@@ -26,7 +26,7 @@ import {
     TrendingUp,
     ThumbsUp  
 } from 'lucide-react';
-// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
 import Headline from '../HeadLine/Headline';
 import SearchSection from './SearchSection';
 
@@ -38,14 +38,14 @@ const DashboardHome = () => {
     const [showAnnouncement, setShowAnnouncement] = useState(false);
     const [viewMode, setViewMode] = useState('grid');
     
-    // Like and view tracking
+
     const [postStats, setPostStats] = useState({
         1: { likes: 12, views: 45, isLiked: false },
         2: { likes: 8, views: 32, isLiked: false },
         3: { likes: 23, views: 67, isLiked: false }
     });
 
-    // Sample user data
+
     const userData = {
         name: 'John Don',
         isVerified: true,
@@ -135,7 +135,7 @@ const DashboardHome = () => {
     const handleShowDetailsModal = (post) => {
         setSelectedPost(post);
         setShowDetailsModal(true);
-        // Increment view count when viewing details
+
         handleViewPost(post.id);
     };
 
@@ -178,17 +178,17 @@ const DashboardHome = () => {
         };
     };
 
-    // Verified badge with three stars
+
     const VerifiedBadge = () => (
         <div className="flex items-center bg-gray-100 px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-medium mt-1 sm:mt-0 w-fit space-x-1">
-            <Star className="w-3 h-3 sm:w-4 sm:h-4" style={{ color: '#C0C0C0' }} /> {/* Silver */}
-            <Star className="w-3 h-3 sm:w-4 sm:h-4" style={{ color: '#FFD700' }} /> {/* Gold */}
-            <Star className="w-3 h-3 sm:w-4 sm:h-4" style={{ color: '#00BFFF' }} /> {/* Diamond */}
+            <Star className="w-3 h-3 sm:w-4 sm:h-4" style={{ color: '#C0C0C0' }} /> 
+            <Star className="w-3 h-3 sm:w-4 sm:h-4" style={{ color: '#FFD700' }} /> 
+            <Star className="w-3 h-3 sm:w-4 sm:h-4" style={{ color: '#00BFFF' }} /> 
             <span className="ml-1 text-gray-700">Verified</span>
         </div>
     );
 
-    // You can reuse this for seller accounts in posts
+
     const SellerVerifiedBadge = () => (
         <span className="flex items-center space-x-0.5 ml-1">
             <Star className="w-3 h-3" style={{ color: '#C0C0C0' }} />
@@ -202,7 +202,7 @@ const DashboardHome = () => {
             <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 py-4 sm:py-6 lg:py-8">
                 <Headline className='mb-10' headlines={["Welcome to our amazing platform!"]} />
 
-                {/* Welcome Section */}
+                
                 <div className="bg-white/80 backdrop-blur-sm rounded-2xl sm:rounded-3xl shadow-xl border border-white/20 p-4 sm:p-6 lg:p-8 mb-6 sm:mb-8">
                     <div className="flex flex-col space-y-4 sm:space-y-0 sm:flex-row sm:items-center sm:justify-between">
                         <div className="flex items-center space-x-3 sm:space-x-4">
@@ -228,7 +228,7 @@ const DashboardHome = () => {
                     </div>
                 </div>
 
-                {/* Stats Cards */}
+                
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 mb-6 sm:mb-8">
                     <div className="bg-white/80 backdrop-blur-sm rounded-xl sm:rounded-2xl shadow-lg p-4 sm:p-6 border border-white/20 hover:shadow-xl transition-all duration-300">
                         <div className="flex items-center justify-between">
@@ -280,7 +280,7 @@ const DashboardHome = () => {
                 </div>
                 <SearchSection></SearchSection>
 
-                {/* Partner Sites */}
+                
                 <div className="bg-white/80 backdrop-blur-sm rounded-xl sm:rounded-2xl shadow-lg p-4 sm:p-6 border border-white/20 mb-6 sm:mb-8">
                     <div className="flex items-center space-x-3 mb-4 sm:mb-6">
                         <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
@@ -307,7 +307,7 @@ const DashboardHome = () => {
                     </div>
                 </div>
 
-                {/* Deals Section */}
+                
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 mb-6 sm:mb-8">
                     <div className="bg-white/80 backdrop-blur-sm rounded-xl sm:rounded-2xl shadow-lg p-4 sm:p-6 border border-white/20">
                         <div className="flex items-center space-x-3 mb-4 sm:mb-6">
@@ -365,7 +365,7 @@ const DashboardHome = () => {
                     </div>
                 </div>
 
-                {/* Posts Section */}
+                
                 <div className="bg-white/80 backdrop-blur-sm rounded-2xl sm:rounded-3xl shadow-xl border border-white/20 overflow-hidden">
                     <div className="bg-gradient-to-r from-blue-600 to-purple-600 px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
                         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between space-y-3 sm:space-y-0">
@@ -461,7 +461,7 @@ const DashboardHome = () => {
                     </div>
                 </div>
 
-                {/* View All Modal */}
+                
                 {showViewAll && (
                     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 z-50">
                         <div className="bg-white rounded-2xl sm:rounded-3xl shadow-2xl max-w-6xl w-full max-h-[90vh] overflow-y-auto">
@@ -529,7 +529,7 @@ const DashboardHome = () => {
                     </div>
                 )}
 
-                {/* Details Modal */}
+                
                 {showDetailsModal && selectedPost && (
                     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 z-50">
                         <div className="bg-white rounded-2xl sm:rounded-3xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
@@ -602,7 +602,7 @@ const DashboardHome = () => {
                     </div>
                 )}
 
-                {/* Buy Now Modal */}
+                
                 {showBuyModal && selectedPost && (
                     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 z-50">
                         <div className="bg-white rounded-2xl sm:rounded-3xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
@@ -624,7 +624,7 @@ const DashboardHome = () => {
                                     <p className="text-sm sm:text-base text-gray-600">{selectedPost.details}</p>
                                 </div>
 
-                                {/* Fee Breakdown */}
+                                
                                 <div className="bg-gray-50 rounded-xl p-4 sm:p-6 mb-6">
                                     <h5 className="text-base sm:text-lg font-semibold text-gray-900 mb-4">Fee Breakdown</h5>
                                     {(() => {
@@ -687,7 +687,7 @@ const DashboardHome = () => {
                     </div>
                 )}
 
-                {/* Announcement Modal with Social Icons */}
+                
                 {showAnnouncement && (
                     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 z-50">
                         <div className="bg-white rounded-2xl sm:rounded-3xl shadow-2xl max-w-sm w-full">

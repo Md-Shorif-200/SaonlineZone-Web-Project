@@ -6,7 +6,7 @@ import { signOut } from "firebase/auth";
 import { auth } from "../../firebase"; // Adjust path as needed
 import { FiUser, FiSettings, FiLogOut, FiChevronDown } from "react-icons/fi";
 
-// nav logo
+
 import nav_logo from '../../public/Picsart_24-12-18_17-11-57-456.png'
 
 const Navbar = ({ user }) => {
@@ -16,7 +16,7 @@ const Navbar = ({ user }) => {
     const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
     const [isLoggingOut, setIsLoggingOut] = useState(false);
 
-    // Handle scroll effect for navbar
+
     useEffect(() => {
         const handleScroll = () => {
             setIsScrolled(window.scrollY > 10);
@@ -26,7 +26,7 @@ const Navbar = ({ user }) => {
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
-    // Close user menu when clicking outside
+
     useEffect(() => {
         const handleClickOutside = (event) => {
             if (showUserMenu && !event.target.closest('.user-menu-container')) {
@@ -38,7 +38,7 @@ const Navbar = ({ user }) => {
         return () => document.removeEventListener('mousedown', handleClickOutside);
     }, [showUserMenu]);
 
-    // Logout function
+
     const handleLogout = async () => {
         setIsLoggingOut(true);
         try {
@@ -54,7 +54,7 @@ const Navbar = ({ user }) => {
         }
     };
 
-    // Get user display info
+
     const getUserDisplayName = () => {
         if (user?.displayName) return user.displayName;
         if (user?.email) return user.email.split('@')[0];
@@ -115,7 +115,7 @@ const Navbar = ({ user }) => {
                     Privacy Policy
                 </NavLink>
             </li>
-            {/* Conditionally render Dashboard link only if user is authenticated */}
+            
             {user && (
                 <li className='text-lg mx-0 md:mx-6 my-4 md:my-0 font-medium transition-all duration-300 hover:text-blue-500'>
                     <NavLink
@@ -191,7 +191,7 @@ const Navbar = ({ user }) => {
                     </NavLink>
                 </div>
             </li>
-            {/* Conditionally render Dashboard link only if user is authenticated */}
+            
             {user && (
                 <li className="transform hover:translate-x-2 transition-transform duration-300">
                     <div className="p-3 rounded-lg hover:bg-gradient-to-r hover:from-cyan-50 hover:to-blue-50 transition-all duration-300">
@@ -221,7 +221,7 @@ const Navbar = ({ user }) => {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-16">
                 <div className="flex items-center justify-between py-3 relative">
 
-                    {/* Logo */}
+                    
                     <div className="nav-start flex items-center gap-x-3 group">
                         <div className="relative overflow-hidden rounded-full ring-2 ring-cyan-500/20 transition-all duration-300 group-hover:ring-cyan-500/40">
                             <img
@@ -238,16 +238,16 @@ const Navbar = ({ user }) => {
                         </div>
                     </div>
 
-                    {/* Desktop Navigation */}
+                    
                     <div className="nav-center mr-10 hidden lg:flex">
                         <ul className="flex items-center space-x-2">
                             {navLink}
                         </ul>
                     </div>
 
-                    {/* User & Mobile */}
+                    
                     <div className="flex items-center gap-x-4">
-                        {/* Mobile Menu Button */}
+                        
                         <div className="lg:hidden">
                             <button
                                 onClick={handleMenuIcon}
@@ -257,7 +257,7 @@ const Navbar = ({ user }) => {
                             </button>
                         </div>
 
-                        {/* Desktop Auth Section */}
+                        
                         <div className="hidden lg:block">
                             {user ? (
                                 /* User Menu for Desktop */
@@ -273,10 +273,10 @@ const Navbar = ({ user }) => {
                                             <span className="relative z-10">Sign Out</span>
                                         </button>
 
-                                    {/* User Dropdown Menu */}
+                                    
                                     {showUserMenu && (
                                         <div className="absolute right-0 mt-3 w-72 bg-white rounded-2xl shadow-2xl border border-gray-100 py-2 z-50 overflow-hidden">
-                                            {/* User Info Section */}
+                                            
                                             <div className="px-4 py-4 border-b border-gray-100 bg-gradient-to-r from-cyan-50 to-blue-50">
                                                 <div className="flex items-center gap-3">
                                                     <div className="w-12 h-12 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-full flex items-center justify-center overflow-hidden">
@@ -301,7 +301,7 @@ const Navbar = ({ user }) => {
                                                 </div>
                                             </div>
                                             
-                                            {/* Menu Items */}
+                                            
                                             <div className="py-2">
                                                 <Link to="/dashboard" onClick={() => setShowUserMenu(false)}>
                                                     <button className="w-full text-left px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-3 transition-colors">
@@ -339,7 +339,7 @@ const Navbar = ({ user }) => {
                         </div>
                     </div>
 
-                    {/* Mobile Sidebar */}
+                    
                     <div
                         tabIndex={0}
                         className={`fixed inset-0 w-screen h-screen bg-black/50 backdrop-blur-sm transition-all duration-300 ease-in-out lg:hidden z-50 ${isActive ? "opacity-100 visible" : "opacity-0 invisible"
@@ -351,7 +351,7 @@ const Navbar = ({ user }) => {
                                 }`}
                             onClick={(e) => e.stopPropagation()}
                         >
-                            {/* Sidebar Header */}
+                            
                             <div className="flex justify-end items-center p-4 border-b border-gray-100 bg-gradient-to-r from-cyan-50 to-blue-50 flex-shrink-0">
                                 <button
                                     onClick={() => setIsActive(false)}
@@ -361,7 +361,7 @@ const Navbar = ({ user }) => {
                                 </button>
                             </div>
 
-                            {/* User Info in Mobile Sidebar (if authenticated) */}
+                            
                             {user && (
                                 <div className="px-4 py-4 border-b border-gray-100 bg-gradient-to-r from-cyan-50 to-blue-50">
                                     <div className="flex items-center gap-3">
@@ -384,16 +384,16 @@ const Navbar = ({ user }) => {
                                 </div>
                             )}
 
-                            {/* Sidebar Navigation */}
+                            
                             <div className="px-4 py-6 bg-white flex-1 overflow-y-auto hide-scrollbar">
                                 <ul className="space-y-2">
                                     {mobileNavLink}
                                 </ul>
 
-                                {/* Divider */}
+                                
                                 <div className="my-6 h-px bg-gradient-to-r from-transparent via-gray-300 to-transparent"></div>
 
-                                {/* Mobile Auth Section */}
+                                
                                 <div className="pt-4">
                                     {user ? (
                                         /* Logout Button for Authenticated Users */
@@ -422,7 +422,7 @@ const Navbar = ({ user }) => {
                 </div>
             </div>
 
-            {/* Logout Confirmation Modal */}
+            
             {showLogoutConfirm && (
                 <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
                     <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6">

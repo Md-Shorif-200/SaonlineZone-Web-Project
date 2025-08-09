@@ -40,7 +40,7 @@ const ImportantServices = () => {
   return (
     <section className="py-30 px-4 bg-blue-50">
       <div className="max-w-6xl mx-auto">
-        {/* Header */}
+        
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-12">
           <div>
             <h2 className="text-3xl md:text-4xl font-bold text-black">
@@ -52,7 +52,7 @@ const ImportantServices = () => {
           </p>
         </div>
 
-        {/* Services Grid */}
+        
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {services.map((service, idx) => (
             <div

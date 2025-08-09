@@ -40,7 +40,7 @@ const Dashboard = ({ user }) => {
     const [isLoggingOut, setIsLoggingOut] = useState(false);
     const navigate = useNavigate()
 
-    // Check if mobile device
+
     useEffect(() => {
         const checkIfMobile = () => {
             setIsMobile(window.innerWidth < 1024);
@@ -52,7 +52,7 @@ const Dashboard = ({ user }) => {
         return () => window.removeEventListener('resize', checkIfMobile);
     }, []);
 
-    // Close sidebar when clicking outside on mobile
+
     useEffect(() => {
         const handleClickOutside = (event) => {
             if (sidebarOpen && isMobile && !event.target.closest('aside') && !event.target.closest('[data-sidebar-toggle]')) {
@@ -81,13 +81,13 @@ const Dashboard = ({ user }) => {
         { name: 'Home', icon: FiHome, badge: null },
     ];
 
-    // Logout function
+
     const handleLogout = async () => {
         setIsLoggingOut(true);
         try {
             await signOut(auth);
             console.log('User signed out successfully');
-            // Redirect will be handled by the auth state change in App.jsx
+
         } catch (error) {
             console.error('Logout error:', error);
             alert('Failed to log out. Please try again.');
@@ -97,14 +97,14 @@ const Dashboard = ({ user }) => {
         }
     };
 
-    // Profile picture click handler
+
     const handleProfileClick = () => {
         setActivePage('Profile');
         setShowUserMenu(false); // Close any open menu
         if (isMobile) setSidebarOpen(false); // Close sidebar on mobile
     };
 
-    // Get user display info
+
     const getUserDisplayName = () => {
         if (user?.displayName) return user.displayName;
         if (user?.email) return user.email.split('@')[0];
@@ -118,9 +118,9 @@ const Dashboard = ({ user }) => {
     return (
         <div className="min-h-screen bg-white">
             <div className="flex h-screen overflow-hidden">
-                {/* Sidebar */}
+                
                 <aside className={`fixed lg:sticky top-0 z-50 w-64 h-screen bg-blue-500 text-white shadow-xl border-r border-gray-300 transform transition-transform duration-300 ease-in-out flex flex-col ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}>
-                    {/* Profile Section */}
+                    
                     <div className="p-6 border-b border-gray-300 flex flex-col items-center text-center">
                         <div 
                             className="w-20 h-20 bg-white rounded-full overflow-hidden mb-3 ring-4 ring-white/20 cursor-pointer hover:ring-white/40 transition-all duration-200"
@@ -144,7 +144,7 @@ const Dashboard = ({ user }) => {
                         <p className="text-sm text-gray-300">{getUserEmail()}</p>
                     </div>
 
-                    {/* Navigation - Flex grow to push logout button to bottom */}
+                    
                     <div className="flex-1 overflow-y-auto hide-scrollbar">
                         <nav className="mt-6 px-4 flex flex-col gap-2">
                             {navItems.map((item) => {
@@ -173,7 +173,7 @@ const Dashboard = ({ user }) => {
                         </nav>
                     </div>
 
-                    {/* Logout Button at Bottom */}
+                    
                     <div className="p-4 border-t border-blue-400/30">
                         <button
                             onClick={() => setShowLogoutConfirm(true)}
@@ -195,11 +195,11 @@ const Dashboard = ({ user }) => {
                     </div>
                 </aside>
 
-                {/* Main Content */}
+                
                 <div className="flex-1 overflow-y-auto hide-scrollbar">
-                    {/* Enhanced Top Navbar */}
+                    
                     <div className="w-full bg-gradient-to-r from-blue-500 to-blue-600 text-white px-4 py-3 flex items-center justify-between shadow-lg sticky top-0 z-30">
-                        {/* Left: Logo and App Name */}
+                        
                         <div className="flex items-center gap-3">
                             <div className='bg-white w-10 h-10 rounded-full p-1 hidden md:inline shadow-md'>
                                 <img src={logo} alt="Saonline Zone Logo" className="w-full h-full rounded-full object-contain" />
@@ -210,9 +210,9 @@ const Dashboard = ({ user }) => {
                             </div>
                         </div>
 
-                        {/* Right: Enhanced User Info and Actions */}
+                        
                         <div className="flex items-center gap-4">
-                            {/* Notification Icon */}
+                            
                             <div className="relative">
                                 <button className="hover:bg-white/10 p-2 rounded-full transition-all duration-200 hover:scale-105">
                                     <FiBell className="text-xl" />
@@ -220,7 +220,7 @@ const Dashboard = ({ user }) => {
                                 <span className="absolute top-1 right-1 w-3 h-3 bg-red-500 rounded-full border-2 border-white"></span>
                             </div>
 
-                            {/* User Profile Section */}
+                            
                             <div className="relative">
                                 <button 
                                     onClick={handleProfileClick}
@@ -237,7 +237,7 @@ const Dashboard = ({ user }) => {
                     </div>
 
                     <main className="p-3 md:p-6 lg:p-8 min-h-screen">
-                        {/* Mobile Menu Button */}
+                        
                         <button
                             data-sidebar-toggle
                             onClick={() => setSidebarOpen(!sidebarOpen)}
@@ -246,7 +246,7 @@ const Dashboard = ({ user }) => {
                             <FiMenu className="text-lg md:text-xl" />
                         </button>
 
-                        {/* Conditional Rendering */}
+                        
                         {activePage === 'Dashboard' && <DashboardHome />}
                         {activePage === 'Add Fund' && <AddFund />}
                         {activePage === 'Buy Subscription' && <BuySubscription />}
@@ -265,7 +265,7 @@ const Dashboard = ({ user }) => {
                 </div>
             </div>
 
-            {/* Logout Confirmation Modal */}
+            
             {showLogoutConfirm && (
                 <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
                     <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6">
@@ -306,7 +306,7 @@ const Dashboard = ({ user }) => {
                 </div>
             )}
 
-            {/* Backdrop for mobile sidebar */}
+            
             {sidebarOpen && (
                 <div
                     className="lg:hidden fixed inset-0 bg-black/50 backdrop-blur-sm z-40"
@@ -314,7 +314,7 @@ const Dashboard = ({ user }) => {
                 />
             )}
 
-            {/* Backdrop for user menu */}
+            
             {showUserMenu && (
                 <div
                     className="fixed inset-0 z-40"

@@ -20,7 +20,7 @@ const FindJobs = () => {
 
     return (
         <div className="find_job p-4">
-            {/* Section Heading */}
+            
             <div className="section_heading bg-blue-200 p-4 rounded-tl-lg rounded-tr-lg">
                 <div className="w-full rounded-md primary_text_color text-2xl font-semibold capitalize p-3 mb-4 bg-white overflow-hidden">
                     <div className="animate-marquee whitespace-nowrap">
@@ -35,7 +35,7 @@ const FindJobs = () => {
                 </div>
             </div>
 
-            {/* Filter & Sort Section */}
+            
             <div className="data_section bg-gray-50 px-6 lg:px-16 py-8">
                 <div className="flex flex-wrap justify-center gap-4 sm:gap-6 mt-6 mb-10">
                     <div className="filter_category">
@@ -65,7 +65,7 @@ const FindJobs = () => {
                     </div>
                 </div>
 
-                {/* Jobs Table */}
+                
                 <h1 className="capitalize font-semibold text-2xl mb-4 text-center">
                     Total Jobs: {jobs?.length || 0}
                 </h1>
@@ -123,7 +123,7 @@ const FindJobs = () => {
                 }
             </div>
 
-            {/* Marquee Animation */}
+            
             <style>{`
                 .animate-marquee {
                     animation: marquee 15s linear infinite;

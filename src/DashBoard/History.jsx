@@ -30,7 +30,7 @@ const History = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [dateFilter, setDateFilter] = useState('all');
 
-  // Sample data for different history types
+
   const depositHistory = [
     {
       id: 'DEP-2024-001',
@@ -258,7 +258,7 @@ const History = () => {
         value.toString().toLowerCase().includes(searchTerm.toLowerCase())
       );
       
-      // Simple date filtering (can be enhanced)
+
       const matchesDate = dateFilter === 'all' || 
         (dateFilter === 'today' && item.date?.includes('2024-01-28')) ||
         (dateFilter === 'week' && item.date?.includes('2024-01'));
@@ -267,7 +267,7 @@ const History = () => {
     });
   };
 
-  // Mobile card components for different history types
+
   const DepositWithdrawalCard = ({ item, isWithdrawal = false }) => (
     <div className="bg-white border border-gray-200 rounded-xl p-4 space-y-3 shadow-sm">
       <div className="flex items-start justify-between">
@@ -485,7 +485,7 @@ const History = () => {
     </div>
   );
 
-  // Render mobile cards based on active tab
+
   const renderMobileCards = () => {
     const data = getFilteredData();
     
@@ -527,7 +527,7 @@ const History = () => {
     );
   };
 
-  // Render desktop table content
+
   const renderTableContent = () => {
     const data = getFilteredData();
     
@@ -674,7 +674,7 @@ const History = () => {
       <Headline className='mb-10'  headlines={["Welcome to our amazing platform!"]} ></Headline>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
-        {/* Header */}
+        
         <div className="text-center mb-6 sm:mb-8">
           <div className="inline-flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-r from-indigo-500 to-blue-600 rounded-full mb-4 sm:mb-6">
             <BarChart3 className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
@@ -685,7 +685,7 @@ const History = () => {
           </p>
         </div>
 
-        {/* Tab Navigation - Mobile Optimized */}
+        
         <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg border border-gray-200 mb-6 sm:mb-8 overflow-hidden">
           <div className="overflow-x-auto">
             <div className="flex min-w-max">
@@ -708,10 +708,10 @@ const History = () => {
           </div>
         </div>
 
-        {/* Filters - Mobile Optimized */}
+        
         <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg border border-gray-100 p-4 sm:p-6 mb-6 sm:mb-8">
           <div className="space-y-4">
-            {/* Search Bar */}
+            
             <div className="relative">
               <input
                 type="text"
@@ -725,7 +725,7 @@ const History = () => {
               </div>
             </div>
             
-            {/* Filter Buttons */}
+            
             <div className="flex flex-wrap gap-2">
               {['all', 'today', 'week', 'month'].map((filter) => (
                 <button
@@ -744,7 +744,7 @@ const History = () => {
           </div>
         </div>
 
-        {/* History Content */}
+        
         <div className="bg-white rounded-2xl sm:rounded-3xl shadow-xl border border-gray-100 overflow-hidden">
           <div className="bg-gradient-to-r from-indigo-500 to-blue-600 px-4 sm:px-8 py-4 sm:py-6">
             <h2 className="text-lg sm:text-2xl font-bold text-white flex items-center space-x-2">
@@ -756,12 +756,12 @@ const History = () => {
             </h2>
           </div>
 
-          {/* Mobile View - Cards */}
+          
           <div className="block lg:hidden p-4">
             {renderMobileCards()}
           </div>
 
-          {/* Desktop View - Table */}
+          
           <div className="hidden lg:block overflow-x-auto">
             <table className="min-w-full">
               <thead className="bg-gray-50">
@@ -780,7 +780,7 @@ const History = () => {
           </div>
         </div>
 
-        {/* Summary Cards */}
+        
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 mt-6 sm:mt-8">
           <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg p-4 sm:p-6 border border-gray-100">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">

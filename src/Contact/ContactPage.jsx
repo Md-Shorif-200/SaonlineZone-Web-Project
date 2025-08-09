@@ -23,7 +23,7 @@ const ContactPage = () => {
         e.preventDefault();
         setIsSubmitting(true);
 
-        // Simulate form submission
+
         await new Promise(resolve => setTimeout(resolve, 2000));
 
         alert('Message sent successfully!');
@@ -40,7 +40,7 @@ const ContactPage = () => {
     return (
         <div className="min-h-screen bg-blue-50 py-12 px-4 sm:py-20">
             <div className="max-w-7xl mx-auto pt-10">
-                {/* Header Section */}
+                
                 <div className="text-center mb-16">
                     <div className="inline-flex items-center gap-2 bg-blue-500/10 border border-blue-500/20 rounded-full px-4 py-2 mb-6">
                         <MessageCircle className="w-4 h-4 text-blue-500" />
@@ -57,7 +57,7 @@ const ContactPage = () => {
                 </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12">
-                    {/* Contact Info Cards */}
+                    
                     <div className="lg:col-span-1 space-y-6">
                         <div className="bg-blue-100 rounded-2xl p-6 shadow-lg border border-blue-100 hover:shadow-xl transition-all duration-300 hover:border-blue-200">
                             <div className="w-12 h-12 bg-blue-500 rounded-xl flex items-center justify-center mb-4">
@@ -94,7 +94,7 @@ const ContactPage = () => {
                         </div>
                     </div>
 
-                    {/* Contact Form */}
+                    
                     <div className="lg:col-span-2">
                         <div className="bg-blue-100 rounded-3xl p-6 sm:p-8 lg:p-10 shadow-xl border border-blue-100">
                             <div className="mb-8">
@@ -107,7 +107,7 @@ const ContactPage = () => {
                             </div>
 
                             <form onSubmit={handleSubmit} className="space-y-6">
-                                {/* Name and Email Row */}
+                                
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     <div className="relative">
                                         <label className="block text-sm font-semibold text-black mb-2">
@@ -146,7 +146,7 @@ const ContactPage = () => {
                                     </div>
                                 </div>
 
-                                {/* Subject and Phone Row */}
+                                
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     <div className="relative">
                                         <label className="block text-sm font-semibold text-black mb-2">
@@ -184,7 +184,7 @@ const ContactPage = () => {
                                     </div>
                                 </div>
 
-                                {/* Message Field */}
+                                
                                 <div className="relative">
                                     <label className="block text-sm font-semibold text-black mb-2">
                                         Message *
@@ -200,7 +200,7 @@ const ContactPage = () => {
                                     ></textarea>
                                 </div>
 
-                                {/* Submit Button */}
+                                
                                 <div className="pt-4">
                                     <button
                                         type="submit"

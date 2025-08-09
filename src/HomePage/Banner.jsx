@@ -11,7 +11,7 @@ const Banner = () => {
 
   return (
     <div className="relative w-full min-h-screen overflow-hidden">
-      {/* Parallax Background */}
+      
       <div
         className="absolute inset-0 w-full h-[120%] bg-cover bg-center bg-no-repeat"
         style={{
@@ -20,36 +20,36 @@ const Banner = () => {
         }}
       />
       
-      {/* Dark Overlay */}
+      
       <div className="absolute inset-0 bg-black/50" />
       
   
 
-      {/* Content */}
+      
       <div className="relative z-10 w-full min-h-screen flex flex-col justify-center items-center text-center text-white px-4 py-16">
         <div className="max-w-5xl mx-auto space-y-8">
-          {/* Animated subtitle */}
+          
           <div className="overflow-hidden">
             <h4 className="text-xs sm:text-sm md:text-base font-semibold uppercase tracking-widest text-cyan-400 animate-fade-in-up">
               Best Solution & Creative
             </h4>
           </div>
 
-          {/* Main title with stagger animation */}
+          
           <div className="overflow-hidden">
             <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-6xl uppercase font-bold leading-tight animate-fade-in-up-delay bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
               Grow Your Business Now
             </h1>
           </div>
 
-          {/* Description */}
+          
           <div className="overflow-hidden">
             <p className="text-base sm:text-lg md:text-xl lg:text-2xl leading-relaxed text-gray-200 max-w-3xl mx-auto animate-fade-in-up-delay-2">
               Together we are going to help you determine a goal, choose your tools, and develop your business to make it distinct.
             </p>
           </div>
 
-          {/* Buttons with hover effects */}
+          
           <div className="flex flex-col sm:flex-row sm:justify-center gap-4 mt-8 w-full sm:w-auto animate-fade-in-up-delay-3">
             <button className="group relative overflow-hidden bg-transparent border-2 border-cyan-400 text-cyan-400 hover:text-white px-6 py-3 uppercase font-semibold tracking-wide transition-all duration-300 transform hover:scale-105 hover:shadow-lg hover:shadow-cyan-400/25 w-full sm:w-auto">
               <span className="absolute inset-0 bg-gradient-to-r from-cyan-400 to-blue-500 transform -translate-x-full group-hover:translate-x-0 transition-transform duration-300"></span>
@@ -65,7 +65,7 @@ const Banner = () => {
 
     
 
-      {/* Scroll indicator */}
+      
       <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-white animate-bounce">
         <div className="flex flex-col items-center space-y-2">
           <span className="text-sm font-light">Scroll down</span>

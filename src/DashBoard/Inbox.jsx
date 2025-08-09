@@ -22,7 +22,7 @@ const Inbox = () => {
   const [showCreateDeal, setShowCreateDeal] = useState(false);
   const [showChatList, setShowChatList] = useState(true); // For mobile navigation
 
-  // Sample chat data
+
   const [chats, setChats] = useState([
     {
       id: 1,
@@ -228,7 +228,7 @@ const Inbox = () => {
     return chats.reduce((total, chat) => total + chat.unreadCount, 0);
   };
 
-  // Mobile chat list item component
+
   const ChatListItem = ({ chat }) => (
     <div
       onClick={() => handleChatSelect(chat)}
@@ -272,7 +272,7 @@ const Inbox = () => {
       <Headline className='mb-10'  headlines={["Welcome to our amazing platform!"]} ></Headline>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
         
-        {/* Header - Hide on mobile when chat is selected */}
+        
         <div className={`text-center mb-6 sm:mb-8 ${!showChatList && 'hidden lg:block'}`}>
           <div className="inline-flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full mb-4 sm:mb-6">
             <MessageCircle className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
@@ -283,15 +283,15 @@ const Inbox = () => {
           </p>
         </div>
 
-        {/* Main Inbox Interface */}
+        
         <div className="bg-white rounded-2xl sm:rounded-3xl shadow-xl border border-gray-100 overflow-hidden">
           
-          {/* Mobile: Show either chat list or chat view */}
+          
           <div className="lg:hidden">
             {showChatList ? (
               /* Mobile Chat List */
               <div className="h-[calc(100vh-200px)] flex flex-col">
-                {/* Mobile Header */}
+                
                 <div className="bg-gradient-to-r from-blue-500 to-blue-600 px-4 py-4">
                   <h2 className="text-lg sm:text-xl font-bold text-white flex items-center justify-between">
                     <span>Messages</span>
@@ -301,7 +301,7 @@ const Inbox = () => {
                   </h2>
                 </div>
 
-                {/* Mobile Search */}
+                
                 <div className="p-4 border-b border-gray-200">
                   <div className="relative">
                     <input
@@ -317,7 +317,7 @@ const Inbox = () => {
                   </div>
                 </div>
 
-                {/* Mobile Filter Tabs */}
+                
                 <div className="px-4 py-3 border-b border-gray-200">
                   <div className="flex space-x-1 overflow-x-auto">
                     {[
@@ -341,7 +341,7 @@ const Inbox = () => {
                   </div>
                 </div>
 
-                {/* Mobile Chat List */}
+                
                 <div className="flex-1 overflow-y-auto">
                   {filteredChats.length === 0 ? (
                     <div className="p-8 text-center text-gray-500">
@@ -359,7 +359,7 @@ const Inbox = () => {
               /* Mobile Chat View */
               selectedChat && (
                 <div className="h-[calc(100vh-120px)] flex flex-col">
-                  {/* Mobile Chat Header */}
+                  
                   <div className="bg-gray-50 px-4 py-4 border-b border-gray-200 flex items-center justify-between">
                     <div className="flex items-center space-x-3 flex-1 min-w-0">
                       <button
@@ -403,7 +403,7 @@ const Inbox = () => {
                     </div>
                   </div>
 
-                  {/* Mobile Messages */}
+                  
                   <div className="flex-1 overflow-y-auto p-4 space-y-4">
                     {selectedChat.messages.map(msg => (
                       <div
@@ -430,7 +430,7 @@ const Inbox = () => {
                     ))}
                   </div>
 
-                  {/* Mobile Message Input */}
+                  
                   <div className="bg-gray-50 px-4 py-4 border-t border-gray-200">
                     <div className="flex items-center space-x-3">
                       <input
@@ -454,11 +454,11 @@ const Inbox = () => {
             )}
           </div>
 
-          {/* Desktop: Show both sidebar and chat */}
+          
           <div className="hidden lg:flex h-[700px]">
-            {/* Desktop Sidebar */}
+            
             <div className="w-1/3 border-r border-gray-200 flex flex-col">
-              {/* Sidebar Header */}
+              
               <div className="bg-gradient-to-r from-blue-500 to-blue-600 px-6 py-4">
                 <h2 className="text-xl font-bold text-white flex items-center justify-between">
                   <span>Messages</span>
@@ -468,7 +468,7 @@ const Inbox = () => {
                 </h2>
               </div>
 
-              {/* Search Bar */}
+              
               <div className="p-4 border-b border-gray-200">
                 <div className="relative">
                   <input
@@ -484,7 +484,7 @@ const Inbox = () => {
                 </div>
               </div>
 
-              {/* Filter Tabs */}
+              
               <div className="px-4 py-2 border-b border-gray-200">
                 <div className="flex space-x-1">
                   {[
@@ -508,7 +508,7 @@ const Inbox = () => {
                 </div>
               </div>
 
-              {/* Chat List */}
+              
               <div className="flex-1 overflow-y-auto">
                 {filteredChats.length === 0 ? (
                   <div className="p-8 text-center text-gray-500">
@@ -560,11 +560,11 @@ const Inbox = () => {
               </div>
             </div>
 
-            {/* Desktop Main Chat Area */}
+            
             <div className="flex-1 flex flex-col">
               {selectedChat ? (
                 <>
-                  {/* Desktop Chat Header */}
+                  
                   <div className="bg-gray-50 px-6 py-4 border-b border-gray-200 flex items-center justify-between">
                     <div className="flex items-center space-x-3">
                       <div className="relative">
@@ -602,7 +602,7 @@ const Inbox = () => {
                     </div>
                   </div>
 
-                  {/* Desktop Messages */}
+                  
                   <div className="flex-1 overflow-y-auto p-6 space-y-4">
                     {selectedChat.messages.map(msg => (
                       <div
@@ -629,7 +629,7 @@ const Inbox = () => {
                     ))}
                   </div>
 
-                  {/* Desktop Message Input */}
+                  
                   <div className="bg-gray-50 px-6 py-4 border-t border-gray-200">
                     <div className="flex items-center space-x-3">
                       <input
@@ -664,7 +664,7 @@ const Inbox = () => {
         </div>
       </div>
 
-      {/* Create Deal Modal - Mobile Responsive */}
+      
       {showCreateDeal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-2xl sm:rounded-3xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">

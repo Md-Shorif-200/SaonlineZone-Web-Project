@@ -13,13 +13,13 @@ const AddList = () => {
     <div className="min-h-screen bg-white py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-        {/* Header */}
+        
         <div className="text-center mb-10">
           <h2 className="text-4xl font-bold text-blue-500 mb-2">📢 Advertisement List</h2>
           <div className="w-24 h-1 bg-blue-500 mx-auto rounded-full"></div>
         </div>
 
-        {/* Table */}
+        
         <div className="bg-white rounded-2xl border border-blue-100 overflow-hidden">
           <div className="overflow-x-auto">
             <table className="min-w-full text-sm text-black">
@@ -80,7 +80,7 @@ const AddList = () => {
           </div>
         </div>
 
-        {/* Empty State */}
+        
         {ads.length === 0 && (
           <div className="text-center py-12">
             <div className="w-24 h-24 mx-auto mb-6 bg-blue-100 rounded-full flex items-center justify-center">

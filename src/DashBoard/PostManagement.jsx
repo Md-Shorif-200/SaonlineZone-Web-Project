@@ -30,7 +30,7 @@ const PostManagement = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const [selectedPost, setSelectedPost] = useState(null);
 
-  // Sample posts data
+
   const [posts, setPosts] = useState([
     {
       id: 'POST-2024-001',
@@ -88,13 +88,13 @@ const PostManagement = () => {
     }
   ]);
 
-  // Form data for new post
+
   const [formData, setFormData] = useState({
-    // Step 1 - Targeting
+
     zone: '',
     country: '',
     city: '',
-    // Step 2 - Details
+
     title: '',
     category: '',
     subCategory: '',
@@ -105,7 +105,7 @@ const PostManagement = () => {
     description: ''
   });
 
-  // Sample data for dropdowns
+
   const zones = ['North America', 'Europe', 'Asia', 'Africa', 'South America', 'Oceania'];
   const countries = {
     'North America': ['United States', 'Canada', 'Mexico'],
@@ -180,7 +180,7 @@ const PostManagement = () => {
   };
 
   const handleSubmit = () => {
-    // Create new post
+
     const newPost = {
       ...formData,
       id: `POST-2024-${String(posts.length + 1).padStart(3, '0')}`,
@@ -192,7 +192,7 @@ const PostManagement = () => {
     
     setPosts([newPost, ...posts]);
     
-    // Reset form
+
     setFormData({
       zone: '', country: '', city: '',
       title: '', category: '', subCategory: '', type: '',
@@ -213,7 +213,7 @@ const PostManagement = () => {
     return (amount + adminFee).toFixed(2);
   };
 
-  // Mobile card component for posts
+
   const PostCard = ({ post }) => (
     <div className="bg-white border border-gray-200 rounded-xl p-4 space-y-3 shadow-sm">
       <div className="flex items-start justify-between">
@@ -267,7 +267,7 @@ const PostManagement = () => {
     </div>
   );
 
-  // Step 1 - Targeting Component
+
   const Step1Targeting = () => (
     <div className="space-y-6">
       <div className="text-center mb-6 sm:mb-8">
@@ -329,7 +329,7 @@ const PostManagement = () => {
     </div>
   );
 
-  // Step 2 - Details Component
+
 
   const Step2Details = () => (
 
@@ -372,7 +372,7 @@ const PostManagement = () => {
       Add your post content and specifications
     </p>   </div>
    <div className="space-y-4 sm:space-y-6">
-  {/* Title, Category, Sub Category, Amount in same grid */}
+  
   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">    <div className="space-y-2">
        <label className="block text-sm font-medium text-gray-700">Title *</label>
        <input
@@ -444,7 +444,7 @@ const PostManagement = () => {
       </div>
     </div>
 
-    {/* Remaining fields */}
+    
     <div className="space-y-2">
       <label className="block text-sm font-medium text-gray-700">Keywords</label>
       <input
@@ -506,7 +506,7 @@ const PostManagement = () => {
       Add your post content and specifications
     </p>   </div>
    <div className="space-y-4 sm:space-y-6">
-  {/* Title, Category, Sub Category, Amount in same grid */}
+  
   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">    <div className="space-y-2">
        <label className="block text-sm font-medium text-gray-700">Title *</label>
        <input
@@ -578,7 +578,7 @@ const PostManagement = () => {
       </div>
     </div>
 
-    {/* Remaining fields */}
+    
     <div className="space-y-2">
       <label className="block text-sm font-medium text-gray-700">Keywords</label>
       <input
@@ -634,7 +634,7 @@ const PostManagement = () => {
 </>
   );
 
-  // Step 3 - Review Component
+
   const Step3Review = () => (
     <div className="space-y-6">
       <div className="text-center mb-6 sm:mb-8">
@@ -643,7 +643,7 @@ const PostManagement = () => {
       </div>
 
       <div className="bg-gray-50 rounded-xl p-4 sm:p-6 space-y-6">
-        {/* Targeting Info */}
+        
         <div>
           <h4 className="text-base sm:text-lg font-semibold text-gray-900 mb-3 flex items-center">
             <Target className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
@@ -665,7 +665,7 @@ const PostManagement = () => {
           </div>
         </div>
 
-        {/* Post Details */}
+        
         <div>
           <h4 className="text-base sm:text-lg font-semibold text-gray-900 mb-3 flex items-center">
             <FileText className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
@@ -705,7 +705,7 @@ const PostManagement = () => {
           </div>
         </div>
 
-        {/* Pricing Information */}
+        
         <div className="border-t pt-6">
           <h4 className="text-base sm:text-lg font-semibold text-gray-900 mb-3 flex items-center">
             <DollarSign className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
@@ -735,7 +735,7 @@ const PostManagement = () => {
       <Headline className='mb-10'  headlines={["Welcome to our amazing platform!"]} ></Headline>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
-        {/* Header */}
+        
         <div className="text-center mb-6 sm:mb-8">
           <div className="inline-flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full mb-4 sm:mb-6">
             <FileText className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
@@ -746,7 +746,7 @@ const PostManagement = () => {
           </p>
         </div>
 
-        {/* Tab Navigation - Mobile Optimized */}
+        
         <div className="flex justify-center mb-6 sm:mb-8">
           <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg p-1 border border-gray-200 w-full max-w-md">
             <div className="grid grid-cols-2 gap-1">
@@ -789,14 +789,14 @@ const PostManagement = () => {
               </h2>
             </div>
 
-            {/* Mobile View - Cards */}
+            
             <div className="block lg:hidden p-4 space-y-4">
               {posts.map((post) => (
                 <PostCard key={post.id} post={post} />
               ))}
             </div>
 
-            {/* Desktop View - Table */}
+            
             <div className="hidden lg:block overflow-x-auto">
               <table className="min-w-full">
                 <thead className="bg-gray-50">
@@ -863,7 +863,7 @@ const PostManagement = () => {
         ) : (
           /* Create Post Wizard */
           <div className="bg-white rounded-2xl sm:rounded-3xl shadow-xl border border-gray-100 overflow-hidden">
-            {/* Progress Bar */}
+            
             <div className="bg-gradient-to-r from-blue-500 to-purple-600 px-4 sm:px-8 py-4 sm:py-6">
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-lg sm:text-2xl font-bold text-white">Create New Post</h2>
@@ -880,12 +880,12 @@ const PostManagement = () => {
             </div>
 
             <div className="p-4 sm:p-8">
-              {/* Step Content */}
+              
               {currentStep === 1 && <Step1Targeting />}
               {currentStep === 2 && <Step2Details />}
               {currentStep === 3 && <Step3Review />}
 
-              {/* Navigation Buttons */}
+              
               <div className="flex justify-between items-center pt-6 sm:pt-8 mt-6 sm:mt-8 border-t">
                 <button
                   onClick={prevStep}
@@ -934,7 +934,7 @@ const PostManagement = () => {
         )}
       </div>
 
-      {/* Post Details Modal - Mobile Optimized */}
+      
       {selectedPost && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-2xl sm:rounded-3xl shadow-2xl w-full max-w-2xl max-h-screen overflow-y-auto">

@@ -10,7 +10,7 @@ const Footer = () => {
     return (
         <footer className="bg-black text-white pt-16 pb-10 relative z-10">
             <div className="max-w-7xl mx-auto px-6 lg:px-12 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-10">
-                {/* Logo & Branding */}
+                
                 <div className="flex flex-col items-start">
                     <div className="flex items-center gap-3">
                         <img className="w-12 h-12 object-contain" src={logo} alt="SA Online Zone Logo" />
@@ -23,7 +23,7 @@ const Footer = () => {
                     </p>
                 </div>
 
-                {/* Contact Info */}
+                
                 <div>
                     <h3 className="text-lg font-semibold mb-4 text-white">Contact Us</h3>
                     <ul className="space-y-2 text-sm text-gray-400">
@@ -33,7 +33,7 @@ const Footer = () => {
                     </ul>
                 </div>
 
-                {/* Privacy Section */}
+                
                 <div>
                     <h3 className="text-lg font-semibold mb-4 text-white">Legal</h3>
                     <ul className="text-sm text-gray-400 space-y-2">
@@ -49,7 +49,7 @@ const Footer = () => {
                     </ul>
                 </div>
 
-                {/* Social Links */}
+                
                 <div>
                     <h3 className="text-lg font-semibold mb-4 text-white">Follow Us</h3>
                     <div className="flex gap-4">
@@ -85,7 +85,7 @@ const Footer = () => {
                 </div>
             </div>
 
-            {/* Divider */}
+            
             <div className="mt-12 border-t border-gray-700/50 pt-5">
                 <p className="text-center text-sm text-gray-500">
                     &copy; {new Date().getFullYear()} SA Online Zone. All rights reserved.

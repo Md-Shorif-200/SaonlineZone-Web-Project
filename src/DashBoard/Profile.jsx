@@ -21,7 +21,7 @@ const Profile = () => {
     const [showEditProfile, setShowEditProfile] = useState(false);
 
 
-    // Sample user data
+
     const userProfile = {
         coverPhoto: 'https://images.unsplash.com/photo-1557683316-973673baf926?w=1200&h=400&fit=crop',
         profilePhoto: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face',
@@ -63,7 +63,7 @@ const Profile = () => {
         }
     };
 
-    // Sample profile orders/showcase
+
     const profileOrders = [
         {
             id: 1,
@@ -135,10 +135,10 @@ const Profile = () => {
         <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-blue-50">
             <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4 lg:py-8">
 
-                {/* Profile Header */}
+                
                 <div className="bg-white rounded-3xl shadow-xl border border-gray-100 overflow-hidden mb-8">
 
-                    {/* Cover Photo */}
+                    
                     <div className="relative h-48 lg:h-64">
                         <img
                             src={userProfile.coverPhoto}
@@ -147,7 +147,7 @@ const Profile = () => {
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
 
-                        {/* Edit Button */}
+                        
                         <button
                             onClick={() => setShowEditProfile(true)}
                             className="absolute top-4 right-4 bg-white/90 hover:bg-white text-gray-700 px-4 py-2 rounded-lg font-medium transition-colors backdrop-blur-sm flex items-center space-x-2"
@@ -157,10 +157,10 @@ const Profile = () => {
                         </button>
                     </div>
 
-                    {/* Profile Info */}
+                    
                     <div className="relative px-6 lg:px-8 pb-8">
 
-                        {/* Profile Photo */}
+                        
                         <div className="relative -mt-16 lg:-mt-20 mb-6">
                             <div className="relative inline-block">
                                 <img
@@ -168,7 +168,7 @@ const Profile = () => {
                                     alt="Profile"
                                     className="w-24 h-24 lg:w-32 lg:h-32 rounded-full border-4 border-white shadow-lg object-cover"
                                 />
-                                {/* Online Status */}
+                                
                                 <div className={`absolute bottom-2 right-2 w-6 h-6 lg:w-8 lg:h-8 rounded-full border-3 border-white ${userProfile.isOnline ? 'bg-green-500' : 'bg-red-500'
                                     }`}></div>
                             </div>
@@ -176,10 +176,10 @@ const Profile = () => {
 
                         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
 
-                            {/* Left Column - Basic Info */}
+                            
                             <div className="lg:col-span-2">
 
-                                {/* Name and Verification */}
+                                
                                 <div className="flex items-center space-x-3 mb-4">
                                     <h1 className="text-2xl lg:text-3xl font-bold text-gray-900">{userProfile.name}</h1>
                                     {userProfile.isVerified && (
@@ -194,16 +194,16 @@ const Profile = () => {
                                     </div>
                                 </div>
 
-                                {/* User ID */}
+                                
                                 <div className="mb-4">
                                     <span className="text-sm text-gray-500">User ID: </span>
                                     <span className="font-mono text-sm font-medium text-gray-700">{userProfile.userId}</span>
                                 </div>
 
-                                {/* Description */}
+                                
                                 <p className="text-gray-600 mb-6 leading-relaxed">{userProfile.description}</p>
 
-                                {/* Location */}
+                                
                                 <div className="mb-6">
                                     <h3 className="text-lg font-semibold text-gray-900 mb-3 flex items-center">
                                         <MapPin className="w-5 h-5 mr-2" />
@@ -227,7 +227,7 @@ const Profile = () => {
                                     </div>
                                 </div>
 
-                                {/* Social Media */}
+                                
                                 <div className="mb-6">
                                     <h3 className="text-lg font-semibold text-gray-900 mb-3 flex items-center">
                                         <Link className="w-5 h-5 mr-2" />
@@ -250,10 +250,10 @@ const Profile = () => {
                                 </div>
                             </div>
 
-                            {/* Right Column - Stats and Health */}
+                            
                             <div className="space-y-6">
 
-                                {/* Reviews */}
+                                
                                 <div className="bg-gradient-to-br from-yellow-50 to-orange-50 rounded-2xl p-6 border border-yellow-200">
                                     <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
                                         <Star className="w-5 h-5 mr-2 text-yellow-500" />
@@ -285,7 +285,7 @@ const Profile = () => {
                                     </div>
                                 </div>
 
-                                {/* Account Health */}
+                                
                                 <div className="bg-gradient-to-br from-green-50 to-blue-50 rounded-2xl p-6 border border-green-200">
                                     <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
                                         <Shield className="w-5 h-5 mr-2 text-green-600" />
@@ -329,7 +329,7 @@ const Profile = () => {
                     </div>
                 </div>
 
-                {/* Tab Navigation */}
+                
                 <div className="flex justify-center mb-8">
                     <div className="bg-white rounded-2xl shadow-lg p-1 border border-gray-200">
                         <button
@@ -355,13 +355,13 @@ const Profile = () => {
                     </div>
                 </div>
 
-                {/* Profile Orders Section */}
+                
                 {activeTab === 'orders' && (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         {profileOrders.map((order) => (
                             <div key={order.id} className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden hover:shadow-xl transition-shadow duration-300">
 
-                                {/* Order Cover Photo */}
+                                
                                 <div className="relative h-48">
                                     <img
                                         src={order.coverPhoto}
@@ -370,7 +370,7 @@ const Profile = () => {
                                     />
                                     <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
 
-                                    {/* Profile Photo Overlay */}
+                                    
                                     <div className="absolute bottom-4 left-4">
                                         <img
                                             src={order.profilePhoto}
@@ -379,31 +379,31 @@ const Profile = () => {
                                         />
                                     </div>
 
-                                    {/* Price Tag */}
+                                    
                                     <div className="absolute top-4 right-4 bg-green-600 text-white px-3 py-1 rounded-full font-bold">
                                         ${order.price}
                                     </div>
                                 </div>
 
-                                {/* Order Content */}
+                                
                                 <div className="p-6">
 
-                                    {/* Order Header */}
+                                    
                                     <div className="flex items-start justify-between mb-3">
                                         <h3 className="text-lg font-bold text-gray-900 flex-1">{order.name}</h3>
                                         <order.socialIcon className="w-6 h-6 ml-2 text-blue-600" />
                                     </div>
 
-                                    {/* Description */}
+                                    
                                     <p className="text-gray-600 text-sm mb-4 line-clamp-3">{order.description}</p>
 
-                                    {/* Location */}
+                                    
                                     <div className="flex items-center text-sm text-gray-500 mb-4">
                                         <MapPin className="w-4 h-4 mr-1" />
                                         {order.location}
                                     </div>
 
-                                    {/* Stats */}
+                                    
                                     <div className="flex items-center justify-between">
                                         <div className="flex items-center space-x-4">
                                             <div className="flex items-center space-x-1">
@@ -426,14 +426,14 @@ const Profile = () => {
                     </div>
                 )}
 
-                {/* Additional Profile Info (when profile tab is active) */}
+                
                 {activeTab === 'profile' && (
                     <div className="bg-white rounded-3xl shadow-xl border border-gray-100 p-8">
                         <h2 className="text-2xl font-bold text-gray-900 mb-6">Additional Information</h2>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
-                            {/* Skills */}
+                            
                             <div>
                                 <h3 className="text-lg font-semibold text-gray-900 mb-3 flex items-center">
                                     <Briefcase className="w-5 h-5 mr-2" />
@@ -448,7 +448,7 @@ const Profile = () => {
                                 </div>
                             </div>
 
-                            {/* Languages */}
+                            
                             <div>
                                 <h3 className="text-lg font-semibold text-gray-900 mb-3 flex items-center">
                                     <Globe className="w-5 h-5 mr-2" />
@@ -470,7 +470,7 @@ const Profile = () => {
                                 </div>
                             </div>
 
-                            {/* Certifications */}
+                            
                             <div>
                                 <h3 className="text-lg font-semibold text-gray-900 mb-3 flex items-center">
                                     <Award className="w-5 h-5 mr-2" />
@@ -492,7 +492,7 @@ const Profile = () => {
                 )}
             </div>
 
-            {/* Edit Profile Modal */}
+            
             {showEditProfile && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
                     <div className="bg-white rounded-3xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">

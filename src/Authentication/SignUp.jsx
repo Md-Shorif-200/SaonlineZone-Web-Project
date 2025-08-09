@@ -26,7 +26,7 @@ import {
 } from 'firebase/auth';
 import { auth } from '../../firebase'; // Adjust path as needed
 
-// Country codes data
+
 const countryCodes = [
     { code: '+1', country: 'US', flag: '🇺🇸' },
     { code: '+44', country: 'UK', flag: '🇬🇧' },
@@ -46,7 +46,7 @@ const countryCodes = [
     { code: '+966', country: 'SA', flag: '🇸🇦' },
 ];
 
-// Countries data
+
 const countries = [
     'United States', 'United Kingdom', 'India', 'China', 'Japan', 'Germany', 
     'France', 'Italy', 'Spain', 'Russia', 'Brazil', 'Mexico', 'Australia', 
@@ -57,7 +57,7 @@ const countries = [
     'Pakistan', 'Bangladesh', 'Sri Lanka', 'Afghanistan', 'Nepal', 'Myanmar'
 ];
 
-// Input field component
+
 const InputField = ({
     icon: Icon,
     type,
@@ -101,7 +101,7 @@ const InputField = ({
     </div>
 );
 
-// Enhanced WhatsApp field with better UI
+
 const WhatsAppField = ({ value, onChange, error, countryCode, onCountryCodeChange }) => {
     const [isOpen, setIsOpen] = useState(false);
     const selectedCountry = countryCodes.find(c => c.code === countryCode);
@@ -112,7 +112,7 @@ const WhatsAppField = ({ value, onChange, error, countryCode, onCountryCodeChang
                 <FiPhone className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 text-lg z-10" />
                 
                 <div className={`flex bg-blue-50 border-2 rounded-xl transition-all duration-300 ${error ? 'border-red-400' : 'border-gray-200 hover:border-blue-300 focus-within:border-blue-500 focus-within:bg-white'}`}>
-                    {/* Country Code Selector */}
+                    
                     <div className="relative">
                         <button
                             type="button"
@@ -149,7 +149,7 @@ const WhatsAppField = ({ value, onChange, error, countryCode, onCountryCodeChang
                         )}
                     </div>
 
-                    {/* Phone Number Input */}
+                    
                     <input
                         type="tel"
                         name="whatsapp"
@@ -166,7 +166,7 @@ const WhatsAppField = ({ value, onChange, error, countryCode, onCountryCodeChang
                     {error}
                 </p>
             )}
-            {/* Click outside to close dropdown */}
+            
             {isOpen && (
                 <div 
                     className="fixed inset-0 z-20" 
@@ -177,7 +177,7 @@ const WhatsAppField = ({ value, onChange, error, countryCode, onCountryCodeChang
     );
 };
 
-// Country select field
+
 const CountrySelectField = ({ value, onChange, error }) => {
     const [isOpen, setIsOpen] = useState(false);
 
@@ -220,7 +220,7 @@ const CountrySelectField = ({ value, onChange, error }) => {
                     {error}
                 </p>
             )}
-            {/* Click outside to close dropdown */}
+            
             {isOpen && (
                 <div 
                     className="fixed inset-0 z-10" 
@@ -231,7 +231,7 @@ const CountrySelectField = ({ value, onChange, error }) => {
     );
 };
 
-// Social button
+
 const SocialButton = ({ icon: Icon, provider, onClick, disabled }) => (
     <button
         type="button"
@@ -244,7 +244,7 @@ const SocialButton = ({ icon: Icon, provider, onClick, disabled }) => (
     </button>
 );
 
-// Feature card
+
 const FeatureCard = ({ icon: Icon, title, description }) => (
     <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl p-6 text-white">
         <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center mb-4">
@@ -255,7 +255,7 @@ const FeatureCard = ({ icon: Icon, title, description }) => (
     </div>
 );
 
-// Forgot Password Modal
+
 const ForgotPasswordModal = ({ isOpen, onClose, onSend }) => {
     const [email, setEmail] = useState('');
     const [isLoading, setIsLoading] = useState(false);
@@ -319,7 +319,7 @@ const ForgotPasswordModal = ({ isOpen, onClose, onSend }) => {
     );
 };
 
-// Helper function to get user-friendly error messages
+
 const getFirebaseErrorMessage = (errorCode) => {
     switch (errorCode) {
         case 'auth/user-not-found':
@@ -366,7 +366,7 @@ const SignUp = ({ onAuthSuccess }) => {
     const [authError, setAuthError] = useState('');
     const [user, setUser] = useState(null);
 
-    // Listen for authentication state changes
+
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
             setUser(currentUser);
@@ -395,7 +395,7 @@ const SignUp = ({ onAuthSuccess }) => {
     const validateForm = () => {
         const newErrors = {};
 
-        // Check privacy policy for both login and signup
+
         if (!formData.policyAccepted) {
             newErrors.policyAccepted = 'You must accept our policies';
         }
@@ -427,31 +427,31 @@ const SignUp = ({ onAuthSuccess }) => {
         return Object.keys(newErrors).length === 0;
     };
 
-    // Email/Password Authentication
+
     const handleEmailAuth = async () => {
         try {
             let userCredential;
 
             if (isSignUp) {
-                // Create new user
+
                 userCredential = await createUserWithEmailAndPassword(
                     auth, 
                     formData.email, 
                     formData.password
                 );
 
-                // Update user profile with display name
+
                 await updateProfile(userCredential.user, {
                     displayName: formData.name
                 });
 
-                // Here you can save additional user data to your database
-                // saveUserData(userCredential.user.uid, {
-                //     name: formData.name,
-                //     username: formData.username,
-                //     whatsapp: countryCode + formData.whatsapp,
-                //     country: formData.country
-                // });
+
+
+
+
+
+
+
 
                 console.log('User created:', {
                     uid: userCredential.user.uid,
@@ -462,7 +462,7 @@ const SignUp = ({ onAuthSuccess }) => {
                 });
 
             } else {
-                // Sign in existing user
+
                 userCredential = await signInWithEmailAndPassword(
                     auth, 
                     formData.email, 
@@ -479,7 +479,7 @@ const SignUp = ({ onAuthSuccess }) => {
         }
     };
 
-    // Google Authentication
+
     const handleGoogleAuth = async () => {
         try {
             const provider = new GoogleAuthProvider();
@@ -490,10 +490,10 @@ const SignUp = ({ onAuthSuccess }) => {
             console.log('Google authentication successful:', result.user);
             setAuthError('');
 
-            // If it's a new user and this was meant to be a signup, you might want to collect additional info
-            // if (isSignUp && result.additionalUserInfo?.isNewUser) {
-            //     // Redirect to complete profile or show additional form
-            // }
+
+
+
+
 
         } catch (error) {
             console.error('Google authentication error:', error);
@@ -501,7 +501,7 @@ const SignUp = ({ onAuthSuccess }) => {
         }
     };
 
-    // Facebook Authentication
+
     const handleFacebookAuth = async () => {
         try {
             const provider = new FacebookAuthProvider();
@@ -543,7 +543,7 @@ const SignUp = ({ onAuthSuccess }) => {
                 [name]: ''
             }));
         }
-        // Clear auth error when user starts typing
+
         if (authError) {
             setAuthError('');
         }
@@ -568,7 +568,7 @@ const SignUp = ({ onAuthSuccess }) => {
 
     return (
         <div className="min-h-screen flex">
-            {/* Left side */}
+            
             <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-cyan-500 to-blue-500 relative overflow-hidden">
                 <div className="absolute inset-0">
                     <div className="absolute -top-40 -right-40 w-80 h-80 bg-white/10 rounded-full blur-3xl"></div>
@@ -589,7 +589,7 @@ const SignUp = ({ onAuthSuccess }) => {
                 </div>
             </div>
 
-            {/* Right side - Form */}
+            
             <div className="w-full lg:w-1/2 flex items-center justify-center p-6 lg:p-12 bg-gray-50">
                 <div className="w-full max-w-md">
                     <div className="text-center mb-8">
@@ -601,7 +601,7 @@ const SignUp = ({ onAuthSuccess }) => {
                         </p>
                     </div>
 
-                    {/* Auth Error Display */}
+                    
                     {authError && (
                         <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl">
                             <p className="text-sm text-red-600 flex items-center gap-2">
@@ -692,7 +692,7 @@ const SignUp = ({ onAuthSuccess }) => {
                             </div>
                         )}
 
-                        {/* Privacy Policy Checkbox - Now appears on both login and signup */}
+                        
                         <div className="flex items-start gap-2">
                             <input
                                 type="checkbox"
@@ -747,7 +747,7 @@ const SignUp = ({ onAuthSuccess }) => {
                 </div>
             </div>
 
-            {/* Forgot Password Modal */}
+            
             <ForgotPasswordModal 
                 isOpen={showForgotPassword}
                 onClose={() => setShowForgotPassword(false)}

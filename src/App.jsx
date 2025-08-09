@@ -1,4 +1,4 @@
-// src/App.jsx (Alternative version using Auth Context)
+
 import React, { useEffect } from 'react';
 import { BrowserRouter, Routes, Route, useLocation, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './Provider/AuthProvider';
@@ -13,7 +13,7 @@ import Spinner from './Components/Spinner';
 import NotFoundPage from './Components/NotFoundPage';
 import ContactPage from './Contact/ContactPage';
 
-// Protected Route Component
+
 const ProtectedRoute = ({ children, redirectTo = "/sign-in" }) => {
   const { isAuthenticated, loading } = useAuth();
   
@@ -26,7 +26,7 @@ const ProtectedRoute = ({ children, redirectTo = "/sign-in" }) => {
   return children;
 };
 
-// Public Route Component
+
 const PublicRoute = ({ children, redirectTo = "/" }) => {
   const { isAuthenticated, loading } = useAuth();
   

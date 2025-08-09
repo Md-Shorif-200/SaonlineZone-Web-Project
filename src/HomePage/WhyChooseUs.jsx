@@ -7,7 +7,7 @@ const WhyChooseUs = () => {
     <div className="w-full bg-blue-50 pb-30 px-4 pt-40 overflow-hidden">
       <div className="max-w-6xl mx-auto flex flex-col-reverse lg:flex-row items-center gap-12 lg:gap-20">
         
-        {/* Image Section */}
+        
         <div className="w-full sm:w-[80%] md:w-[60%] lg:w-1/2 mx-auto relative h-[280px]">
           <img
             src={img_1}
@@ -18,7 +18,7 @@ const WhyChooseUs = () => {
           <div className="w-full h-full bg-blue-500 absolute top-8 left-0 z-0 rounded-md"></div>
         </div>
 
-        {/* Content Section */}
+        
         <div className="w-full sm:w-[80%] md:w-[60%] lg:w-1/2 px-2 sm:px-4 space-y-5 text-center lg:text-left">
           <h4 className="text-sm sm:text-base md:text-lg font-bold uppercase tracking-widest text-blue-600">
             Who We Are

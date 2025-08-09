@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Search, X, Filter, ChevronDown } from 'lucide-react';
 
-// Demo data built into the component
+
 const demoCategories = [
     'Technology',
     'Business',
@@ -312,7 +312,7 @@ const SearchSection = ({
 
     return (
         <div className="bg-gradient-to-r from-white to-gray-50/50 backdrop-blur-sm rounded-2xl shadow-xl border border-white/30 mb-8 overflow-hidden">
-            {/* Header */}
+            
             <div className="bg-gradient-to-r from-indigo-600 to-purple-600 px-6 py-4">
                 <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-3">
@@ -327,7 +327,7 @@ const SearchSection = ({
                         </div>
                     </div>
                     
-                    {/* Mobile filter toggle */}
+                    
                     <button
                         onClick={() => setIsFilterExpanded(!isFilterExpanded)}
                         className="lg:hidden flex items-center space-x-2 bg-white/20 px-3 py-2 rounded-lg text-white hover:bg-white/30 transition-all duration-200"
@@ -341,10 +341,10 @@ const SearchSection = ({
                 </div>
             </div>
 
-            {/* Main Content */}
+            
             <div className="p-6">
                 <div className="flex flex-col lg:flex-row lg:items-start gap-6">
-                    {/* Left Side - Search */}
+                    
                     <div className="lg:w-2/5">
                         <label className="block text-sm font-semibold text-gray-700 mb-3">
                             Search Posts
@@ -376,13 +376,13 @@ const SearchSection = ({
                             </div>
                         )}
 
-                        {/* Search Stats */}
+                        
                         <div className="mt-4 text-xs text-gray-500">
                             <p>💡 Try searching: "web development", "travel tips", "healthy recipes"</p>
                         </div>
                     </div>
 
-                    {/* Right Side - Filters */}
+                    
                     <div className={`lg:w-3/5 ${isFilterExpanded ? 'block' : 'hidden lg:block'}`}>
                         <div className="flex items-center justify-between mb-4">
                             <label className="block text-sm font-semibold text-gray-700">
@@ -405,7 +405,7 @@ const SearchSection = ({
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            {/* Category Filter */}
+                            
                             <div className="space-y-2">
                                 <label className="block text-xs font-medium text-gray-600 uppercase tracking-wide">
                                     Category ({categories.length})
@@ -425,7 +425,7 @@ const SearchSection = ({
                                 </div>
                             </div>
 
-                            {/* Sub Category Filter */}
+                            
                             <div className="space-y-2">
                                 <label className="block text-xs font-medium text-gray-600 uppercase tracking-wide">
                                     Sub Category 
@@ -451,7 +451,7 @@ const SearchSection = ({
                                 </div>
                             </div>
 
-                            {/* Country Filter */}
+                            
                             <div className="space-y-2">
                                 <label className="block text-xs font-medium text-gray-600 uppercase tracking-wide">
                                     Country ({countries.length})
@@ -472,7 +472,7 @@ const SearchSection = ({
                             </div>
                         </div>
 
-                        {/* Active Filters Display */}
+                        
                         {hasActiveFilters && (
                             <div className="mt-4 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl border border-blue-200">
                                 <p className="text-sm font-medium text-blue-800 mb-2">Active Filters:</p>
@@ -496,7 +496,7 @@ const SearchSection = ({
                             </div>
                         )}
 
-                        {/* Quick Filter Suggestions */}
+                        
                         {!hasActiveFilters && (
                             <div className="mt-4 p-4 bg-gray-50 rounded-xl">
                                 <p className="text-sm font-medium text-gray-700 mb-2">💡 Quick Filters:</p>

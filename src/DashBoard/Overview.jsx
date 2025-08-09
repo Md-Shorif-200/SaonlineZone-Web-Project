@@ -22,7 +22,7 @@ import {
 import Headline from '../HeadLine/Headline';
 
 const Overview = () => {
-  // Sample user data
+
   const userData = {
     accountBalance: 2456.75,
     spentBalance: 1834.50,
@@ -40,7 +40,7 @@ const Overview = () => {
 
   const [timeRange, setTimeRange] = useState('30d');
 
-  // Sample recent activities
+
   const recentActivities = [
     {
       id: 1,
@@ -76,7 +76,7 @@ const Overview = () => {
     }
   ];
 
-  // Sample status information
+
   const statusInfo = [
     {
       category: 'Account Status',
@@ -140,7 +140,7 @@ const Overview = () => {
     return colors[color] || 'bg-gray-100 text-gray-800 border-gray-200';
   };
 
-  // Mobile activity card component
+
   const ActivityCard = ({ activity }) => {
     const ActivityIcon = getActivityIcon(activity.type);
     return (
@@ -174,7 +174,7 @@ const Overview = () => {
       <Headline className='mb-10'  headlines={["Welcome to our amazing platform!"]} ></Headline>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
-        {/* Header */}
+        
         <div className="mb-6 sm:mb-8">
           <div className="flex flex-col space-y-4 md:flex-row md:items-center md:justify-between md:space-y-0">
             <div>
@@ -196,10 +196,10 @@ const Overview = () => {
           </div>
         </div>
 
-        {/* Main Statistics Grid */}
+        
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6 sm:mb-8">
           
-          {/* Account Balance */}
+          
           <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg p-4 sm:p-6 border border-gray-100">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
               <div className="mb-3 sm:mb-0 flex-1">
@@ -213,7 +213,7 @@ const Overview = () => {
             </div>
           </div>
 
-          {/* Spent Balance */}
+          
           <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg p-4 sm:p-6 border border-gray-100">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
               <div className="mb-3 sm:mb-0 flex-1">
@@ -227,7 +227,7 @@ const Overview = () => {
             </div>
           </div>
 
-          {/* Total Orders */}
+          
           <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg p-4 sm:p-6 border border-gray-100">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
               <div className="mb-3 sm:mb-0 flex-1">
@@ -241,7 +241,7 @@ const Overview = () => {
             </div>
           </div>
 
-          {/* Total Earnings */}
+          
           <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg p-4 sm:p-6 border border-gray-100">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
               <div className="mb-3 sm:mb-0 flex-1">
@@ -256,10 +256,10 @@ const Overview = () => {
           </div>
         </div>
 
-        {/* Order Status Grid */}
+        
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 mb-6 sm:mb-8">
           
-          {/* Receive Orders */}
+          
           <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg p-3 sm:p-6 border border-gray-100">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
               <div className="mb-2 sm:mb-0 flex-1">
@@ -272,7 +272,7 @@ const Overview = () => {
             </div>
           </div>
 
-          {/* Pending Orders */}
+          
           <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg p-3 sm:p-6 border border-gray-100">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
               <div className="mb-2 sm:mb-0 flex-1">
@@ -285,7 +285,7 @@ const Overview = () => {
             </div>
           </div>
 
-          {/* In Progress Orders */}
+          
           <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg p-3 sm:p-6 border border-gray-100">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
               <div className="mb-2 sm:mb-0 flex-1">
@@ -298,7 +298,7 @@ const Overview = () => {
             </div>
           </div>
 
-          {/* Referral Users */}
+          
           <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg p-3 sm:p-6 border border-gray-100">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
               <div className="mb-2 sm:mb-0 flex-1">
@@ -312,10 +312,10 @@ const Overview = () => {
           </div>
         </div>
 
-        {/* Subscription and Recent Activity */}
+        
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8 mb-6 sm:mb-8">
           
-          {/* Subscription Information */}
+          
           <div className="bg-white rounded-2xl sm:rounded-3xl shadow-xl border border-gray-100 overflow-hidden">
             <div className="bg-gradient-to-r from-blue-500 to-indigo-600 px-4 sm:px-6 py-3 sm:py-4">
               <h3 className="text-lg sm:text-xl font-bold text-white flex items-center">
@@ -355,7 +355,7 @@ const Overview = () => {
             </div>
           </div>
 
-          {/* Recent Activities */}
+          
           <div className="lg:col-span-2 bg-white rounded-2xl sm:rounded-3xl shadow-xl border border-gray-100 overflow-hidden">
             <div className="bg-gradient-to-r from-blue-500 to-blue-600 px-4 sm:px-6 py-3 sm:py-4">
               <h3 className="text-lg sm:text-xl font-bold text-white flex items-center">
@@ -376,7 +376,7 @@ const Overview = () => {
           </div>
         </div>
 
-        {/* Status Information */}
+        
         <div className="bg-white rounded-2xl sm:rounded-3xl shadow-xl border border-gray-100 overflow-hidden mb-6 sm:mb-8">
           <div className="bg-gradient-to-r from-green-500 to-blue-600 px-4 sm:px-8 py-4 sm:py-6">
             <h3 className="text-xl sm:text-2xl font-bold text-white flex items-center">
@@ -417,7 +417,7 @@ const Overview = () => {
           </div>
         </div>
 
-        {/* Quick Actions */}
+        
         <div className="bg-white rounded-2xl sm:rounded-3xl shadow-xl border border-gray-100 p-4 sm:p-8">
           <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4 sm:mb-6 flex items-center">
             <Zap className="w-5 h-5 sm:w-6 sm:h-6 mr-2" />

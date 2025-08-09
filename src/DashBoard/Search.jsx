@@ -17,7 +17,7 @@ const Search = () => {
     };
     const countries = ['United States', 'Canada', 'United Kingdom', 'Germany', 'France'];
 
-    // Clear all filters
+
     const clearFilters = () => {
         setSearchTerm('');
         setSelectedCategory('');
@@ -25,7 +25,7 @@ const Search = () => {
         setSelectedCountry('');
     };
 
-    // Handle category change and reset subcategory
+
     const handleCategoryChange = (e) => {
         setSelectedCategory(e.target.value);
         setSelectedSubCategory(''); // Reset subcategory when category changes
@@ -33,7 +33,7 @@ const Search = () => {
 
     return (
         <div className="w-full">
-            {/* Search & Filters */}
+            
             <div className="bg-white/80 backdrop-blur-sm rounded-xl sm:rounded-2xl shadow-lg p-4 sm:p-6 border border-white/20 mb-6 sm:mb-8">
                 <div className="flex items-center justify-between mb-4 sm:mb-6">
                     <div className="flex items-center space-x-3">
@@ -43,7 +43,7 @@ const Search = () => {
                         <h3 className="text-lg sm:text-xl font-bold text-gray-900">Search & Filter Posts</h3>
                     </div>
                     
-                    {/* Clear filters button */}
+                    
                     {(searchTerm || selectedCategory || selectedCountry) && (
                         <button
                             onClick={clearFilters}
@@ -54,9 +54,9 @@ const Search = () => {
                     )}
                 </div>
 
-                {/* Mobile-first responsive layout */}
+                
                 <div className="space-y-4">
-                    {/* Search Input - Full width on all screens */}
+                    
                     <div className="relative">
                         <input
                             type="text"
@@ -79,9 +79,9 @@ const Search = () => {
                         )}
                     </div>
 
-                    {/* Filters - Responsive grid layout */}
+                    
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
-                        {/* Category Filter */}
+                        
                         <div className="relative">
                             <select
                                 value={selectedCategory}
@@ -100,7 +100,7 @@ const Search = () => {
                             </div>
                         </div>
 
-                        {/* Sub Category Filter */}
+                        
                         <div className="relative">
                             <select
                                 value={selectedSubCategory}
@@ -122,7 +122,7 @@ const Search = () => {
                             </div>
                         </div>
 
-                        {/* Country Filter */}
+                        
                         <div className="relative sm:col-span-2 lg:col-span-1">
                             <select
                                 value={selectedCountry}
@@ -142,7 +142,7 @@ const Search = () => {
                         </div>
                     </div>
 
-                    {/* Active Filters Display */}
+                    
                     {(searchTerm || selectedCategory || selectedSubCategory || selectedCountry) && (
                         <div className="flex flex-wrap gap-2 pt-2 border-t border-gray-100">
                             <span className="text-xs sm:text-sm font-medium text-gray-500">Active filters:</span>

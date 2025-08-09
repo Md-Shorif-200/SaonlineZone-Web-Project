@@ -29,7 +29,7 @@ const WithDrawForm = () => {
       return;
     }
 
-    // Create withdrawal record
+
     const withdrawalRecord = {
       id: Date.now(),
       transactionId: generateTransactionId(),
@@ -40,7 +40,7 @@ const WithDrawForm = () => {
       status: 'Processing'
     };
 
-    // Update states
+
     setAvailableBalance(prev => prev - amount);
     setLastWithdraw(amount);
     setTotalWithdrawn(prev => prev + amount);
@@ -76,7 +76,7 @@ const WithDrawForm = () => {
       <Headline className='mb-10'  headlines={["Welcome to our amazing platform!"]} ></Headline>
       <h2 className="text-3xl font-bold text-center mb-10">💸 Withdraw Funds</h2>
 
-      {/* Summary Boxes */}
+      
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-10">
         <div className="bg-gradient-to-r from-indigo-600 to-purple-500 text-white p-5 rounded-xl flex flex-col items-center shadow-lg">
           <FaWallet className="text-3xl mb-2" />
@@ -95,9 +95,9 @@ const WithDrawForm = () => {
         </div>
       </div>
 
-      {/* Withdraw Form */}
+      
       <form onSubmit={handleSubmit} className="space-y-6 p-6 rounded-xl border border-gray-200 bg-gray-50 mb-10">
-        {/* Payment Method */}
+        
         <div>
           <label className="block text-sm font-medium mb-1">Payment Method</label>
           <select
@@ -114,7 +114,7 @@ const WithDrawForm = () => {
           </select>
         </div>
 
-        {/* Withdraw Amount */}
+        
         <div>
           <label className="block text-sm font-medium mb-1">Withdraw Amount</label>
           <input
@@ -128,7 +128,7 @@ const WithDrawForm = () => {
           />
         </div>
 
-        {/* Account Number */}
+        
         <div>
           <label className="block text-sm font-medium mb-1">Account Number</label>
           <input
@@ -148,7 +148,7 @@ const WithDrawForm = () => {
         </button>
       </form>
 
-      {/* Withdrawal History Table */}
+      
       {withdrawalHistory.length > 0 && (
         <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
           <div className="bg-gradient-to-r from-blue-700 to-sky-500 px-6 py-4">

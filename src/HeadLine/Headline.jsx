@@ -1,4 +1,4 @@
-// MovingHeadline.jsx
+
 import React, { useState} from 'react';
 import { Speaker, Volume2, VolumeX, Pause, Play } from 'lucide-react';
 
@@ -15,10 +15,10 @@ const Headline = ({
   const [isPaused, setIsPaused] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
 
-  // Join headlines with separator for continuous scroll
+
   const headlineText = headlines.join(' • ');
   
-  // Calculate animation duration based on text length and speed
+
   const animationDuration = (headlineText.length * 12) / speed; // approximate character width of 12px
 
   const handleTogglePause = () => {
@@ -31,10 +31,10 @@ const Headline = ({
 
   return (
     <div className={`relative overflow-hidden rounded-xl sm:rounded-2xl shadow-lg ${className}`}>
-      {/* Background with gradient */}
+      
       <div className={`bg-gradient-to-r ${backgroundColor} p-3 sm:p-4`}>
         <div className="flex items-center space-x-3">
-          {/* Icon */}
+          
           {showIcon && (
             <div className="flex-shrink-0">
               <div className="w-8 h-8 sm:w-10 sm:h-10 bg-white/20 rounded-lg flex items-center justify-center">
@@ -43,7 +43,7 @@ const Headline = ({
             </div>
           )}
 
-          {/* Moving text container */}
+          
           <div className="flex-1 relative overflow-hidden">
             <div
               className={`flex whitespace-nowrap ${textColor} font-medium text-sm sm:text-base`}
@@ -56,13 +56,13 @@ const Headline = ({
               onMouseEnter={() => pauseOnHover && setIsPaused(true)}
               onMouseLeave={() => pauseOnHover && setIsPaused(false)}
             >
-              {/* Duplicate text for seamless loop */}
+              
               <span className="pr-8">{headlineText}</span>
               <span className="pr-8">{headlineText}</span>
             </div>
           </div>
 
-          {/* Controls */}
+          
           {showControls && (
             <div className="flex-shrink-0 flex items-center space-x-2">
               <button
@@ -92,7 +92,7 @@ const Headline = ({
         </div>
       </div>
 
-      {/* CSS Animation */}
+      
       <style jsx>{`
         @keyframes scroll {
           0% {

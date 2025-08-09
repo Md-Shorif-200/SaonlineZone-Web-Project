@@ -25,12 +25,12 @@ const AddFund = () => {
   const [history, setHistory] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   
-  // Admin description state
+
   const [adminDescription, setAdminDescription] = useState('Welcome to the Add Fund section. Here you can submit your fund requests with proper transaction details. Please ensure all information is accurate before submitting.');
   const [isEditingDescription, setIsEditingDescription] = useState(false);
   const [tempDescription, setTempDescription] = useState('');
   
-  // Assume this comes from your auth context or props
+
   const isAdmin = true; // You can replace this with actual admin check
 
   const handleChange = (e) => {
@@ -45,7 +45,7 @@ const AddFund = () => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Simulate API call delay
+
     await new Promise(resolve => setTimeout(resolve, 1000));
 
     const newEntry = {
@@ -114,15 +114,15 @@ const AddFund = () => {
       <Headline className='mb-10' headlines={["Welcome to our amazing platform!"]} />
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
+        
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold text-gray-900 mb-2">Add Fund</h1>
           <p className="text-gray-600">Submit your fund request with transaction details</p>
         </div>
 
-        {/* Admin Description and Video Tutorial Row */}
+        
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
-          {/* Admin Description Section */}
+          
           <div className="lg:col-span-2">
             <div className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
               <div className="bg-gradient-to-r from-green-500 to-emerald-500 px-6 py-4">
@@ -188,20 +188,20 @@ const AddFund = () => {
             </div>
           </div>
 
-          {/* Video Tutorial Section */}
+          
           <div className="lg:col-span-1">
             <VideoTutorial />
           </div>
         </div>
 
-        {/* Form Card */}
+        
         <div className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden mb-8">
           <div className="bg-blue-500 px-6 py-4">
             <h2 className="text-xl font-semibold text-white">Fund Request Form</h2>
           </div>
           
           <form onSubmit={handleSubmit} className="p-6 space-y-6">
-            {/* Grid Form Fields */}
+            
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-2">
                 <label className="block text-sm font-medium text-gray-700">
@@ -285,7 +285,7 @@ const AddFund = () => {
               </div>
             </div>
 
-            {/* File Upload */}
+            
             <div className="space-y-2">
               <label className="block text-sm font-medium text-gray-700">
                 Transaction Screenshot *
@@ -317,7 +317,7 @@ const AddFund = () => {
               </div>
             </div>
 
-            {/* Submit Button */}
+            
             <button
               type="submit"
               disabled={isSubmitting}
@@ -337,7 +337,7 @@ const AddFund = () => {
           </form>
         </div>
 
-        {/* History Section */}
+        
         {history.length > 0 && (
           <div className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
             <div className="bg-gradient-to-r from-blue-500 to-blue-600 px-6 py-4">

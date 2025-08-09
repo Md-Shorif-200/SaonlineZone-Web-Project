@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-// Dummy blog posts data
+
 const posts = [
   {
     date: "May 5, 2019",
@@ -52,7 +52,7 @@ const posts = [
   },
 ];
 
-// Custom arrow buttons
+
 const PrevArrow = ({ onClick, disabled }) => (
   <button
     onClick={onClick}
@@ -89,7 +89,7 @@ const RecentPost = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [slidesToShow, setSlidesToShow] = useState(1);
 
-  // Handle responsive slides per view
+
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth >= 1024) {
@@ -106,7 +106,7 @@ const RecentPost = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Reset current index when slidesToShow changes
+
   useEffect(() => {
     setCurrentIndex(0);
   }, [slidesToShow]);
@@ -127,7 +127,7 @@ const RecentPost = () => {
     }
   };
 
-  // Auto-play functionality (optional)
+
   useEffect(() => {
     const autoPlay = setInterval(() => {
       if (canGoNext) {
@@ -143,7 +143,7 @@ const RecentPost = () => {
   return (
     <section className="py-16 lg:py-24 px-4 bg-blue-50">
       <div className="max-w-6xl mx-auto">
-        {/* Header */}
+        
         <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-16">
           <div className="mb-6 lg:mb-0">
             <p className="text-sm text-blue-500 uppercase font-semibold mb-2 tracking-wider">
@@ -158,9 +158,9 @@ const RecentPost = () => {
           </p>
         </div>
 
-        {/* Slider */}
+        
         <div className="relative">
-          {/* Navigation Arrows - Only show if there are more posts than visible */}
+          
           {posts.length > slidesToShow && (
             <>
               <PrevArrow onClick={handlePrev} disabled={!canGoPrev} />
@@ -168,7 +168,7 @@ const RecentPost = () => {
             </>
           )}
           
-          {/* Carousel Container */}
+          
           <div className="overflow-hidden rounded-lg">
             <div 
               className="flex transition-transform duration-500 ease-in-out"

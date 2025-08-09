@@ -23,7 +23,7 @@ const MyOrders = () => {
   const [filterStatus, setFilterStatus] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
 
-  // Sample orders data
+
   const orders = [
     {
       id: 'ORD-2024-001',
@@ -159,7 +159,7 @@ const MyOrders = () => {
   const completedOrders = orders.filter(order => order.status === 'Completed').length;
   const processingOrders = orders.filter(order => order.status === 'Processing').length;
 
-  // Mobile card component for orders
+
   const OrderCard = ({ order }) => (
     <div className="bg-white border border-gray-200 rounded-xl p-4 space-y-3 shadow-sm">
       <div className="flex items-start justify-between">
@@ -204,7 +204,7 @@ const MyOrders = () => {
       <Headline className='mb-10'  headlines={["Welcome to our amazing platform!"]} ></Headline>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
-        {/* Header */}
+        
         <div className="text-center mb-6 sm:mb-8">
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-2 sm:mb-4">My Orders</h1>
           <p className="text-base sm:text-lg lg:text-xl text-gray-600 max-w-2xl mx-auto px-4">
@@ -212,7 +212,7 @@ const MyOrders = () => {
           </p>
         </div>
 
-        {/* Statistics Cards */}
+        
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 mb-6 sm:mb-8">
           <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg p-3 sm:p-6 border border-gray-100">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
@@ -263,10 +263,10 @@ const MyOrders = () => {
           </div>
         </div>
 
-        {/* Filters and Search - Mobile Optimized */}
+        
         <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg border border-gray-100 p-4 sm:p-6 mb-6 sm:mb-8">
           <div className="space-y-4">
-            {/* Search Bar */}
+            
             <div className="relative">
               <input
                 type="text"
@@ -280,7 +280,7 @@ const MyOrders = () => {
               </div>
             </div>
             
-            {/* Filter Buttons */}
+            
             <div className="flex flex-wrap gap-2">
               {['all', 'completed', 'processing', 'pending', 'cancelled'].map((status) => (
                 <button
@@ -299,7 +299,7 @@ const MyOrders = () => {
           </div>
         </div>
 
-        {/* Orders List */}
+        
         <div className="bg-white rounded-2xl sm:rounded-3xl shadow-xl border border-gray-100 overflow-hidden">
           <div className="bg-gradient-to-r from-blue-500 to-blue-600 px-4 sm:px-8 py-4 sm:py-6">
             <h2 className="text-xl sm:text-2xl font-bold text-white flex items-center space-x-2">  
@@ -307,14 +307,14 @@ const MyOrders = () => {
             </h2>
           </div>
 
-          {/* Mobile View - Cards */}
+          
           <div className="block lg:hidden p-4 space-y-4">
             {filteredOrders.map((order) => (
               <OrderCard key={order.id} order={order} />
             ))}
           </div>
 
-          {/* Desktop View - Table */}
+          
           <div className="hidden lg:block overflow-x-auto">
             <table className="min-w-full">
               <thead className="bg-gray-50">
@@ -375,7 +375,7 @@ const MyOrders = () => {
         </div>
       </div>
 
-      {/* Order Details Modal - Mobile Optimized */}
+      
       {selectedOrder && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-2xl sm:rounded-3xl shadow-2xl w-full max-w-2xl max-h-screen overflow-y-auto">
@@ -392,7 +392,7 @@ const MyOrders = () => {
             </div>
 
             <div className="p-4 sm:p-8 space-y-6">
-              {/* Order Info */}
+              
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Order ID</label>
@@ -412,7 +412,7 @@ const MyOrders = () => {
                 </div>
               </div>
 
-              {/* Post Show Details */}
+              
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">Post Show</label>
                 <div className="bg-gray-50 rounded-xl p-4">
@@ -427,7 +427,7 @@ const MyOrders = () => {
                 </div>
               </div>
 
-              {/* Performance Metrics */}
+              
               {selectedOrder.status === 'Completed' && (
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-3">Performance Metrics</label>
@@ -448,7 +448,7 @@ const MyOrders = () => {
                 </div>
               )}
 
-              {/* Action Buttons */}
+              
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 pt-4">
                 <button className="flex items-center justify-center space-x-2 px-4 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition-colors text-sm">
                   <FileText className="w-4 h-4" />

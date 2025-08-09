@@ -21,7 +21,7 @@ import Headline from '../HeadLine/Headline';
 const ReferEarn = () => {
   const [copySuccess, setCopySuccess] = useState('');
   
-  // Sample user data
+
   const userReferralData = {
     referralLink: 'https://app.example.com/ref/USER123ABC',
     promoCode: 'REF123ABC',
@@ -31,7 +31,7 @@ const ReferEarn = () => {
     thisMonthEarnings: 456.80
   };
 
-  // Sample referral history
+
   const referralHistory = [
     {
       id: 1,
@@ -128,7 +128,7 @@ const ReferEarn = () => {
     );
   };
 
-  // Mobile card component for referral history
+
   const ReferralCard = ({ user, index }) => (
     <div className="bg-white border border-gray-200 rounded-xl p-4 space-y-3 shadow-sm">
       <div className="flex items-center justify-between">
@@ -182,7 +182,7 @@ const ReferEarn = () => {
       <Headline className='mb-10'  headlines={["Welcome to our amazing platform!"]} ></Headline>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
-        {/* Header */}
+        
         <div className="text-center mb-6 sm:mb-8">
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-2 sm:mb-4">Refer & Earn</h1>
           <p className="text-base sm:text-lg lg:text-xl text-gray-600 max-w-3xl mx-auto px-4">
@@ -190,7 +190,7 @@ const ReferEarn = () => {
           </p>
         </div>
 
-        {/* Statistics Cards */}
+        
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 mb-6 sm:mb-8">
           <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg p-3 sm:p-6 border border-gray-100">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
@@ -241,7 +241,7 @@ const ReferEarn = () => {
           </div>
         </div>
 
-        {/* How It Works Section */}
+        
         <div className="bg-white rounded-2xl sm:rounded-3xl shadow-xl border border-gray-100 p-4 sm:p-8 mb-6 sm:mb-8">
           <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4 sm:mb-6 text-center">How It Works</h2>
           
@@ -272,7 +272,7 @@ const ReferEarn = () => {
           </div>
         </div>
 
-        {/* Referral Tools - Mobile Optimized */}
+        
         <div className="bg-white rounded-2xl sm:rounded-3xl shadow-xl border border-gray-100 overflow-hidden mb-6 sm:mb-8">
           <div className="bg-gradient-to-r from-blue-500 to-blue-600 px-4 sm:px-8 py-4 sm:py-6">
             <h2 className="text-xl sm:text-2xl font-bold text-white">Your Referral Tools</h2>
@@ -280,7 +280,7 @@ const ReferEarn = () => {
           </div>
 
           <div className="p-4 sm:p-8 space-y-6">
-            {/* Referral Link - Mobile Optimized */}
+            
             <div className="space-y-3">
               <label className="block text-base sm:text-lg font-semibold text-gray-800 flex items-center">
                 <LuLink className="mr-2 w-4 h-4 sm:w-5 sm:h-5" /> Your Referral Link
@@ -302,7 +302,7 @@ const ReferEarn = () => {
               </div>
             </div>
 
-            {/* Promo Code - Mobile Optimized */}
+            
             <div className="space-y-3">
               <label className="block text-base sm:text-lg font-semibold text-gray-800 flex items-center">
                 <LuTicket className="mr-2 w-4 h-4 sm:w-5 sm:h-5" /> Your Promo Code
@@ -324,7 +324,7 @@ const ReferEarn = () => {
               </div>
             </div>
 
-            {/* Share Buttons - Mobile Optimized */}
+            
             <div className="pt-2 sm:pt-4">
               <label className="block text-base sm:text-lg font-semibold text-gray-800 mb-3 sm:mb-4 flex items-center">
                 <LuSmartphone className="mr-2 w-4 h-4 sm:w-5 sm:h-5" /> Quick Share
@@ -355,7 +355,7 @@ const ReferEarn = () => {
           </div>
         </div>
 
-        {/* Referral History */}
+        
         <div className="bg-white rounded-2xl sm:rounded-3xl shadow-xl border border-gray-100 overflow-hidden">
           <div className="bg-gradient-to-r from-blue-500 to-blue-600 px-4 sm:px-8 py-4 sm:py-6">
             <h2 className="text-xl sm:text-2xl font-bold text-white flex items-center space-x-2">
@@ -363,14 +363,14 @@ const ReferEarn = () => {
             </h2>
           </div>
 
-          {/* Mobile View - Cards */}
+          
           <div className="block lg:hidden p-4 space-y-4">
             {referralHistory.map((user, index) => (
               <ReferralCard key={user.id} user={user} index={index} />
             ))}
           </div>
 
-          {/* Desktop View - Table */}
+          
           <div className="hidden lg:block overflow-x-auto">
             <table className="min-w-full">
               <thead className="bg-gray-50">

@@ -13,7 +13,7 @@ const CarefulWork = () => {
   return (
     <div className="py-16 bg-blue-50">
       <div className="max-w-6xl mx-auto">
-        {/* Header */}
+        
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-10">
           <div>
             <p className="text-sm text-blue-500 uppercase tracking-wide mb-1">
@@ -28,7 +28,7 @@ const CarefulWork = () => {
           </p>
         </div>
 
-        {/* Filter Tabs */}
+        
         <div className="flex flex-wrap gap-6 mb-10 text-xs font-semibold text-gray-800 uppercase">
           <span className="text-blue-500 border-b-2 border-blue-500">All</span>
           <span>User Experience</span>
@@ -37,7 +37,7 @@ const CarefulWork = () => {
           <span>Branding</span>
         </div>
 
-        {/* Image Grid */}
+        
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
           {items.map((item) => (
             <div

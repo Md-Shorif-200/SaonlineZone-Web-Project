@@ -35,7 +35,7 @@ const BuySubscription = ({ isAdmin = true }) => { // Add isAdmin prop, defaultin
   const [editingPackage, setEditingPackage] = useState(null);
   const [editData, setEditData] = useState({});
 
-  // Sample packages data with commission percentages
+
   const [packages, setPackages] = useState([
     {
       id: 1,
@@ -92,12 +92,12 @@ const BuySubscription = ({ isAdmin = true }) => { // Add isAdmin prop, defaultin
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Simulate API call
+
     await new Promise(resolve => setTimeout(resolve, 2000));
 
     alert(`Subscription purchased successfully!\nPackage: ${selectedPackage.name}\nPrice: $${selectedPackage.price}\nCommission: ${selectedPackage.commission}%`);
     
-    // Reset form
+
     setFormData({
       nidFront: null,
       nidBack: null,
@@ -112,7 +112,7 @@ const BuySubscription = ({ isAdmin = true }) => { // Add isAdmin prop, defaultin
     setSelectedPackage(null);
   };
 
-  // Admin editing functions
+
   const startEditing = (pkg) => {
     setEditingPackage(pkg.id);
     setEditData({
@@ -148,7 +148,7 @@ const BuySubscription = ({ isAdmin = true }) => { // Add isAdmin prop, defaultin
       <Headline className='mb-10' headlines={["Welcome to our amazing platform!"]} />
       <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8">
         
-        {/* Header */}
+        
         <div className="text-center mb-8 sm:mb-12">
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-3 sm:mb-4 px-2">
             Choose Your Package
@@ -176,7 +176,7 @@ const BuySubscription = ({ isAdmin = true }) => { // Add isAdmin prop, defaultin
                   </div>
                 )}
 
-                {/* Admin Edit Controls */}
+                
                 {isAdmin && (
                   <div className="absolute top-3 right-3 z-10">
                     {editingPackage === pkg.id ? (
@@ -209,9 +209,9 @@ const BuySubscription = ({ isAdmin = true }) => { // Add isAdmin prop, defaultin
                 )}
 
                 <div className="p-4 sm:p-6 lg:p-8">
-                  {/* Package Header */}
+                  
                   <div className="text-center mb-4 sm:mb-6">
-                    {/* Editable Package Name */}
+                    
                     {editingPackage === pkg.id ? (
                       <input
                         type="text"
@@ -231,7 +231,7 @@ const BuySubscription = ({ isAdmin = true }) => { // Add isAdmin prop, defaultin
                     </div>
                   </div>
 
-                  {/* Package Details */}
+                  
                   <div className="space-y-2 sm:space-y-3 mb-4 sm:mb-6">
                     <div className="flex justify-between items-center">
                       <span className="text-sm sm:text-base text-gray-600 flex items-center">
@@ -251,7 +251,7 @@ const BuySubscription = ({ isAdmin = true }) => { // Add isAdmin prop, defaultin
                       </span>
                       <span className="text-sm sm:text-base font-semibold text-green-600">{pkg.trustedGuarantee}%</span>
                     </div>
-                    {/* Editable Commission */}
+                    
                     <div className="flex justify-between items-center">
                       <span className="text-sm sm:text-base text-gray-600 flex items-center">
                         <DollarSign className="mr-2 w-3 h-3 sm:w-4 sm:h-4" /> Commission
@@ -274,7 +274,7 @@ const BuySubscription = ({ isAdmin = true }) => { // Add isAdmin prop, defaultin
                     </div>
                   </div>
 
-                  {/* Features */}
+                  
                   <div className="mb-6 sm:mb-8">
                     <h4 className="text-sm sm:text-base font-semibold text-gray-800 mb-2 sm:mb-3 flex items-center">
                       <Sparkles className="mr-2 w-4 h-4 sm:w-5 sm:h-5" /> Features
@@ -289,7 +289,7 @@ const BuySubscription = ({ isAdmin = true }) => { // Add isAdmin prop, defaultin
                     </ul>
                   </div>
 
-                  {/* Select Button */}
+                  
                   <button
                     onClick={() => handlePackageSelect(pkg)}
                     disabled={editingPackage === pkg.id}
@@ -311,7 +311,7 @@ const BuySubscription = ({ isAdmin = true }) => { // Add isAdmin prop, defaultin
           /* Subscription Form */
           <div className="max-w-4xl mx-auto">
             <div className="bg-white rounded-2xl sm:rounded-3xl shadow-lg sm:shadow-xl border border-gray-200 overflow-hidden">
-              {/* Form Header */}
+              
               <div className="bg-gradient-to-r from-blue-500 to-blue-600 px-4 sm:px-8 py-4 sm:py-6">
                 <div className="flex items-center justify-between">
                   <div>
@@ -330,7 +330,7 @@ const BuySubscription = ({ isAdmin = true }) => { // Add isAdmin prop, defaultin
               </div>
 
               <form onSubmit={handleSubmit} className="p-4 sm:p-6 lg:p-8 space-y-4 sm:space-y-6">
-                {/* NID Upload Section */}
+                
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                   <div className="space-y-2">
                     <label className="block text-sm font-medium text-gray-700">
@@ -385,7 +385,7 @@ const BuySubscription = ({ isAdmin = true }) => { // Add isAdmin prop, defaultin
                   </div>
                 </div>
 
-                {/* Address Section */}
+                
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                   <div className="space-y-2">
                     <label className="block text-sm font-medium text-gray-700">
@@ -418,7 +418,7 @@ const BuySubscription = ({ isAdmin = true }) => { // Add isAdmin prop, defaultin
                   </div>
                 </div>
 
-                {/* Contact Information */}
+                
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                   <div className="space-y-2">
                     <label className="block text-sm font-medium text-gray-700">
@@ -460,7 +460,7 @@ const BuySubscription = ({ isAdmin = true }) => { // Add isAdmin prop, defaultin
                   </div>
                 </div>
 
-                {/* Profile Image */}
+                
                 <div className="space-y-2">
                   <label className="block text-sm font-medium text-gray-700">
                     Profile Image *
@@ -487,7 +487,7 @@ const BuySubscription = ({ isAdmin = true }) => { // Add isAdmin prop, defaultin
                   </div>
                 </div>
 
-                {/* Submit Button */}
+                
                 <div className="pt-4 sm:pt-6">
                   <button
                     type="submit"

@@ -23,7 +23,7 @@ const Deposit = () => {
       return;
     }
 
-    // Create deposit record
+
     const depositRecord = {
       id: Date.now(),
       depositId: generateDepositId(),
@@ -34,7 +34,7 @@ const Deposit = () => {
       status: 'Completed'
     };
 
-    // Update states
+
     setCurrentBalance(prev => prev + depositAmount);
     setLastDeposit(depositAmount);
     setTotalDeposited(prev => prev + depositAmount);
@@ -69,7 +69,7 @@ const Deposit = () => {
     <div className="w-full max-w-5xl mx-auto mt-10 p-6 rounded-2xl bg-white text-gray-800 shadow-2xl">
       <h2 className="text-3xl font-bold text-center mb-10">💳 Deposit Funds</h2>
 
-      {/* Summary Boxes */}
+      
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-10">
         <div className="bg-gradient-to-r from-indigo-600 to-purple-500 text-white p-5 rounded-xl flex flex-col items-center shadow-lg">
           <FaWallet className="text-3xl mb-2" />
@@ -88,9 +88,9 @@ const Deposit = () => {
         </div>
       </div>
 
-      {/* Deposit Form */}
+      
       <form onSubmit={handleSubmit} className="space-y-6 p-6 rounded-xl border border-gray-200 bg-gray-50 mb-10">
-        {/* Payment Method */}
+        
         <div>
           <label className="block text-sm font-medium mb-1">Payment Method</label>
           <select
@@ -107,7 +107,7 @@ const Deposit = () => {
           </select>
         </div>
 
-        {/* Amount */}
+        
         <div>
           <label className="block text-sm font-medium mb-1">Deposit Amount</label>
           <input
@@ -120,7 +120,7 @@ const Deposit = () => {
           />
         </div>
 
-        {/* Transaction ID */}
+        
         <div>
           <label className="block text-sm font-medium mb-1">Transaction ID</label>
           <input
@@ -140,7 +140,7 @@ const Deposit = () => {
         </button>
       </form>
 
-      {/* Deposit History Table */}
+      
       {depositHistory.length > 0 && (
         <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
           <div className="bg-gradient-to-r from-blue-700 to-sky-500 px-6 py-4">

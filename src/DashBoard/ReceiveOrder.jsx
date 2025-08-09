@@ -23,7 +23,7 @@ const ReceiveOrder = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
 
-  // Sample incoming orders data
+
   const [orders, setOrders] = useState([
     {
       id: 'ORD-2024-101',
@@ -159,7 +159,7 @@ const ReceiveOrder = () => {
   const handleOrderAction = async (orderId, action) => {
     setIsProcessing(true);
     
-    // Simulate API call
+
     await new Promise(resolve => setTimeout(resolve, 1000));
     
     setOrders(prevOrders => 
@@ -187,7 +187,7 @@ const ReceiveOrder = () => {
   const rejectedOrders = orders.filter(order => order.status === 'Rejected').length;
   const totalRevenue = orders.filter(order => order.status === 'Accepted').reduce((sum, order) => sum + order.amount, 0);
 
-  // Mobile card component for orders
+
   const OrderCard = ({ order }) => (
     <div className="bg-white border border-gray-200 rounded-xl p-4 space-y-3 shadow-sm">
       <div className="flex items-start justify-between">
@@ -260,7 +260,7 @@ const ReceiveOrder = () => {
       <Headline className='mb-10'  headlines={["Welcome to our amazing platform!"]} ></Headline>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
-        {/* Header */}
+        
         <div className="text-center mb-6 sm:mb-8">
           <div className="inline-flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-full mb-4 sm:mb-6">
             <Mail className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
@@ -271,7 +271,7 @@ const ReceiveOrder = () => {
           </p>
         </div>
 
-        {/* Statistics Cards */}
+        
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 mb-6 sm:mb-8">
           <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg p-3 sm:p-6 border border-gray-100">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
@@ -322,10 +322,10 @@ const ReceiveOrder = () => {
           </div>
         </div>
 
-        {/* Filters and Search - Mobile Optimized */}
+        
         <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg border border-gray-100 p-4 sm:p-6 mb-6 sm:mb-8">
           <div className="space-y-4">
-            {/* Search Bar */}
+            
             <div className="relative">
               <input
                 type="text"
@@ -339,7 +339,7 @@ const ReceiveOrder = () => {
               </div>
             </div>
             
-            {/* Filter Buttons */}
+            
             <div className="flex flex-wrap gap-2">
               {['all', 'pending', 'accepted', 'rejected'].map((status) => (
                 <button
@@ -358,7 +358,7 @@ const ReceiveOrder = () => {
           </div>
         </div>
 
-        {/* Orders List */}
+        
         <div className="bg-white rounded-2xl sm:rounded-3xl shadow-xl border border-gray-100 overflow-hidden">
           <div className="bg-gradient-to-r from-blue-500 to-indigo-600 px-4 sm:px-8 py-4 sm:py-6">
             <h2 className="text-lg sm:text-2xl font-bold text-white flex items-center space-x-2">
@@ -370,14 +370,14 @@ const ReceiveOrder = () => {
             </h2>
           </div>
 
-          {/* Mobile View - Cards */}
+          
           <div className="block lg:hidden p-4 space-y-4">
             {filteredOrders.map((order) => (
               <OrderCard key={order.id} order={order} />
             ))}
           </div>
 
-          {/* Desktop View - Table */}
+          
           <div className="hidden lg:block overflow-x-auto">
             <table className="min-w-full">
               <thead className="bg-gray-50">
@@ -467,7 +467,7 @@ const ReceiveOrder = () => {
         </div>
       </div>
 
-      {/* Order Details Modal - Mobile Optimized */}
+      
       {selectedOrder && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-2xl sm:rounded-3xl shadow-2xl w-full max-w-3xl max-h-screen overflow-y-auto">
@@ -484,7 +484,7 @@ const ReceiveOrder = () => {
             </div>
 
             <div className="p-4 sm:p-8 space-y-6">
-              {/* Order Info */}
+              
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Order ID</label>
@@ -504,7 +504,7 @@ const ReceiveOrder = () => {
                 </div>
               </div>
 
-              {/* Customer Info */}
+              
               <div className="bg-gray-50 rounded-xl p-4 sm:p-6">
                 <h4 className="font-semibold text-gray-900 mb-4 text-sm sm:text-base">Customer Information</h4>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -519,7 +519,7 @@ const ReceiveOrder = () => {
                 </div>
               </div>
 
-              {/* Post Show Details */}
+              
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">Post Show Details</label>
                 <div className="bg-blue-50 rounded-xl p-4 sm:p-6">
@@ -544,7 +544,7 @@ const ReceiveOrder = () => {
                 </div>
               </div>
 
-              {/* Action Buttons */}
+              
               {selectedOrder.status === 'Pending' && (
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 pt-4">
                   <button

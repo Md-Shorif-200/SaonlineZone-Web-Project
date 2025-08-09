@@ -12,13 +12,13 @@ import {
 import Headline from '../HeadLine/Headline';
 
 const Settings = () => {
-  // State management for settings
+
   const [theme, setTheme] = useState('light');
   const [language, setLanguage] = useState('en');
   const [currency, setCurrency] = useState('USD');
   const [isSaving, setIsSaving] = useState(false);
 
-  // Available options
+
   const languages = [
     { code: 'en', name: 'English', flag: '🇺🇸' },
     { code: 'es', name: 'Español', flag: '🇪🇸' },
@@ -49,7 +49,7 @@ const Settings = () => {
     { code: 'RUB', name: 'Russian Ruble', symbol: '₽', flag: '🇷🇺' }
   ];
 
-  // Load settings from localStorage on component mount
+
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme') || 'light';
     const savedLanguage = localStorage.getItem('language') || 'en';
@@ -59,43 +59,43 @@ const Settings = () => {
     setLanguage(savedLanguage);
     setCurrency(savedCurrency);
     
-    // Apply theme to document
+
     document.documentElement.classList.toggle('dark', savedTheme === 'dark');
   }, []);
 
-  // Handle theme change
+
   const handleThemeChange = (newTheme) => {
     setTheme(newTheme);
     localStorage.setItem('theme', newTheme);
     document.documentElement.classList.toggle('dark', newTheme === 'dark');
   };
 
-  // Handle language change
+
   const handleLanguageChange = (newLanguage) => {
     setLanguage(newLanguage);
     localStorage.setItem('language', newLanguage);
   };
 
-  // Handle currency change
+
   const handleCurrencyChange = (newCurrency) => {
     setCurrency(newCurrency);
     localStorage.setItem('currency', newCurrency);
   };
 
-  // Save settings
+
   const handleSaveSettings = async () => {
     setIsSaving(true);
     
-    // Simulate API call
+
     await new Promise(resolve => setTimeout(resolve, 1000));
     
     setIsSaving(false);
     
-    // Show success message (you can implement toast notification here)
+
     alert('Settings saved successfully!');
   };
 
-  // Get current language and currency objects
+
   const currentLanguage = languages.find(lang => lang.code === language);
   const currentCurrency = currencies.find(curr => curr.code === currency);
 
@@ -108,7 +108,7 @@ const Settings = () => {
       <Headline className='mb-10'  headlines={["Welcome to our amazing platform!"]} ></Headline>
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
         
-        {/* Header */}
+        
         <div className="text-center mb-6 sm:mb-8">
           <div className={`inline-flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 rounded-full mb-4 sm:mb-6 ${
             theme === 'dark'
@@ -129,14 +129,14 @@ const Settings = () => {
           </p>
         </div>
 
-        {/* Settings Card */}
+        
         <div className={`rounded-2xl sm:rounded-3xl shadow-xl border overflow-hidden ${
           theme === 'dark'
             ? 'bg-gray-800 border-gray-700'
             : 'bg-white border-gray-100'
         }`}>
           
-          {/* Card Header */}
+          
           <div className="bg-gradient-to-r from-indigo-500 to-blue-600 px-4 sm:px-8 py-4 sm:py-6">
             <h2 className="text-xl sm:text-2xl font-bold text-white">Account Settings</h2>
             <p className="text-indigo-100 mt-1 text-sm sm:text-base">Manage your preferences and account settings</p>
@@ -144,7 +144,7 @@ const Settings = () => {
 
           <div className="p-4 sm:p-8 space-y-6 sm:space-y-8">
             
-            {/* Theme Settings */}
+            
             <div className="space-y-4">
               <div className="flex items-center space-x-3 mb-4">
                 <Palette className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600" />
@@ -214,7 +214,7 @@ const Settings = () => {
               </div>
             </div>
 
-            {/* Language Settings */}
+            
             <div className="space-y-4">
               <div className="flex items-center space-x-3 mb-4">
                 <Globe className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600" />
@@ -262,7 +262,7 @@ const Settings = () => {
               </div>
             </div>
 
-            {/* Currency Settings */}
+            
             <div className="space-y-4">
               <div className="flex items-center space-x-3 mb-4">
                 <DollarSign className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600" />
@@ -315,7 +315,7 @@ const Settings = () => {
               </div>
             </div>
 
-            {/* Save Button */}
+            
             <div className="pt-4 sm:pt-6 border-t border-gray-200 dark:border-gray-600">
               <button
                 onClick={handleSaveSettings}
@@ -338,7 +338,7 @@ const Settings = () => {
           </div>
         </div>
 
-        {/* Additional Settings Info */}
+        
         <div className={`mt-6 sm:mt-8 p-4 sm:p-6 rounded-xl sm:rounded-2xl ${
           theme === 'dark'
             ? 'bg-gray-800 border border-gray-700'
