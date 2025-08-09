@@ -26,7 +26,7 @@ import {
     TrendingUp,
     ThumbsUp  
 } from 'lucide-react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Headline from '../HeadLine/Headline';
 import SearchSection from './SearchSection';
 
