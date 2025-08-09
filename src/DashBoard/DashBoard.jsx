@@ -11,6 +11,7 @@ import {
     FiPlus,
     FiUser,
     FiLogOut,
+    FiHome,
 } from 'react-icons/fi';
 import { signOut } from 'firebase/auth';
 import { auth } from '../../firebase'; // Adjust path as needed
@@ -27,6 +28,8 @@ import History from './History';
 import Settings from './Settings';
 import Overview from './Overview';
 import DashboardHome from './DashBoardHome';
+import Profile from './Profile';
+import { useNavigate } from 'react-router-dom';
 
 const Dashboard = ({ user }) => {
     const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -35,6 +38,7 @@ const Dashboard = ({ user }) => {
     const [showUserMenu, setShowUserMenu] = useState(false);
     const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
     const [isLoggingOut, setIsLoggingOut] = useState(false);
+    const navigate = useNavigate()
 
     // Check if mobile device
     useEffect(() => {
@@ -73,6 +77,8 @@ const Dashboard = ({ user }) => {
         { name: 'History', icon: FiFileText, badge: null },
         { name: 'Settings', icon: FiSettings, badge: null },
         { name: 'Overview', icon: FiBriefcase, badge: null },
+        { name: 'Profile', icon: FiUser, badge: null },
+        { name: 'Home', icon: FiHome, badge: null },
     ];
 
     // Logout function
@@ -253,6 +259,8 @@ const Dashboard = ({ user }) => {
                         {activePage === 'History' && <History />}
                         {activePage === 'Settings' && <Settings />}
                         {activePage === 'Overview' && <Overview />}
+                        {activePage === 'Profile' && <Profile />}
+                        {activePage === 'Home' &&  navigate('/')}
                     </main>
                 </div>
             </div>

@@ -20,6 +20,7 @@ const Profile = () => {
     const [activeTab, setActiveTab] = useState('profile');
     const [showEditProfile, setShowEditProfile] = useState(false);
 
+
     // Sample user data
     const userProfile = {
         coverPhoto: 'https://images.unsplash.com/photo-1557683316-973673baf926?w=1200&h=400&fit=crop',
