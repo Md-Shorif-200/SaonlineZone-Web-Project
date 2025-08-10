@@ -86,8 +86,20 @@ const Dashboard = ({ user }) => {
     { name: "Settings", icon: FiSettings, badge: null },
     { name: "Overview", icon: FiBriefcase, badge: null },
     { name: "Profile", icon: FiUser, badge: null },
-    { name: "Home", icon: FiHome, badge: null },
   ];
+
+  // Conditionally add Home button only for admin
+  const getFilteredNavItems = () => {
+    const items = [...navItems];
+    
+    if (role === 'admin') {
+      items.push({ name: "Home", icon: FiHome, badge: null });
+    }
+    
+    return items;
+  };
+
+  const filteredNavItems = getFilteredNavItems();
 
   const handleLogout = async () => {
     setIsLoggingOut(true);
@@ -152,7 +164,7 @@ const Dashboard = ({ user }) => {
 
           <div className="flex-1 overflow-y-auto hide-scrollbar">
             <nav className="mt-6 px-4 flex flex-col gap-2">
-              {navItems.map((item) => {
+              {filteredNavItems.map((item) => {
                 const IconComponent = item.icon;
                 const isActive = activePage === item.name;
                 return (
@@ -259,14 +271,12 @@ const Dashboard = ({ user }) => {
             )}
             {activePage === "Buy Subscription" && (
               <UserRoute>
-                {" "}
-                <BuySubscription />{" "}
+                <BuySubscription />
               </UserRoute>
             )}
             {activePage === "Withdraw" && (
               <AdminRoute>
-                {" "}
-                <WithDrawForm />{" "}
+                <WithDrawForm />
               </AdminRoute>
             )}
             {activePage === "Refer & Earn" && <ReferEarn />}
@@ -280,8 +290,7 @@ const Dashboard = ({ user }) => {
             {activePage === "Profile" && <Profile />}
             {activePage === "Home" && (
               <AdminRoute>
-                {" "}
-                <Navigate to="/"></Navigate>{" "}
+                <Navigate to="/"></Navigate>
               </AdminRoute>
             )}
           </main>
