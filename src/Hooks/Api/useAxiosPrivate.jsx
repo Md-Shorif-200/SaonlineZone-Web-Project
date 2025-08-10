@@ -1,10 +1,8 @@
 import axios from 'axios';
 
 const useAxiosPrivate = () => {
-    // Environment based base URL
-    const baseURL = process.env.NODE_ENV === 'production' 
-        ? 'https://saonlinezone-server.vercel.app'
-        : 'http://localhost:5000'; // Local development এর জন্য
+   
+    const baseURL = 'https://saonlinezone-server.vercel.app';
 
     const axiosPrivate = axios.create({
         baseURL: baseURL,
@@ -12,7 +10,7 @@ const useAxiosPrivate = () => {
         headers: {
             'Content-Type': 'application/json',
         },
-        timeout: 10000 // 10 second timeout
+        timeout: 2000 // 10 second timeout
     });
 
     // Request interceptor

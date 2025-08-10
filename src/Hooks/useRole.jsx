@@ -47,6 +47,7 @@ const useRole = () => {
         setLoading(true);
         try {
             const response = await axiosPrivate.get('/api/auth/me');
+            console.log(response)
             if (response.data.success) {
                 setRole(response.data.user.role);
                 setUser(response.data.user);
