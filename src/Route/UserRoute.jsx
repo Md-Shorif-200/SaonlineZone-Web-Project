@@ -2,7 +2,7 @@ import React from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import useRole from '../Hooks/useRole';
 
-const AdminRoute = ({ children}) => {
+const UserRoute = ({ children}) => {
   const { role, loading, error } = useRole();
   const location = useLocation();
 
@@ -21,7 +21,7 @@ const AdminRoute = ({ children}) => {
   }
 
   // Role check
-  if (role === 'admin') {
+  if (role === 'user') {
     return children;
   }
 
@@ -29,4 +29,4 @@ const AdminRoute = ({ children}) => {
   return <Navigate to="/sign-in" state={{ from: location }} replace />;
 };
 
-export default AdminRoute;
+export default UserRoute;
