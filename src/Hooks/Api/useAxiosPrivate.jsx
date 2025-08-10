@@ -10,7 +10,7 @@ const useAxiosPrivate = () => {
         headers: {
             'Content-Type': 'application/json',
         },
-        timeout: 2000 // 2 second timeout
+        timeout: 5000 
     });
 
     // Request interceptor
