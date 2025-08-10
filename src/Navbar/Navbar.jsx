@@ -8,6 +8,7 @@ import { FiUser, FiSettings, FiLogOut, FiChevronDown } from "react-icons/fi";
 
 
 import nav_logo from '../../public/Picsart_24-12-18_17-11-57-456.png'
+import useAxiosPrivate from "../Hooks/Api/useAxiosPrivate";
 
 const Navbar = ({ user }) => {
     const [isActive, setIsActive] = useState(false);
@@ -15,6 +16,7 @@ const Navbar = ({ user }) => {
     const [showUserMenu, setShowUserMenu] = useState(false);
     const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
     const [isLoggingOut, setIsLoggingOut] = useState(false);
+    const axiosPrivate = useAxiosPrivate()
 
 
     useEffect(() => {
@@ -39,20 +41,30 @@ const Navbar = ({ user }) => {
     }, [showUserMenu]);
 
 
-    const handleLogout = async () => {
-        setIsLoggingOut(true);
-        try {
-            await signOut(auth);
-            console.log('User signed out successfully');
-            setShowUserMenu(false);
-            setShowLogoutConfirm(false);
-        } catch (error) {
-            console.error('Logout error:', error);
-            alert('Failed to log out. Please try again.');
-        } finally {
-            setIsLoggingOut(false);
-        }
-    };
+  const handleLogout = async () => {
+    setIsLoggingOut(true);
+    try {
+        // Backend logout (JWT cookie clear করার জন্য) - NEW
+        await axiosPrivate.post('/api/auth/logout');
+        console.log('Backend logout successful');
+        
+        // Firebase logout
+        await signOut(auth);
+        console.log('User signed out successfully');
+        
+        setShowUserMenu(false);
+        setShowLogoutConfirm(false);
+        
+        // Page reload বা redirect (optional)
+        window.location.reload();
+        
+    } catch (error) {
+        console.error('Logout error:', error);
+        alert('Failed to log out. Please try again.');
+    } finally {
+        setIsLoggingOut(false);
+    }
+};
 
 
     const getUserDisplayName = () => {

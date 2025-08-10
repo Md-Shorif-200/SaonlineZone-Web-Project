@@ -1,14 +1,14 @@
-
-import React, { createContext, useContext, useEffect, useState } from 'react';
-import { onAuthStateChanged, signOut } from 'firebase/auth';
-import { auth } from '../../firebase';
+import React, { createContext, useContext, useEffect, useState } from "react";
+import { onAuthStateChanged, signOut } from "firebase/auth";
+import { auth } from "../../firebase";
+import useAxiosPrivate from "../Hooks/Api/useAxiosPrivate";
 
 const AuthContext = createContext();
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider');
+    throw new Error("useAuth must be used within an AuthProvider");
   }
   return context;
 };
@@ -17,11 +17,14 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+ 
+
+  console.log(user);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(
       auth,
-      (currentUser) => {
+      async (currentUser) => {
         setUser(currentUser);
         setLoading(false);
         setError(null);
@@ -41,7 +44,7 @@ export const AuthProvider = ({ children }) => {
       setUser(null);
     } catch (error) {
       setError(error);
-      console.error('Logout error:', error);
+      console.error("Logout error:", error);
     }
   };
 
@@ -50,12 +53,8 @@ export const AuthProvider = ({ children }) => {
     loading,
     error,
     logout,
-    isAuthenticated: !!user
+    isAuthenticated: !!user,
   };
 
-  return (
-    <AuthContext.Provider value={value}>
-      {children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

@@ -1,33 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import {
-    FiMail,
-    FiLock,
-    FiUser,
-    FiEye,
-    FiEyeOff,
-    FiX,
-    FiChevronRight,
-    FiShield,
-    FiUsers,
-    FiTrendingUp,
-    FiPhone,
-    FiChevronDown
+    FiMail, FiLock, FiUser, FiEye, FiEyeOff, FiX, FiChevronRight,
+    FiShield, FiUsers, FiTrendingUp, FiPhone, FiChevronDown
 } from 'react-icons/fi';
 import { FaGoogle, FaFacebookF } from 'react-icons/fa';
 import { 
-    createUserWithEmailAndPassword,
-    signInWithEmailAndPassword,
-    signInWithPopup,
-    GoogleAuthProvider,
-    FacebookAuthProvider,
-    updateProfile,
-    sendPasswordResetEmail,
-    onAuthStateChanged
+    createUserWithEmailAndPassword, signInWithEmailAndPassword,
+    signInWithPopup, GoogleAuthProvider, FacebookAuthProvider,
+    updateProfile, sendPasswordResetEmail, onAuthStateChanged
 } from 'firebase/auth';
-import { auth } from '../../firebase'; // Adjust path as needed
+import { auth } from '../../firebase';
+import useAxiosPrivate from '../Hooks/Api/useAxiosPrivate';
 
-
-const countryCodes = [
+// Constants
+const COUNTRY_CODES = [
     { code: '+1', country: 'US', flag: '🇺🇸' },
     { code: '+44', country: 'UK', flag: '🇬🇧' },
     { code: '+91', country: 'IN', flag: '🇮🇳' },
@@ -46,8 +32,7 @@ const countryCodes = [
     { code: '+966', country: 'SA', flag: '🇸🇦' },
 ];
 
-
-const countries = [
+const COUNTRIES = [
     'United States', 'United Kingdom', 'India', 'China', 'Japan', 'Germany', 
     'France', 'Italy', 'Spain', 'Russia', 'Brazil', 'Mexico', 'Australia', 
     'South Korea', 'United Arab Emirates', 'Saudi Arabia', 'Canada', 'Netherlands',
@@ -57,19 +42,102 @@ const countries = [
     'Pakistan', 'Bangladesh', 'Sri Lanka', 'Afghanistan', 'Nepal', 'Myanmar'
 ];
 
+// Utility Functions
+const getFirebaseErrorMessage = (errorCode) => {
+    const errorMessages = {
+        'auth/user-not-found': 'No account found with this email address.',
+        'auth/wrong-password': 'Incorrect password. Please try again.',
+        'auth/email-already-in-use': 'An account with this email already exists.',
+        'auth/weak-password': 'Password should be at least 6 characters long.',
+        'auth/invalid-email': 'Please enter a valid email address.',
+        'auth/too-many-requests': 'Too many failed attempts. Please try again later.',
+        'auth/popup-closed-by-user': 'Sign-in popup was closed. Please try again.',
+        'auth/cancelled-popup-request': 'Only one popup request is allowed at a time.',
+        'auth/popup-blocked': 'Popup was blocked by the browser. Please allow popups and try again.',
+    };
+    return errorMessages[errorCode] || 'An error occurred. Please try again.';
+};
 
-const InputField = ({
-    icon: Icon,
-    type,
-    name,
-    placeholder,
-    value,
-    onChange,
-    error,
-    showPasswordToggle,
-    onTogglePassword,
-    showPassword
-}) => (
+const getPasswordStrength = (password) => {
+    let strength = 0;
+    if (password.length >= 8) strength++;
+    if (/[A-Z]/.test(password)) strength++;
+    if (/[a-z]/.test(password)) strength++;
+    if (/[0-9]/.test(password)) strength++;
+    if (/[^A-Za-z0-9]/.test(password)) strength++;
+    return strength;
+};
+
+// API Functions
+const saveUserToBackend = async (userData, axiosPrivate) => {
+    try {
+        const response = await axiosPrivate.post('/api/all-users', userData);
+        console.log('User saved to backend:', response.data);
+        return response.data;
+    } catch (error) {
+        console.error('Error saving user to backend:', error);
+        throw error;
+    }
+};
+
+// Backend login function - NEW
+const handleBackendLogin = async (email, password, axiosPrivate) => {
+    try {
+        const response = await axiosPrivate.post('/api/auth/login', {
+            email,
+            password
+        });
+        
+        if (response.data.success) {
+            console.log('Backend login successful:', response.data.user);
+            return response.data.user;
+        }
+    } catch (error) {
+        console.error('Backend login error:', error.response?.data?.message);
+        return null;
+    }
+};
+
+// Custom Hooks
+const useFormValidation = (formData, isSignUp) => {
+    const validateForm = () => {
+        const errors = {};
+
+        if (!formData.policyAccepted) {
+            errors.policyAccepted = 'You must accept our policies';
+        }
+
+        if (isSignUp) {
+            if (!formData.name.trim()) errors.name = 'Name is required';
+            if (!formData.username.trim()) errors.username = 'Username is required';
+            if (!formData.whatsapp.trim()) errors.whatsapp = 'WhatsApp number is required';
+            if (!formData.country.trim()) errors.country = 'Country is required';
+        }
+
+        if (!formData.email.trim()) {
+            errors.email = 'Email is required';
+        } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+            errors.email = 'Email is invalid';
+        }
+
+        if (!formData.password) {
+            errors.password = 'Password is required';
+        } else if (formData.password.length < 6) {
+            errors.password = 'Password must be at least 6 characters';
+        }
+
+        if (isSignUp && formData.password !== formData.confirmPassword) {
+            errors.confirmPassword = 'Passwords do not match';
+        }
+
+        return errors;
+    };
+
+    return { validateForm };
+};
+
+// Components (আপনার existing components গুলো একই থাকবে)
+const InputField = ({ icon: Icon, type, name, placeholder, value, onChange, error, showPasswordToggle, onTogglePassword, showPassword }) => (
     <div className="relative">
         <div className="relative">
             <Icon className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 text-lg" />
@@ -79,8 +147,9 @@ const InputField = ({
                 placeholder={placeholder}
                 value={value}
                 onChange={onChange}
-                className={`w-full pl-12 pr-12 py-4 bg-blue-50 border-2 rounded-xl text-gray-800 placeholder-gray-500 focus:outline-none focus:bg-white transition-all duration-300 ${error ? 'border-red-400 focus:border-red-500' : 'border-gray-200 hover:border-blue-300 focus:border-blue-500'
-                    }`}
+                className={`w-full pl-12 pr-12 py-4 bg-blue-50 border-2 rounded-xl text-gray-800 placeholder-gray-500 focus:outline-none focus:bg-white transition-all duration-300 ${
+                    error ? 'border-red-400 focus:border-red-500' : 'border-gray-200 hover:border-blue-300 focus:border-blue-500'
+                }`}
             />
             {showPasswordToggle && (
                 <button
@@ -101,18 +170,18 @@ const InputField = ({
     </div>
 );
 
-
 const WhatsAppField = ({ value, onChange, error, countryCode, onCountryCodeChange }) => {
     const [isOpen, setIsOpen] = useState(false);
-    const selectedCountry = countryCodes.find(c => c.code === countryCode);
+    const selectedCountry = COUNTRY_CODES.find(c => c.code === countryCode);
 
     return (
         <div className="relative">
             <div className="relative">
                 <FiPhone className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 text-lg z-10" />
                 
-                <div className={`flex bg-blue-50 border-2 rounded-xl transition-all duration-300 ${error ? 'border-red-400' : 'border-gray-200 hover:border-blue-300 focus-within:border-blue-500 focus-within:bg-white'}`}>
-                    
+                <div className={`flex bg-blue-50 border-2 rounded-xl transition-all duration-300 ${
+                    error ? 'border-red-400' : 'border-gray-200 hover:border-blue-300 focus-within:border-blue-500 focus-within:bg-white'
+                }`}>
                     <div className="relative">
                         <button
                             type="button"
@@ -127,7 +196,7 @@ const WhatsAppField = ({ value, onChange, error, countryCode, onCountryCodeChang
                         {isOpen && (
                             <div className="absolute top-full left-0 w-64 max-h-60 overflow-y-auto bg-white border-2 border-gray-200 rounded-xl shadow-xl z-30 mt-2">
                                 <div className="p-2">
-                                    {countryCodes.map((country) => (
+                                    {COUNTRY_CODES.map((country) => (
                                         <button
                                             key={country.code}
                                             type="button"
@@ -149,7 +218,6 @@ const WhatsAppField = ({ value, onChange, error, countryCode, onCountryCodeChang
                         )}
                     </div>
 
-                    
                     <input
                         type="tel"
                         name="whatsapp"
@@ -177,7 +245,6 @@ const WhatsAppField = ({ value, onChange, error, countryCode, onCountryCodeChang
     );
 };
 
-
 const CountrySelectField = ({ value, onChange, error }) => {
     const [isOpen, setIsOpen] = useState(false);
 
@@ -188,7 +255,9 @@ const CountrySelectField = ({ value, onChange, error }) => {
                 <button
                     type="button"
                     onClick={() => setIsOpen(!isOpen)}
-                    className={`w-full pl-12 pr-12 py-4 bg-blue-50 border-2 rounded-xl text-left text-gray-800 focus:outline-none focus:bg-white transition-all duration-300 flex items-center justify-between ${error ? 'border-red-400 focus:border-red-500' : 'border-gray-200 hover:border-blue-300 focus:border-blue-500'}`}
+                    className={`w-full pl-12 pr-12 py-4 bg-blue-50 border-2 rounded-xl text-left text-gray-800 focus:outline-none focus:bg-white transition-all duration-300 flex items-center justify-between ${
+                        error ? 'border-red-400 focus:border-red-500' : 'border-gray-200 hover:border-blue-300 focus:border-blue-500'
+                    }`}
                 >
                     <span className={value ? 'text-gray-800' : 'text-gray-500'}>
                         {value || 'Select your country'}
@@ -198,7 +267,7 @@ const CountrySelectField = ({ value, onChange, error }) => {
                 
                 {isOpen && (
                     <div className="absolute top-full left-0 w-full max-h-60 overflow-y-auto bg-white border-2 border-gray-200 rounded-xl shadow-lg z-20 mt-1">
-                        {countries.map((country) => (
+                        {COUNTRIES.map((country) => (
                             <button
                                 key={country}
                                 type="button"
@@ -231,7 +300,6 @@ const CountrySelectField = ({ value, onChange, error }) => {
     );
 };
 
-
 const SocialButton = ({ icon: Icon, provider, onClick, disabled }) => (
     <button
         type="button"
@@ -244,7 +312,6 @@ const SocialButton = ({ icon: Icon, provider, onClick, disabled }) => (
     </button>
 );
 
-
 const FeatureCard = ({ icon: Icon, title, description }) => (
     <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl p-6 text-white">
         <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center mb-4">
@@ -255,8 +322,7 @@ const FeatureCard = ({ icon: Icon, title, description }) => (
     </div>
 );
 
-
-const ForgotPasswordModal = ({ isOpen, onClose, onSend }) => {
+const ForgotPasswordModal = ({ isOpen, onClose }) => {
     const [email, setEmail] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [message, setMessage] = useState('');
@@ -319,159 +385,87 @@ const ForgotPasswordModal = ({ isOpen, onClose, onSend }) => {
     );
 };
 
-
-const getFirebaseErrorMessage = (errorCode) => {
-    switch (errorCode) {
-        case 'auth/user-not-found':
-            return 'No account found with this email address.';
-        case 'auth/wrong-password':
-            return 'Incorrect password. Please try again.';
-        case 'auth/email-already-in-use':
-            return 'An account with this email already exists.';
-        case 'auth/weak-password':
-            return 'Password should be at least 6 characters long.';
-        case 'auth/invalid-email':
-            return 'Please enter a valid email address.';
-        case 'auth/too-many-requests':
-            return 'Too many failed attempts. Please try again later.';
-        case 'auth/popup-closed-by-user':
-            return 'Sign-in popup was closed. Please try again.';
-        case 'auth/cancelled-popup-request':
-            return 'Only one popup request is allowed at a time.';
-        case 'auth/popup-blocked':
-            return 'Popup was blocked by the browser. Please allow popups and try again.';
-        default:
-            return 'An error occurred. Please try again.';
-    }
-};
-
 const SignUp = ({ onAuthSuccess }) => {
     const [isSignUp, setIsSignUp] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [showForgotPassword, setShowForgotPassword] = useState(false);
     const [formData, setFormData] = useState({
-        name: '',
-        username: '',
-        email: '',
-        whatsapp: '',
-        country: '',
-        password: '',
-        confirmPassword: '',
-        policyAccepted: false
+        name: '', username: '', email: '', whatsapp: '', country: '',
+        password: '', confirmPassword: '', policyAccepted: false
     });
     const [countryCode, setCountryCode] = useState('+1');
     const [errors, setErrors] = useState({});
     const [isLoading, setIsLoading] = useState(false);
     const [authError, setAuthError] = useState('');
-    const [user, setUser] = useState(null);
+    const axiosPrivate = useAxiosPrivate();
 
+    const { validateForm } = useFormValidation(formData, isSignUp);
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-            setUser(currentUser);
-            if (currentUser && onAuthSuccess) {
-                onAuthSuccess(currentUser);
+            if (currentUser && onAuthSuccess && !isLoading) {
+                console.log('Firebase auth state changed:', currentUser);
             }
         });
-
         return () => unsubscribe();
-    }, [onAuthSuccess]);
+    }, [onAuthSuccess, isLoading]);
 
-    const getPasswordStrength = (password) => {
-        let strength = 0;
-        if (password.length >= 8) strength++;
-        if (/[A-Z]/.test(password)) strength++;
-        if (/[a-z]/.test(password)) strength++;
-        if (/[0-9]/.test(password)) strength++;
-        if (/[^A-Za-z0-9]/.test(password)) strength++;
-        return strength;
-    };
-
-    const passwordStrength = getPasswordStrength(formData.password);
-    const strengthColors = ['bg-red-500', 'bg-red-400', 'bg-yellow-400', 'bg-blue-400', 'bg-green-500'];
-    const strengthLabels = ['Very Weak', 'Weak', 'Fair', 'Good', 'Strong'];
-
-    const validateForm = () => {
-        const newErrors = {};
-
-
-        if (!formData.policyAccepted) {
-            newErrors.policyAccepted = 'You must accept our policies';
-        }
-
-        if (isSignUp) {
-            if (!formData.name.trim()) newErrors.name = 'Name is required';
-            if (!formData.username.trim()) newErrors.username = 'Username is required';
-            if (!formData.whatsapp.trim()) newErrors.whatsapp = 'WhatsApp number is required';
-            if (!formData.country.trim()) newErrors.country = 'Country is required';
-        }
-
-        if (!formData.email.trim()) {
-            newErrors.email = 'Email is required';
-        } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-            newErrors.email = 'Email is invalid';
-        }
-
-        if (!formData.password) {
-            newErrors.password = 'Password is required';
-        } else if (formData.password.length < 6) {
-            newErrors.password = 'Password must be at least 6 characters';
-        }
-
-        if (isSignUp && formData.password !== formData.confirmPassword) {
-            newErrors.confirmPassword = 'Passwords do not match';
-        }
-
-        setErrors(newErrors);
-        return Object.keys(newErrors).length === 0;
-    };
-
-
+    // UPDATED: handleEmailAuth function with JWT integration
     const handleEmailAuth = async () => {
         try {
             let userCredential;
+            let backendUser = null;
 
             if (isSignUp) {
-
-                userCredential = await createUserWithEmailAndPassword(
-                    auth, 
-                    formData.email, 
-                    formData.password
-                );
-
-
+                userCredential = await createUserWithEmailAndPassword(auth, formData.email, formData.password);
+                
                 await updateProfile(userCredential.user, {
                     displayName: formData.name
                 });
 
-
-
-
-
-
-
-
-
-                console.log('User created:', {
+                // Save user data to backend
+                const userData = {
                     uid: userCredential.user.uid,
                     name: formData.name,
                     username: formData.username,
+                    email: formData.email,
                     whatsapp: countryCode + formData.whatsapp,
-                    country: formData.country
-                });
+                    country: formData.country,
+                    password: formData.password, // Backend এ password save করুন
+                    createdAt: new Date().toISOString(),
+                    provider: 'email',
+                    role: 'user'
+                };
 
+                try {
+                    await saveUserToBackend(userData, axiosPrivate);
+                    console.log('User data saved to backend successfully');
+                    
+                    // Sign up এর পর automatic backend login
+                    backendUser = await handleBackendLogin(formData.email, formData.password, axiosPrivate);
+                    
+                } catch (backendError) {
+                    console.error('Failed to save user data to backend:', backendError);
+                }
             } else {
-
-                userCredential = await signInWithEmailAndPassword(
-                    auth, 
-                    formData.email, 
-                    formData.password
-                );
+                // Firebase login
+                userCredential = await signInWithEmailAndPassword(auth, formData.email, formData.password);
+                
+                // Backend login (JWT cookie set করার জন্য)
+                backendUser = await handleBackendLogin(formData.email, formData.password, axiosPrivate);
             }
 
-            console.log('Authentication successful:', userCredential.user);
+            console.log('Authentication successful:', { 
+                firebase: userCredential.user, 
+                backend: backendUser 
+            });
             setAuthError('');
+
+            // onAuthSuccess callback এ backend user info ও পাঠান
+            if (onAuthSuccess) {
+                onAuthSuccess(userCredential.user, backendUser);
+            }
 
         } catch (error) {
             console.error('Authentication error:', error);
@@ -479,47 +473,58 @@ const SignUp = ({ onAuthSuccess }) => {
         }
     };
 
-
-    const handleGoogleAuth = async () => {
+    // UPDATED: handleSocialAuth function with JWT integration
+    const handleSocialAuth = async (provider) => {
         try {
-            const provider = new GoogleAuthProvider();
-            provider.addScope('email');
-            provider.addScope('profile');
-            
             const result = await signInWithPopup(auth, provider);
-            console.log('Google authentication successful:', result.user);
+            console.log('Social authentication successful:', result.user);
+            
+            const userData = {
+                uid: result.user.uid,
+                name: result.user.displayName || '',
+                email: result.user.email,
+                photoURL: result.user.photoURL || '',
+                password: 'social_login', // Social login এর জন্য dummy password
+                createdAt: new Date().toISOString(),
+                provider: provider.providerId,
+                role: 'user'
+            };
+
+            let backendUser = null;
+
+            try {
+                await saveUserToBackend(userData, axiosPrivate);
+                console.log('Social auth user data saved to backend successfully');
+            } catch (backendError) {
+                console.log('User might already exist, proceeding with login');
+            }
+
+            // Backend login attempt
+            try {
+                backendUser = await handleBackendLogin(result.user.email, 'social_login', axiosPrivate);
+            } catch (loginError) {
+                console.log('Backend login failed for social user, but Firebase login successful');
+            }
+
             setAuthError('');
 
-
-
-
-
-
-        } catch (error) {
-            console.error('Google authentication error:', error);
-            setAuthError(getFirebaseErrorMessage(error.code));
-        }
-    };
-
-
-    const handleFacebookAuth = async () => {
-        try {
-            const provider = new FacebookAuthProvider();
-            provider.addScope('email');
-            
-            const result = await signInWithPopup(auth, provider);
-            console.log('Facebook authentication successful:', result.user);
-            setAuthError('');
+            if (onAuthSuccess) {
+                onAuthSuccess(result.user, backendUser);
+            }
 
         } catch (error) {
-            console.error('Facebook authentication error:', error);
+            console.error('Social authentication error:', error);
             setAuthError(getFirebaseErrorMessage(error.code));
         }
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (!validateForm()) return;
+        const validationErrors = validateForm();
+        if (Object.keys(validationErrors).length > 0) {
+            setErrors(validationErrors);
+            return;
+        }
 
         setIsLoading(true);
         setAuthError('');
@@ -537,38 +542,31 @@ const SignUp = ({ onAuthSuccess }) => {
             ...prev,
             [name]: type === 'checkbox' ? checked : value
         }));
+        
         if (errors[name]) {
-            setErrors(prev => ({
-                ...prev,
-                [name]: ''
-            }));
+            setErrors(prev => ({ ...prev, [name]: '' }));
         }
-
-        if (authError) {
-            setAuthError('');
-        }
+        if (authError) setAuthError('');
     };
 
     const switchMode = () => {
         setIsSignUp(!isSignUp);
         setFormData({
-            name: '',
-            username: '',
-            email: '',
-            whatsapp: '',
-            country: '',
-            password: '',
-            confirmPassword: '',
-            policyAccepted: false
+            name: '', username: '', email: '', whatsapp: '', country: '',
+            password: '', confirmPassword: '', policyAccepted: false
         });
         setCountryCode('+1');
         setErrors({});
         setAuthError('');
     };
 
+    const passwordStrength = getPasswordStrength(formData.password);
+    const strengthColors = ['bg-red-500', 'bg-red-400', 'bg-yellow-400', 'bg-blue-400', 'bg-green-500'];
+    const strengthLabels = ['Very Weak', 'Weak', 'Fair', 'Good', 'Strong'];
+
     return (
         <div className="min-h-screen flex">
-            
+            {/* Left Panel */}
             <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-cyan-500 to-blue-500 relative overflow-hidden">
                 <div className="absolute inset-0">
                     <div className="absolute -top-40 -right-40 w-80 h-80 bg-white/10 rounded-full blur-3xl"></div>
@@ -589,7 +587,7 @@ const SignUp = ({ onAuthSuccess }) => {
                 </div>
             </div>
 
-            
+            {/* Right Panel */}
             <div className="w-full lg:w-1/2 flex items-center justify-center p-6 lg:p-12 bg-gray-50">
                 <div className="w-full max-w-md">
                     <div className="text-center mb-8">
@@ -601,7 +599,6 @@ const SignUp = ({ onAuthSuccess }) => {
                         </p>
                     </div>
 
-                    
                     {authError && (
                         <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl">
                             <p className="text-sm text-red-600 flex items-center gap-2">
@@ -616,13 +613,13 @@ const SignUp = ({ onAuthSuccess }) => {
                             <SocialButton 
                                 icon={FaGoogle} 
                                 provider="Google" 
-                                onClick={handleGoogleAuth}
+                                onClick={() => handleSocialAuth(new GoogleAuthProvider())}
                                 disabled={isLoading}
                             />
                             <SocialButton 
                                 icon={FaFacebookF} 
                                 provider="Facebook" 
-                                onClick={handleFacebookAuth}
+                                onClick={() => handleSocialAuth(new FacebookAuthProvider())}
                                 disabled={isLoading}
                             />
                         </div>
@@ -640,9 +637,9 @@ const SignUp = ({ onAuthSuccess }) => {
                     <form onSubmit={handleSubmit} className="space-y-5">
                         {isSignUp && (
                             <>
-                                <div className="grid grid-cols-2 gap-3 pb-4">
+                                <div className="grid grid-cols-2 gap-3">
                                     <InputField icon={FiUser} type="text" name="name" placeholder="Full Name" value={formData.name} onChange={handleChange} error={errors.name} />
-                                    <InputField icon={FiUser} type="text" name="username" placeholder="User Name" value={formData.username} onChange={handleChange} error={errors.username} />
+                                    <InputField icon={FiUser} type="text" name="username" placeholder="Username" value={formData.username} onChange={handleChange} error={errors.username} />
                                 </div>
 
                                 <WhatsAppField 
@@ -663,21 +660,47 @@ const SignUp = ({ onAuthSuccess }) => {
 
                         <InputField icon={FiMail} type="email" name="email" placeholder="Email address" value={formData.email} onChange={handleChange} error={errors.email} />
 
-                        <InputField icon={FiLock} type="password" name="password" placeholder="Password" value={formData.password} onChange={handleChange} error={errors.password} showPasswordToggle onTogglePassword={() => setShowPassword(!showPassword)} showPassword={showPassword} />
+                        <InputField 
+                            icon={FiLock} 
+                            type="password" 
+                            name="password" 
+                            placeholder="Password" 
+                            value={formData.password} 
+                            onChange={handleChange} 
+                            error={errors.password} 
+                            showPasswordToggle 
+                            onTogglePassword={() => setShowPassword(!showPassword)} 
+                            showPassword={showPassword} 
+                        />
 
                         {isSignUp && formData.password && (
                             <div className="space-y-2">
                                 <div className="flex gap-1">
                                     {[...Array(5)].map((_, i) => (
-                                        <div key={i} className={`h-1 flex-1 rounded-full transition-all duration-300 ${i < passwordStrength ? strengthColors[passwordStrength - 1] : 'bg-gray-200'}`} />
+                                        <div key={i} className={`h-1 flex-1 rounded-full transition-all duration-300 ${
+                                            i < passwordStrength ? strengthColors[passwordStrength - 1] : 'bg-gray-200'
+                                        }`} />
                                     ))}
                                 </div>
-                                <p className="text-xs text-gray-600">Password strength: {passwordStrength > 0 ? strengthLabels[passwordStrength - 1] : 'Enter password'}</p>
+                                <p className="text-xs text-gray-600">
+                                    Password strength: {passwordStrength > 0 ? strengthLabels[passwordStrength - 1] : 'Enter password'}
+                                </p>
                             </div>
                         )}
 
                         {isSignUp && (
-                            <InputField icon={FiLock} type="password" name="confirmPassword" placeholder="Confirm password" value={formData.confirmPassword} onChange={handleChange} error={errors.confirmPassword} showPasswordToggle onTogglePassword={() => setShowConfirmPassword(!showConfirmPassword)} showPassword={showConfirmPassword} />
+                            <InputField 
+                                icon={FiLock} 
+                                type="password" 
+                                name="confirmPassword" 
+                                placeholder="Confirm password" 
+                                value={formData.confirmPassword} 
+                                onChange={handleChange} 
+                                error={errors.confirmPassword} 
+                                showPasswordToggle 
+                                onTogglePassword={() => setShowConfirmPassword(!showConfirmPassword)} 
+                                showPassword={showConfirmPassword} 
+                            />
                         )}
 
                         {!isSignUp && (
@@ -692,7 +715,6 @@ const SignUp = ({ onAuthSuccess }) => {
                             </div>
                         )}
 
-                        
                         <div className="flex items-start gap-2">
                             <input
                                 type="checkbox"
@@ -721,7 +743,11 @@ const SignUp = ({ onAuthSuccess }) => {
                             </p>
                         )}
 
-                        <button type="submit" disabled={isLoading} className="w-full bg-gradient-to-r from-cyan-500 to-blue-500 text-white py-4 rounded-xl font-semibold hover:from-cyan-600 hover:to-blue-600 transition-all duration-300 flex items-center justify-center gap-2 group disabled:opacity-70 disabled:cursor-not-allowed">
+                        <button 
+                            type="submit" 
+                            disabled={isLoading} 
+                            className="w-full bg-gradient-to-r from-cyan-500 to-blue-500 text-white py-4 rounded-xl font-semibold hover:from-cyan-600 hover:to-blue-600 transition-all duration-300 flex items-center justify-center gap-2 group disabled:opacity-70 disabled:cursor-not-allowed"
+                        >
                             {isLoading ? (
                                 <>
                                     <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
@@ -747,7 +773,6 @@ const SignUp = ({ onAuthSuccess }) => {
                 </div>
             </div>
 
-            
             <ForgotPasswordModal 
                 isOpen={showForgotPassword}
                 onClose={() => setShowForgotPassword(false)}
