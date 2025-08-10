@@ -223,7 +223,7 @@ const DashboardHome = () => {
                                 <User className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
                             </div>
                             <div className="flex-1 min-w-0">
-                                <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 flex flex-col sm:flex-row sm:items-center sm:space-x-3">
+                                <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 flex items-center space-x-3">
                                     <span className="truncate">Welcome, {userData.name}</span>
                                     {userData.isVerified && (
                                         <svg
