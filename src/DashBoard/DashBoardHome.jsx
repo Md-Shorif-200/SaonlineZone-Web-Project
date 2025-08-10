@@ -24,11 +24,13 @@ import {
     ChevronRight,
     Bell,
     TrendingUp,
-    ThumbsUp  
+    ThumbsUp
 } from 'lucide-react';
 
 import Headline from '../HeadLine/Headline';
 import SearchSection from './SearchSection';
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
 const DashboardHome = () => {
     const [showViewAll, setShowViewAll] = useState(false);
@@ -37,14 +39,15 @@ const DashboardHome = () => {
     const [showDetailsModal, setShowDetailsModal] = useState(false);
     const [showAnnouncement, setShowAnnouncement] = useState(false);
     const [viewMode, setViewMode] = useState('grid');
-    
+    const [activeTab, setActiveTab] = useState("online");
+    const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
     const [postStats, setPostStats] = useState({
         1: { likes: 12, views: 45, isLiked: false },
         2: { likes: 8, views: 32, isLiked: false },
-        3: { likes: 23, views: 67, isLiked: false }
+        3: { likes: 23, views: 67, isLiked: false },
+        4: { likes: 15, views: 38, isLiked: false }
     });
-
 
     const userData = {
         name: 'John Don',
@@ -61,21 +64,15 @@ const DashboardHome = () => {
         { name: 'Etsy', icon: Star, url: '#', color: 'bg-purple-100 text-purple-600' }
     ];
 
-    const deals = {
-        online: [
-            { title: 'Premium Package 50% OFF', price: '$49', originalPrice: '$99' },
-            { title: 'Digital Marketing Course', price: '$29', originalPrice: '$59' }
-        ],
-        offline: [
-            { title: 'Local Business Meetup', price: 'Free', location: 'New York' },
-            { title: 'Workshop: Social Media', price: '$25', location: 'Chicago' }
-        ]
-    };
-
     const posts = [
         {
             id: 1,
-            image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=300&h=200&fit=crop',
+            type: "online",
+            images: [
+                'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=300&h=200&fit=crop',
+                'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=300&h=200&fit=crop',
+                'https://images.unsplash.com/photo-1467232004584-a241de8bcf5d?w=300&h=200&fit=crop'
+            ],
             title: 'Professional Web Development Service',
             price: 299.99,
             seller: 'TechExpert',
@@ -92,7 +89,11 @@ const DashboardHome = () => {
         },
         {
             id: 2,
-            image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=300&h=200&fit=crop',
+            type: "online",
+            images: [
+                'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=300&h=200&fit=crop',
+                'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=300&h=200&fit=crop'
+            ],
             title: 'Digital Marketing Strategy',
             price: 199.50,
             seller: 'MarketPro',
@@ -109,18 +110,42 @@ const DashboardHome = () => {
         },
         {
             id: 3,
-            image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=300&h=200&fit=crop',
-            title: 'Mobile App Development',
+            type: "offline",
+            images: [
+                'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=300&h=200&fit=crop',
+                'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=300&h=200&fit=crop'
+            ],
+            title: 'Mobile App Development Workshop',
             price: 499.99,
             seller: 'AppBuilder',
             rating: 5.0,
             postTime: '2024-01-13 9:45 AM',
-            details: 'Custom mobile app development for iOS and Android with modern UI/UX design.',
+            details: 'In-person workshop for mobile app development for iOS and Android with modern UI/UX design.',
             sellerAccount: {
                 name: 'AppBuilder',
                 rating: 4.9,
                 completedOrders: 234,
                 joinDate: 'May 2019',
+                isVerified: true
+            }
+        },
+        {
+            id: 4,
+            type: "offline",
+            images: [
+                'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=300&h=200&fit=crop'
+            ],
+            title: 'Local Business Networking Event',
+            price: 0,
+            seller: 'LocalBusinessHub',
+            rating: 4.5,
+            postTime: '2024-01-20 6:00 PM',
+            details: 'Networking event for local businesses to connect and collaborate.',
+            sellerAccount: {
+                name: 'LocalBusinessHub',
+                rating: 4.7,
+                completedOrders: 42,
+                joinDate: 'Aug 2022',
                 isVerified: true
             }
         }
@@ -135,7 +160,7 @@ const DashboardHome = () => {
     const handleShowDetailsModal = (post) => {
         setSelectedPost(post);
         setShowDetailsModal(true);
-
+        setCurrentImageIndex(0); // Reset carousel index when opening modal
         handleViewPost(post.id);
     };
 
@@ -178,17 +203,6 @@ const DashboardHome = () => {
         };
     };
 
-
-    const VerifiedBadge = () => (
-        <div className="flex items-center bg-gray-100 px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-medium mt-1 sm:mt-0 w-fit space-x-1">
-            <Star className="w-3 h-3 sm:w-4 sm:h-4" style={{ color: '#C0C0C0' }} /> 
-            <Star className="w-3 h-3 sm:w-4 sm:h-4" style={{ color: '#FFD700' }} /> 
-            <Star className="w-3 h-3 sm:w-4 sm:h-4" style={{ color: '#00BFFF' }} /> 
-            <span className="ml-1 text-gray-700">Verified</span>
-        </div>
-    );
-
-
     const SellerVerifiedBadge = () => (
         <span className="flex items-center space-x-0.5 ml-1">
             <Star className="w-3 h-3" style={{ color: '#C0C0C0' }} />
@@ -202,7 +216,6 @@ const DashboardHome = () => {
             <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 py-4 sm:py-6 lg:py-8">
                 <Headline className='mb-10' headlines={["Welcome to our amazing platform!"]} />
 
-                
                 <div className="bg-white/80 backdrop-blur-sm rounded-2xl sm:rounded-3xl shadow-xl border border-white/20 p-4 sm:p-6 lg:p-8 mb-6 sm:mb-8">
                     <div className="flex flex-col space-y-4 sm:space-y-0 sm:flex-row sm:items-center sm:justify-between">
                         <div className="flex items-center space-x-3 sm:space-x-4">
@@ -212,23 +225,65 @@ const DashboardHome = () => {
                             <div className="flex-1 min-w-0">
                                 <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 flex flex-col sm:flex-row sm:items-center sm:space-x-3">
                                     <span className="truncate">Welcome, {userData.name}</span>
-                                    {userData.isVerified && <VerifiedBadge />}
+                                    {userData.isVerified && (
+                                        <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            className="w-6 h-6 flex-shrink-0"
+                                            viewBox="0 0 24 24"
+                                            fill="#0095f6"
+                                            aria-label="Verified account"
+                                        >
+                                            <path d="M22.25 12l-1.6-2.77.3-3.18-3.09-.94L15.66 2 12 3.4 8.34 2 6.14 5.11l-3.09.94.3 3.18L2.25 12l1.1 3.06-.3 3.18 3.09.94L8.34 22l3.66-1.4 3.66 1.4 2.2-3.11 3.09-.94-.3-3.18L22.25 12z" />
+                                            <path
+                                                d="M10.4 15.6l-3-3 1.2-1.2 1.8 1.8 4.8-4.8 1.2 1.2-6 6z"
+                                                fill="#fff"
+                                            />
+                                        </svg>
+                                    )}
                                 </h1>
-                                <p className="text-sm sm:text-base text-gray-600 mt-1">Ready to grow your business today?</p>
+                                <p className="text-sm sm:text-base text-gray-600 mt-1">
+                                    Ready to grow your business today?
+                                </p>
                             </div>
                         </div>
 
                         <button 
-                            className="flex items-center justify-center space-x-2 w-full sm:w-auto bg-blue-500 hover:bg-blue-600 text-white px-4 py-3 rounded-2xl transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl"
                             onClick={() => setShowAnnouncement(true)}
-                        >
+                            className="flex items-center justify-center space-x-2 w-full sm:w-auto bg-blue-500 hover:bg-blue-600 text-white px-4 py-3 rounded-2xl transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl">
                             <Megaphone className="w-5 h-5 sm:w-6 sm:h-6 flex-shrink-0" />
-                            <span className="text-sm sm:text-base lg:text-lg font-semibold">Announcement</span>
+                            <span className="text-sm sm:text-base lg:text-lg font-semibold">
+                                Announcement
+                            </span>
                         </button>
                     </div>
                 </div>
 
-                
+                <div className="bg-white/80 backdrop-blur-sm rounded-xl sm:rounded-2xl shadow-lg p-4 sm:p-6 border border-white/20 mb-6 sm:mb-8">
+                    <div className="flex items-center space-x-3 mb-4 sm:mb-6">
+                        <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
+                            <Handshake className="w-4 h-4 text-purple-600" />
+                        </div>
+                        <h3 className="text-lg sm:text-xl font-bold text-gray-900">Our Partner Sites</h3>
+                    </div>
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
+                        {partnerSites.map((partner, index) => {
+                            const IconComponent = partner.icon;
+                            return (
+                                <a
+                                    key={index}
+                                    href={partner.url}
+                                    className="flex items-center space-x-2 sm:space-x-3 p-3 sm:p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-all duration-200 hover:shadow-md"
+                                >
+                                    <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${partner.color}`}>
+                                        <IconComponent className="w-4 h-4" />
+                                    </div>
+                                    <span className="font-medium text-gray-700 text-sm sm:text-base">{partner.name}</span>
+                                </a>
+                            );
+                        })}
+                    </div>
+                </div>
+
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 mb-6 sm:mb-8">
                     <div className="bg-white/80 backdrop-blur-sm rounded-xl sm:rounded-2xl shadow-lg p-4 sm:p-6 border border-white/20 hover:shadow-xl transition-all duration-300">
                         <div className="flex items-center justify-between">
@@ -280,92 +335,29 @@ const DashboardHome = () => {
                 </div>
                 <SearchSection></SearchSection>
 
-                
-                <div className="bg-white/80 backdrop-blur-sm rounded-xl sm:rounded-2xl shadow-lg p-4 sm:p-6 border border-white/20 mb-6 sm:mb-8">
-                    <div className="flex items-center space-x-3 mb-4 sm:mb-6">
-                        <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
-                            <Handshake className="w-4 h-4 text-purple-600" />
-                        </div>
-                        <h3 className="text-lg sm:text-xl font-bold text-gray-900">Our Partner Sites</h3>
-                    </div>
-                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
-                        {partnerSites.map((partner, index) => {
-                            const IconComponent = partner.icon;
-                            return (
-                                <a
-                                    key={index}
-                                    href={partner.url}
-                                    className="flex items-center space-x-2 sm:space-x-3 p-3 sm:p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-all duration-200 hover:shadow-md"
-                                >
-                                    <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${partner.color}`}>
-                                        <IconComponent className="w-4 h-4" />
-                                    </div>
-                                    <span className="font-medium text-gray-700 text-sm sm:text-base">{partner.name}</span>
-                                </a>
-                            );
-                        })}
+                <div className="space-y-6 mb-6">
+                    <div className="flex space-x-2">
+                        <button
+                            onClick={() => setActiveTab("online")}
+                            className={`px-4 py-2 rounded-lg font-medium transition-colors ${activeTab === "online"
+                                ? "bg-blue-600 text-white"
+                                : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                                }`}
+                        >
+                            Online
+                        </button>
+                        <button
+                            onClick={() => setActiveTab("offline")}
+                            className={`px-4 py-2 rounded-lg font-medium transition-colors ${activeTab === "offline"
+                                ? "bg-orange-600 text-white"
+                                : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                                }`}
+                        >
+                            Offline
+                        </button>
                     </div>
                 </div>
 
-                
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 mb-6 sm:mb-8">
-                    <div className="bg-white/80 backdrop-blur-sm rounded-xl sm:rounded-2xl shadow-lg p-4 sm:p-6 border border-white/20">
-                        <div className="flex items-center space-x-3 mb-4 sm:mb-6">
-                            <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
-                                <Monitor className="w-4 h-4 text-blue-600" />
-                            </div>
-                            <h3 className="text-lg sm:text-xl font-bold text-gray-900">Online Deals</h3>
-                        </div>
-                        <div className="space-y-3 sm:space-y-4">
-                            {deals.online.map((deal, index) => (
-                                <div key={index} className="flex flex-col sm:flex-row sm:justify-between sm:items-center p-3 sm:p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg space-y-2 sm:space-y-0">
-                                    <div>
-                                        <h4 className="font-semibold text-gray-900 text-sm sm:text-base">{deal.title}</h4>
-                                        <div className="flex items-center space-x-2">
-                                            <span className="text-lg font-bold text-emerald-600">{deal.price}</span>
-                                            {deal.originalPrice && (
-                                                <span className="text-xs sm:text-sm text-gray-500 line-through">{deal.originalPrice}</span>
-                                            )}
-                                        </div>
-                                    </div>
-                                    <button className="px-3 sm:px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium w-full sm:w-auto">
-                                        View Deal
-                                    </button>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-
-                    <div className="bg-white/80 backdrop-blur-sm rounded-xl sm:rounded-2xl shadow-lg p-4 sm:p-6 border border-white/20">
-                        <div className="flex items-center space-x-3 mb-4 sm:mb-6">
-                            <div className="w-8 h-8 bg-orange-100 rounded-lg flex items-center justify-center">
-                                <Building className="w-4 h-4 text-orange-600" />
-                            </div>
-                            <h3 className="text-lg sm:text-xl font-bold text-gray-900">Offline Deals</h3>
-                        </div>
-                        <div className="space-y-3 sm:space-y-4">
-                            {deals.offline.map((deal, index) => (
-                                <div key={index} className="flex flex-col sm:flex-row sm:justify-between sm:items-center p-3 sm:p-4 bg-gradient-to-r from-orange-50 to-amber-50 rounded-lg space-y-2 sm:space-y-0">
-                                    <div>
-                                        <h4 className="font-semibold text-gray-900 text-sm sm:text-base">{deal.title}</h4>
-                                        <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-3 space-y-1 sm:space-y-0">
-                                            <span className="text-lg font-bold text-emerald-600">{deal.price}</span>
-                                            <span className="text-xs sm:text-sm text-gray-500 flex items-center">
-                                                <MapPin className="w-3 h-3 mr-1" />
-                                                {deal.location}
-                                            </span>
-                                        </div>
-                                    </div>
-                                    <button className="px-3 sm:px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors text-sm font-medium w-full sm:w-auto">
-                                        View Deal
-                                    </button>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                </div>
-
-                
                 <div className="bg-white/80 backdrop-blur-sm rounded-2xl sm:rounded-3xl shadow-xl border border-white/20 overflow-hidden">
                     <div className="bg-gradient-to-r from-blue-600 to-purple-600 px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
                         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between space-y-3 sm:space-y-0">
@@ -373,7 +365,7 @@ const DashboardHome = () => {
                                 <div className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
                                     <Package className="w-4 h-4 text-white" />
                                 </div>
-                                <h3 className="text-xl sm:text-2xl font-bold text-white">Latest Posts</h3>
+                                <h3 className="text-xl sm:text-2xl font-bold text-white">Latest {activeTab === "online" ? "Online" : "Offline"} Posts</h3>
                             </div>
                             <div className="flex items-center space-x-2 w-full sm:w-auto">
                                 <div className="flex bg-white/20 rounded-lg p-1">
@@ -390,146 +382,72 @@ const DashboardHome = () => {
                                         <List className="w-4 h-4 text-white" />
                                     </button>
                                 </div>
-                                <button
-                                    onClick={() => setShowViewAll(true)}
-                                    className="bg-white/20 hover:bg-white/30 text-white px-3 sm:px-4 py-2 rounded-lg transition-colors text-sm font-medium flex items-center space-x-1"
-                                >
-                                    <span>View All</span>
-                                    <ChevronRight className="w-4 h-4" />
-                                </button>
                             </div>
                         </div>
                     </div>
 
                     <div className="p-4 sm:p-6 lg:p-8">
                         <div className={`grid gap-4 sm:gap-6 ${viewMode === 'grid' ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3' : 'grid-cols-1'}`}>
-                            {posts.slice(0, 3).map(post => (
-                                <div key={post.id} className={`bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden hover:shadow-xl transition-all duration-300 ${viewMode === 'list' ? 'flex space-x-4 p-4' : ''}`}>
-                                    <img
-                                        src={post.image}
-                                        alt={post.title}
-                                        className={`object-cover ${viewMode === 'list' ? 'w-24 h-24 rounded-lg flex-shrink-0' : 'w-full h-40 sm:h-48'}`}
-                                    />
-                                    <div className={`${viewMode === 'list' ? 'flex-1' : 'p-4 sm:p-6'}`}>
-                                        <h4 className="font-bold text-gray-900 mb-2 text-sm sm:text-base leading-tight">{post.title}</h4>
-                                        <div className="flex items-center justify-between mb-3 sm:mb-4">
-                                            <span className="text-xl sm:text-2xl font-bold text-emerald-600">${post.price}</span>
-                                            <div className="flex items-center space-x-1">
-                                                <Star className="w-3 h-3 sm:w-4 sm:h-4 text-amber-400 fill-current" />
-                                                <span className="text-xs sm:text-sm text-gray-600">{post.rating}</span>
-                                            </div>
-                                        </div>
-                                        
-                                        <div className='flex justify-between items-center my-5'>
-                                            <div className="flex items-center space-x-2">
-                                                <User className="w-3 h-3 sm:w-4 sm:h-4 text-gray-400" />
-                                                <span className="text-xs sm:text-sm text-gray-500">by {post.seller}</span>
-                                            </div>
-                                            <div className='action_btn flex gap-x-4 items-center'>
-                                                <div className='flex items-center gap-x-2'>
-                                                    <ThumbsUp  
-                                                        className={`w-5 h-5 cursor-pointer hover:scale-110 transition-all ease-in-out ${
-                                                            postStats[post.id]?.isLiked 
-                                                                ? 'text-blue-600 fill-current' 
-                                                                : 'text-gray-700'
-                                                        }`}
-                                                        onClick={() => handleLikePost(post.id)}
-                                                    />
-                                                    <p className="count text-sm font-medium text-gray-600">
-                                                        {postStats[post.id]?.likes || 0}
-                                                    </p>
-                                                </div>
-                                                <div className='flex items-center gap-x-2'>
-                                                    <Eye className='w-5 h-5 text-gray-700 cursor-pointer hover:scale-110 transition-all ease-in-out' />
-                                                    <p className="count text-sm font-medium text-gray-600">
-                                                        {postStats[post.id]?.views || 0}
-                                                    </p>
+                            {posts
+                                .filter(post => post.type === activeTab)
+                                .slice(0, 3)
+                                .map(post => (
+                                    <div key={post.id} className={`bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden hover:shadow-xl transition-all duration-300 ${viewMode === 'list' ? 'flex space-x-4 p-4' : ''}`}>
+                                        <img
+                                            src={post.images[0]}
+                                            alt={post.title}
+                                            className={`object-cover ${viewMode === 'list' ? 'w-24 h-24 rounded-lg flex-shrink-0' : 'w-full h-40 sm:h-48'}`}
+                                        />
+                                        <div className={`${viewMode === 'list' ? 'flex-1' : 'p-4 sm:p-6'}`}>
+                                            <h4 className="font-bold text-gray-900 mb-2 text-sm sm:text-base leading-tight">{post.title}</h4>
+                                            <div className="flex items-center justify-between mb-3 sm:mb-4">
+                                                <span className="text-xl sm:text-2xl font-bold text-emerald-600">${post.price}</span>
+                                                <div className="flex items-center space-x-1">
+                                                    <Star className="w-3 h-3 sm:w-4 sm:h-4 text-amber-400 fill-current" />
+                                                    <span className="text-xs sm:text-sm text-gray-600">{post.rating}</span>
                                                 </div>
                                             </div>
-                                        </div>
 
-                                        <button
-                                            onClick={() => handleShowDetailsModal(post)}
-                                            className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 sm:py-3 rounded-lg transition-colors font-medium text-sm sm:text-base"
-                                        >
-                                            View Details
-                                        </button>
+                                            <div className='flex justify-between items-center my-5'>
+                                                <div className="flex items-center space-x-2">
+                                                    <User className="w-3 h-3 sm:w-4 sm:h-4 text-gray-400" />
+                                                    <span className="text-xs sm:text-sm text-gray-500">by {post.seller}</span>
+                                                </div>
+                                                <div className='action_btn flex gap-x-4 items-center'>
+                                                    <div className='flex items-center gap-x-2'>
+                                                        <ThumbsUp
+                                                            className={`w-5 h-5 cursor-pointer hover:scale-110 transition-all ease-in-out ${postStats[post.id]?.isLiked
+                                                                ? 'text-blue-600 fill-current'
+                                                                : 'text-gray-700'
+                                                                }`}
+                                                            onClick={() => handleLikePost(post.id)}
+                                                        />
+                                                        <p className="count text-sm font-medium text-gray-600">
+                                                            {postStats[post.id]?.likes || 0}
+                                                        </p>
+                                                    </div>
+                                                    <div className='flex items-center gap-x-2'>
+                                                        <Eye className='w-5 h-5 text-gray-700 cursor-pointer hover:scale-110 transition-all ease-in-out' />
+                                                        <p className="count text-sm font-medium text-gray-600">
+                                                            {postStats[post.id]?.views || 0}
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <button
+                                                onClick={() => handleShowDetailsModal(post)}
+                                                className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 sm:py-3 rounded-lg transition-colors font-medium text-sm sm:text-base"
+                                            >
+                                                View Details
+                                            </button>
+                                        </div>
                                     </div>
-                                </div>
-                            ))}
+                                ))}
                         </div>
                     </div>
                 </div>
 
-                
-                {showViewAll && (
-                    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 z-50">
-                        <div className="bg-white rounded-2xl sm:rounded-3xl shadow-2xl max-w-6xl w-full max-h-[90vh] overflow-y-auto">
-                            <div className="bg-gradient-to-r from-blue-600 to-purple-600 px-4 sm:px-6 lg:px-8 py-4 sm:py-6 rounded-t-2xl sm:rounded-t-3xl">
-                                <div className="flex items-center justify-between">
-                                    <h3 className="text-xl sm:text-2xl font-bold text-white">All Posts</h3>
-                                    <button
-                                        onClick={() => setShowViewAll(false)}
-                                        className="text-white hover:text-gray-200 transition-colors p-1"
-                                    >
-                                        <X className="w-5 h-5 sm:w-6 sm:h-6" />
-                                    </button>
-                                </div>
-                            </div>
-
-                            <div className="p-4 sm:p-6 lg:p-8">
-                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
-                                    {posts.map(post => (
-                                        <div key={post.id} className="bg-gray-50 rounded-xl p-4 sm:p-6">
-                                            <div className="flex space-x-3 sm:space-x-4">
-                                                <img src={post.image} alt={post.title} className="w-20 h-20 sm:w-24 sm:h-24 object-cover rounded-lg flex-shrink-0" />
-                                                <div className="flex-1 min-w-0">
-                                                    <h4 className="font-bold text-gray-900 mb-1 text-sm sm:text-base leading-tight">{post.title}</h4>
-                                                    <div className="flex items-center space-x-2 text-xs sm:text-sm text-gray-500 mb-2">
-                                                        <Clock className="w-3 h-3 sm:w-4 sm:h-4" />
-                                                        <span>{post.postTime}</span>
-                                                    </div>
-                                                    <p className="text-xs sm:text-sm text-gray-600 mb-3 line-clamp-2">{post.details}</p>
-
-                                                    <div className="flex items-center space-x-2 mb-3">
-                                                        <User className="w-3 h-3 sm:w-4 sm:h-4 text-gray-400" />
-                                                        <span className="text-xs sm:text-sm font-medium">{post.sellerAccount.name}</span>
-                                                        {post.sellerAccount.isVerified && <SellerVerifiedBadge />}
-                                                        <span className="text-xs text-gray-500">
-                                                            ({post.sellerAccount.completedOrders} orders)
-                                                        </span>
-                                                    </div>
-
-                                                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-2 sm:space-y-0">
-                                                        <span className="text-lg sm:text-xl font-bold text-emerald-600">${post.price}</span>
-                                                        <div className="flex space-x-2">
-                                                            <button className="px-2 sm:px-3 py-1 bg-blue-100 text-blue-600 rounded-lg hover:bg-blue-200 transition-colors text-xs sm:text-sm font-medium">
-                                                                <MessageCircle className="w-3 h-3 sm:w-4 sm:h-4 inline mr-1" />
-                                                                Chat
-                                                            </button>
-                                                            <button
-                                                                onClick={() => {
-                                                                    setShowViewAll(false);
-                                                                    handleBuyNow(post);
-                                                                }}
-                                                                className="px-2 sm:px-3 py-1 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors text-xs sm:text-sm font-medium"
-                                                            >
-                                                                <ShoppingCart className="w-3 h-3 sm:w-4 sm:h-4 inline mr-1" />
-                                                                Buy Now
-                                                            </button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                )}
-
-                
                 {showDetailsModal && selectedPost && (
                     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 z-50">
                         <div className="bg-white rounded-2xl sm:rounded-3xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
@@ -547,37 +465,95 @@ const DashboardHome = () => {
 
                             <div className="p-4 sm:p-6 lg:p-8">
                                 <div className="mb-6">
-                                    <img 
-                                        src={selectedPost.image} 
-                                        alt={selectedPost.title}
-                                        className="w-full h-48 sm:h-64 object-cover rounded-xl mb-4"
-                                    />
-                                    <h4 className="font-bold text-gray-900 mb-2 text-lg sm:text-xl lg:text-2xl leading-tight">{selectedPost.title}</h4>
+                                 
+                                    <div className="relative w-full h-48 sm:h-64 mb-4">
+                                        <img
+                                            src={selectedPost.images[currentImageIndex]}
+                                            alt={`${selectedPost.title} - ${currentImageIndex + 1}`}
+                                            className="w-full h-full object-cover rounded-xl"
+                                        />
+                                        
+                                        {selectedPost.images.length > 1 && (
+                                            <>
+                                                <button
+                                                    onClick={() => setCurrentImageIndex(prev => 
+                                                        prev === 0 ? selectedPost.images.length - 1 : prev - 1
+                                                    )}
+                                                    className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 text-white p-2 rounded-full hover:bg-black/70"
+                                                >
+                                                    ❮
+                                                </button>
+                                                <button
+                                                    onClick={() => setCurrentImageIndex(prev => 
+                                                        prev === selectedPost.images.length - 1 ? 0 : prev + 1
+                                                    )}
+                                                    className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 text-white p-2 rounded-full hover:bg-black/70"
+                                                >
+                                                    ❯
+                                                </button>
+
+                                                <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex space-x-2">
+                                                    {selectedPost.images.map((_, idx) => (
+                                                        <button
+                                                            key={idx}
+                                                            onClick={() => setCurrentImageIndex(idx)}
+                                                            className={`w-2 h-2 rounded-full ${idx === currentImageIndex ? 'bg-white' : 'bg-gray-400'}`}
+                                                        />
+                                                    ))}
+                                                </div>
+                                            </>
+                                        )}
+                                    </div>
+
+                                    <h4 className="font-bold text-gray-900 mb-2 text-lg sm:text-xl lg:text-2xl leading-tight">
+                                        {selectedPost.title}
+                                    </h4>
+                                    
                                     <div className="flex items-center space-x-2 text-xs sm:text-sm text-gray-500 mb-2">
                                         <Clock className="w-3 h-3 sm:w-4 sm:h-4" />
                                         <span>{selectedPost.postTime}</span>
                                     </div>
+
                                     <p className="text-sm sm:text-base text-gray-600 mb-4">{selectedPost.details}</p>
 
-                                    <div className="flex items-center space-x-2 mb-4">
-                                        <User className="w-4 h-4 text-gray-400" />
-                                        <span className="text-sm font-medium">{selectedPost.sellerAccount.name}</span>
-                                        {selectedPost.sellerAccount.isVerified && <SellerVerifiedBadge />}
-                                        <span className="text-xs text-gray-500">
-                                            ({selectedPost.sellerAccount.completedOrders} orders)
-                                        </span>
+                                    <div className="flex items-center justify-between mb-4">
+                                        <div className="flex items-center space-x-2">
+                                            <User className="w-4 h-4 text-gray-400" />
+                                            <span className="text-sm font-medium">{selectedPost.sellerAccount.name}</span>
+                                            {selectedPost.sellerAccount.isVerified && (
+                                                <svg
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                    className="w-6 h-6 flex-shrink-0"
+                                                    viewBox="0 0 24 24"
+                                                    fill="#0095f6"
+                                                    aria-label="Verified account"
+                                                >
+                                                    <path d="M22.25 12l-1.6-2.77.3-3.18-3.09-.94L15.66 2 12 3.4 8.34 2 6.14 5.11l-3.09.94.3 3.18L2.25 12l1.1 3.06-.3 3.18 3.09.94L8.34 22l3.66-1.4 3.66 1.4 2.2-3.11 3.09-.94-.3-3.18L22.25 12z" />
+                                                    <path
+                                                        d="M10.4 15.6l-3-3 1.2-1.2 1.8 1.8 4.8-4.8 1.2 1.2-6 6z"
+                                                        fill="#fff"
+                                                    />
+                                                </svg>
+                                            )}
+                                            <span className="text-xs text-gray-500">
+                                                ({selectedPost.sellerAccount.completedOrders} orders)
+                                            </span>
+                                        </div>
+                                        <button className="px-2 sm:px-3 py-1 bg-blue-200 text-blue-600 rounded-lg hover:bg-blue-300 transition-colors text-xs sm:text-sm font-medium">
+                                            <MessageCircle className="w-4 h-4" />
+                                        </button>
                                     </div>
 
                                     <div className="flex items-center justify-between mb-6">
-                                        <span className="text-2xl font-bold text-emerald-600">${selectedPost.price}</span>
+                                        <span className="text-xl font-bold text-emerald-600">${selectedPost.price}</span>
                                         <div className="flex items-center space-x-4">
-                                            <div className='flex items-center gap-x-2'>
-                                                <ThumbsUp className="w-5 h-5 text-gray-600" />
-                                                <span className="text-sm font-medium">{postStats[selectedPost.id]?.likes || 0} likes</span>
+                                            <div className='flex items-center gap-x-1'>
+                                                <ThumbsUp className="w-4 h-4 text-gray-600" />
+                                                <span className="text-[0.7rem] font-medium">{postStats[selectedPost.id]?.likes || 0} likes</span>
                                             </div>
-                                            <div className='flex items-center gap-x-2'>
-                                                <Eye className="w-5 h-5 text-gray-600" />
-                                                <span className="text-sm font-medium">{postStats[selectedPost.id]?.views || 0} views</span>
+                                            <div className='flex items-center gap-x-1'>
+                                                <Eye className="w-4 h-4 text-gray-600" />
+                                                <span className="text-[0.7rem] font-medium">{postStats[selectedPost.id]?.views || 0} views</span>
                                             </div>
                                         </div>
                                     </div>
@@ -602,7 +578,6 @@ const DashboardHome = () => {
                     </div>
                 )}
 
-                
                 {showBuyModal && selectedPost && (
                     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 z-50">
                         <div className="bg-white rounded-2xl sm:rounded-3xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
@@ -619,14 +594,26 @@ const DashboardHome = () => {
                             </div>
 
                             <div className="p-4 sm:p-6 lg:p-8">
-                                <div className="mb-6">
+                                <div className="mb-4">
                                     <h4 className="text-lg sm:text-xl font-bold text-gray-900 mb-2">{selectedPost.title}</h4>
                                     <p className="text-sm sm:text-base text-gray-600">{selectedPost.details}</p>
                                 </div>
 
-                                
+                                <div className="flex space-x-2 mb-6">
+                                    <button className="flex-1 px-4 py-2 rounded-lg border border-gray-300 bg-white text-gray-700 font-medium hover:bg-gray-100 transition-colors">
+                                        Buyer
+                                    </button>
+                                    <button className="flex-1 px-4 py-2 rounded-lg border border-gray-300 bg-white text-gray-700 font-medium hover:bg-gray-100 transition-colors">
+                                        Seller
+                                    </button>
+                                    <button className="flex-1 px-4 py-2 rounded-lg border border-gray-300 bg-white text-gray-700 font-medium hover:bg-gray-100 transition-colors">
+                                        Combined
+                                    </button>
+                                </div>
+
                                 <div className="bg-gray-50 rounded-xl p-4 sm:p-6 mb-6">
                                     <h5 className="text-base sm:text-lg font-semibold text-gray-900 mb-4">Fee Breakdown</h5>
+
                                     {(() => {
                                         const fees = calculateFees(selectedPost.price);
                                         return (
@@ -687,7 +674,8 @@ const DashboardHome = () => {
                     </div>
                 )}
 
-                
+
+
                 {showAnnouncement && (
                     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 z-50">
                         <div className="bg-white rounded-2xl sm:rounded-3xl shadow-2xl max-w-sm w-full">
@@ -702,34 +690,34 @@ const DashboardHome = () => {
                             </div>
                             <div className="flex flex-col items-center justify-center p-6 space-y-5">
                                 <div className="flex space-x-8">
-                                    <a 
-                                        href="https://facebook.com" 
-                                        target="_blank" 
-                                        rel="noopener noreferrer" 
+                                    <a
+                                        href="https://facebook.com"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
                                         className="group hover:scale-110 transition-transform duration-300"
                                     >
                                         <div className="w-12 h-12 rounded-xl flex items-center justify-center  transition-colors">
-                                           <i class="fa-brands fa-facebook text-5xl text-blue-600"></i>
+                                            <i class="fa-brands fa-facebook text-5xl text-blue-600"></i>
                                         </div>
                                     </a>
-                                    <a 
-                                        href="https://t.me" 
-                                        target="_blank" 
-                                        rel="noopener noreferrer" 
+                                    <a
+                                        href="https://t.me"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
                                         className="group hover:scale-110 transition-transform duration-300"
                                     >
                                         <div className="w-12 h-12 rounded-xl flex items-center justify-center transition-colors">
-                                          <i class="fa-brands fa-whatsapp text-5xl text-green-600"></i>
+                                            <i class="fa-brands fa-whatsapp text-5xl text-green-600"></i>
                                         </div>
                                     </a>
-                                    <a 
-                                        href="https://wa.me" 
-                                        target="_blank" 
-                                        rel="noopener noreferrer" 
+                                    <a
+                                        href="https://wa.me"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
                                         className="group hover:scale-110 transition-transform duration-300"
                                     >
                                         <div className="w-12 h-12 rounded-xl flex items-center justify-center transition-colors">
-                                           <i class="fa-brands fa-telegram text-5xl text-blue-400"></i>
+                                            <i class="fa-brands fa-telegram text-5xl text-blue-400"></i>
                                         </div>
                                     </a>
                                 </div>

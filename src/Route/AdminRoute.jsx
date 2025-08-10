@@ -26,7 +26,7 @@ const AdminRoute = ({ children}) => {
   }
 
   // Not authorized → Redirect to login
-  return <Navigate to="/sign-in" state={{ from: location }} replace />;
+  // return <Navigate to="/" state={{ from: location }} replace />;
 };
 
 export default AdminRoute;

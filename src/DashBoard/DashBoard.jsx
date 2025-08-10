@@ -33,6 +33,7 @@ import { Navigate, useNavigate } from "react-router-dom";
 import useRole from "../Hooks/useRole";
 import AdminRoute from "../Route/AdminRoute";
 import UserRoute from "../Route/UserRoute";
+import { FaHome } from "react-icons/fa";
 
 const Dashboard = ({ user }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -41,7 +42,7 @@ const Dashboard = ({ user }) => {
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
-  const navigate = useNavigate();
+//   const navigate = useNavigate();
   const { role, loading, error } = useRole();
   console.log(role);
 
@@ -72,32 +73,26 @@ const Dashboard = ({ user }) => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [sidebarOpen, isMobile]);
 
-  const navItems = [
-    { name: "Dashboard", icon: FiBriefcase, badge: null },
-    { name: "Add Fund", icon: FiPlus, badge: null },
-    { name: "Buy Subscription", icon: FiCreditCard, badge: null },
-    { name: "Withdraw", icon: FiCreditCard, badge: null },
-    { name: "Refer & Earn", icon: FiUser, badge: null },
-    { name: "My Order", icon: FiClipboard, badge: null },
-    { name: "Receive Order", icon: FiMail, badge: null },
-    { name: "Post", icon: FiFileText, badge: null },
-    { name: "Inbox", icon: FiMail, badge: null },
-    { name: "History", icon: FiFileText, badge: null },
-    { name: "Settings", icon: FiSettings, badge: null },
-    { name: "Overview", icon: FiBriefcase, badge: null },
-    { name: "Profile", icon: FiUser, badge: null },
-  ];
+const allNavItems = [
+  { name: "Dashboard", icon: FiBriefcase, badge: null, roles: ["admin", "user"] },
+  { name: "Add Fund", icon: FiPlus, badge: null, roles: ["user"] },
+  { name: "Buy Subscription", icon: FiCreditCard, badge: null, roles: ["user"] },
+  { name: "Withdraw", icon: FiCreditCard, badge: null, roles: ["admin"] },
+  { name: "Refer & Earn", icon: FiUser, badge: null, roles: ["admin"] },
+  { name: "My Order", icon: FiClipboard, badge: null, roles: ["admin", "user"] },
+  { name: "Receive Order", icon: FiMail, badge: null, roles: ["admin", "user"] },
+  { name: "Post", icon: FiFileText, badge: null, roles: ["admin", "user"] },
+  { name: "Inbox", icon: FiMail, badge: null, roles: ["admin", "user"] },
+  { name: "History", icon: FiFileText, badge: null, roles: ["admin", "user"] },
+  { name: "Settings", icon: FiSettings, badge: null, roles: ["admin", "user"] },
+  { name: "Overview", icon: FiBriefcase, badge: null, roles: ["admin", "user"] },
+  { name: "Profile", icon: FiUser, badge: null, roles: ["admin", "user"] },
+  { name: "Home", icon: FaHome, badge: null, roles: ["admin", "user"] },
+];
 
-  // Conditionally add Home button only for admin
-  const getFilteredNavItems = () => {
-    const items = [...navItems];
-    
-    if (role === 'admin') {
-      items.push({ name: "Home", icon: FiHome, badge: null });
-    }
-    
-    return items;
-  };
+const getFilteredNavItems = () => {
+  return allNavItems.filter(item => item.roles.includes(role));
+};
 
   const filteredNavItems = getFilteredNavItems();
 
@@ -198,7 +193,7 @@ const Dashboard = ({ user }) => {
             <button
               onClick={() => setShowLogoutConfirm(true)}
               disabled={isLoggingOut}
-              className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-all duration-300 bg-red-500/20 hover:bg-red-500/30 text-white border border-red-400/30 hover:border-red-400/50 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-all duration-300 bg-red-500  hover:bg-red-600  text-white border border-red-400/30 hover:border-red-400/50 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
             >
               {isLoggingOut ? (
                 <>
@@ -265,19 +260,19 @@ const Dashboard = ({ user }) => {
 
             {activePage === "Dashboard" && <DashboardHome />}
             {activePage === "Add Fund" && (
-              <UserRoute>
+          
                 <AddFund />
-              </UserRoute>
+    
             )}
             {activePage === "Buy Subscription" && (
-              <UserRoute>
+      
                 <BuySubscription />
-              </UserRoute>
+           
             )}
             {activePage === "Withdraw" && (
-              <AdminRoute>
+       
                 <WithDrawForm />
-              </AdminRoute>
+           
             )}
             {activePage === "Refer & Earn" && <ReferEarn />}
             {activePage === "My Order" && <MyOrders />}
@@ -289,9 +284,9 @@ const Dashboard = ({ user }) => {
             {activePage === "Overview" && <Overview />}
             {activePage === "Profile" && <Profile />}
             {activePage === "Home" && (
-              <AdminRoute>
+             
                 <Navigate to="/"></Navigate>
-              </AdminRoute>
+            
             )}
           </main>
         </div>

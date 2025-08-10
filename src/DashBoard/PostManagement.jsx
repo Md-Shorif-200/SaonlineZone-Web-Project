@@ -22,6 +22,7 @@ import {
 import Headline from '../HeadLine/Headline';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
+import Step2Details from '../DashBoard/step2Details';
 
 
 const PostManagement = () => {
@@ -30,7 +31,7 @@ const PostManagement = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const [selectedPost, setSelectedPost] = useState(null);
 
-
+  // Sample posts data
   const [posts, setPosts] = useState([
     {
       id: 'POST-2024-001',
@@ -88,13 +89,13 @@ const PostManagement = () => {
     }
   ]);
 
-
+  // Form data for new post
   const [formData, setFormData] = useState({
-
+    // Step 1 - Targeting
     zone: '',
     country: '',
     city: '',
-
+    // Step 2 - Details
     title: '',
     category: '',
     subCategory: '',
@@ -104,8 +105,27 @@ const PostManagement = () => {
     image: null,
     description: ''
   });
+const [onlineFormData, setOnlineFormData] = useState({
+  title: '',
+  category: '',
+  subCategory: '',
+  amount: '',
+  keywords: '',
+  image: null,
+  description: ''
+});
 
+const [offlineFormData, setOfflineFormData] = useState({
+  title: '',
+  category: '',
+  subCategory: '',
+  amount: '',
+  keywords: '',
+  image: null,
+  description: ''
+});
 
+  // Sample data for dropdowns
   const zones = ['North America', 'Europe', 'Asia', 'Africa', 'South America', 'Oceania'];
   const countries = {
     'North America': ['United States', 'Canada', 'Mexico'],
@@ -159,14 +179,48 @@ const PostManagement = () => {
     );
   };
 
-  const handleInputChange = (e) => {
-    const { name, value, files } = e.target;
+  // const handleInputChange = (e) => {
+  //   const { name, value, files } = e.target;
+  //   setFormData(prev => ({
+  //     ...prev,
+  //     [name]: files ? files[0] : value
+  //   }));
+  // };
+const handleInputChange = (e) => {
+  const { name, value, files, type } = e.target;
+
+  if (type === 'file') {
+  
     setFormData(prev => ({
       ...prev,
-      [name]: files ? files[0] : value
+      [name]: files[0]
+    }));
+  } else {
+   
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  }
+};
+ const handleOnlineInputChange = (e) => {
+    console.log("handleInputChange called"); 
+      console.log(`Field: ${name}, Value: ${value}`); 
+    const { name, type, value, files } = e.target;
+    console.log(name,type,value)
+    setOnlineFormData(prev => ({
+      ...prev,
+      [name]: type === 'file' ? (files && files[0]) : value
     }));
   };
 
+    const handleOfflineInputChange = (e) => {
+    const { name, type, value, files } = e.target;
+    setOfflineFormData(prev => ({
+      ...prev,
+      [name]: type === 'file' ? (files && files[0]) : value
+    }));
+  };
   const nextStep = () => {
     if (currentStep < 3) {
       setCurrentStep(currentStep + 1);
@@ -179,41 +233,40 @@ const PostManagement = () => {
     }
   };
 
-  const handleSubmit = () => {
-
-    const newPost = {
-      ...formData,
-      id: `POST-2024-${String(posts.length + 1).padStart(3, '0')}`,
-      status: 'Draft',
-      createdAt: new Date().toLocaleString(),
-      views: 0,
-      clicks: 0
-    };
-    
-    setPosts([newPost, ...posts]);
-    
-
-    setFormData({
-      zone: '', country: '', city: '',
-      title: '', category: '', subCategory: '', type: '',
-      keywords: '', amount: '', image: null, description: ''
-    });
-    setCurrentStep(1);
-    setActiveTab('list');
+ const handleSubmit = () => {
+  const newPost = {
+    ...formData,
+    amount: Number(formData.amount) || 0,
+    id: `POST-2024-${String(posts.length + 1).padStart(3, '0')}`,
+    status: 'Draft',
+    createdAt: new Date().toLocaleString(),
+    views: 0,
+    clicks: 0
   };
 
-  const calculateAdminFee = () => {
-    const amount = parseFloat(formData.amount) || 0;
-    return (amount * adminFeePercentage / 100).toFixed(2);
-  };
+  setPosts([newPost, ...posts]);
 
-  const calculateTotal = () => {
-    const amount = parseFloat(formData.amount) || 0;
-    const adminFee = parseFloat(calculateAdminFee());
-    return (amount + adminFee).toFixed(2);
-  };
+  setFormData({
+    zone: '', country: '', city: '',
+    title: '', category: '', subCategory: '', type: '',
+    keywords: '', amount: '', image: null, description: ''
+  });
+  setCurrentStep(1);
+  setActiveTab('list');
+};
 
 
+const calculateAdminFee = () => {
+  const amount = parseFloat(formData.amount) || 0;
+  return Number((amount * adminFeePercentage / 100).toFixed(2));  
+};
+
+const calculateTotal = () => {
+  const amount = parseFloat(formData.amount) || 0;
+  const adminFee = calculateAdminFee();  
+  return Number((amount + adminFee).toFixed(2));  
+};
+  // Mobile card component for posts
   const PostCard = ({ post }) => (
     <div className="bg-white border border-gray-200 rounded-xl p-4 space-y-3 shadow-sm">
       <div className="flex items-start justify-between">
@@ -267,7 +320,7 @@ const PostManagement = () => {
     </div>
   );
 
-
+  // Step 1 - Targeting Component
   const Step1Targeting = () => (
     <div className="space-y-6">
       <div className="text-center mb-6 sm:mb-8">
@@ -329,312 +382,315 @@ const PostManagement = () => {
     </div>
   );
 
+  // Step 2 - Details Component
 
+//   const Step2Details = () => (
 
-  const Step2Details = () => (
+// <>
+//      <div className="flex justify-center mb-6 sm:mb-8">
+//           <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg p-1 border border-gray-200 w-full max-w-md">
+//             <div className="grid grid-cols-2 gap-1">
+//               <button
+//                 onClick={() => setActiveOnline('online')}
+//                 className={`px-4 py-3 rounded-lg font-medium transition-all duration-200 flex items-center justify-center space-x-2 text-sm ${
+//                   activeOnline === 'online'
+//                     ? 'bg-blue-600 text-white shadow-md'
+//                     : 'text-gray-600 hover:text-gray-900'
+//                 }`}
+//               >
+//                 <ClipboardList className="w-4 h-4" />
+//                 <span>Online</span>
+//               </button>
+//               <button
+//                 onClick={() => setActiveOnline('create')}
+//                 className={`px-4 py-3 rounded-lg font-medium transition-all duration-200 flex items-center justify-center space-x-2 text-sm ${
+//                   activeOnline === 'create'
+//                     ? 'bg-blue-600 text-white shadow-md'
+//                     : 'text-gray-600 hover:text-gray-900'
+//                 }`}
+//               >
+//                 <Plus className="w-4 h-4" />
+//                 <span>Offline</span>
+//               </button>
+//             </div>
+//           </div>
+//         </div>
+//         {activeTab === 'online' ?(
+//            <div className="space-y-6">
+//    <div className="text-center mb-6 sm:mb-8">
+//      <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">
+//        Step 2: Post Details
+//     </h3>
+//      <p className="text-sm sm:text-base text-gray-600">
+//       Add your post content and specifications
+//     </p>   </div>
+//    <div className="space-y-4 sm:space-y-6">
+//   {/* Title, Category, Sub Category, Amount in same grid */}
+//   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">    <div className="space-y-2">
+//        <label className="block text-sm font-medium text-gray-700">Title *</label>
+//        <input
+//           type="text"
+//           name="title"
+//           value={onlineFormData.title}
+//           onChange={handleOnlineInputChange}
+//           placeholder="Enter post title"
+//           className="w-full p-3 sm:p-4 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm sm:text-base"
+//           required
+//         />
+//       </div>
 
-<>
-     <div className="flex justify-center mb-6 sm:mb-8">
-          <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg p-1 border border-gray-200 w-full max-w-md">
-            <div className="grid grid-cols-2 gap-1">
-              <button
-                onClick={() => setActiveOnline('online')}
-                className={`px-4 py-3 rounded-lg font-medium transition-all duration-200 flex items-center justify-center space-x-2 text-sm ${
-                  activeOnline === 'online'
-                    ? 'bg-blue-600 text-white shadow-md'
-                    : 'text-gray-600 hover:text-gray-900'
-                }`}
-              >
-                <ClipboardList className="w-4 h-4" />
-                <span>Online</span>
-              </button>
-              <button
-                onClick={() => setActiveOnline('create')}
-                className={`px-4 py-3 rounded-lg font-medium transition-all duration-200 flex items-center justify-center space-x-2 text-sm ${
-                  activeOnline === 'create'
-                    ? 'bg-blue-600 text-white shadow-md'
-                    : 'text-gray-600 hover:text-gray-900'
-                }`}
-              >
-                <Plus className="w-4 h-4" />
-                <span>Offline</span>
-              </button>
-            </div>
-          </div>
-        </div>
-        {activeTab === 'online' ?(
-           <div className="space-y-6">
-   <div className="text-center mb-6 sm:mb-8">
-     <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">
-       Step 2: Post Details
-    </h3>
-     <p className="text-sm sm:text-base text-gray-600">
-      Add your post content and specifications
-    </p>   </div>
-   <div className="space-y-4 sm:space-y-6">
-  
-  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">    <div className="space-y-2">
-       <label className="block text-sm font-medium text-gray-700">Title *</label>
-       <input
-          type="text"
-          name="title"
-          value={formData.title}
-          onChange={handleInputChange}
-          placeholder="Enter post title"
-          className="w-full p-3 sm:p-4 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm sm:text-base"
-          required
-        />
-      </div>
+//       <div className="space-y-2">
+//         <label className="block text-sm font-medium text-gray-700">Category *</label>
+//         <select
+//           name="category"
+//           value={onlineFormData.category}
+//           onChange={handleOnlineInputChange}
+//           className="w-full p-3 sm:p-4 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm sm:text-base"
+//           required
+//         >
+//           <option value="">Select Category</option>
+//           {categories.map(category => (
+//             <option key={category} value={category}>
+//               {category}
+//             </option>
+//           ))}
+//         </select>
+//       </div>
 
-      <div className="space-y-2">
-        <label className="block text-sm font-medium text-gray-700">Category *</label>
-        <select
-          name="category"
-          value={formData.category}
-          onChange={handleInputChange}
-          className="w-full p-3 sm:p-4 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm sm:text-base"
-          required
-        >
-          <option value="">Select Category</option>
-          {categories.map(category => (
-            <option key={category} value={category}>
-              {category}
-            </option>
-          ))}
-        </select>
-      </div>
+//       <div className="space-y-2">
+//         <label className="block text-sm font-medium text-gray-700">Sub Category *</label>
+//         <select
+//           name="subCategory"
+//           value={onlineFormData.subCategory}
+//           onChange={handleOnlineInputChange}
+//           className="w-full p-3 sm:p-4 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm sm:text-base"
+//           required
+//           disabled={!onlineFormData.category}
+//         >
+//           <option value="">Select Sub Category</option>
+//           {formData.category &&
+//             subCategories[onlineFormData.category]?.map(subCat => (
+//               <option key={subCat} value={subCat}>
+//                 {subCat}
+//               </option>
+//             ))}
+//         </select>
+//       </div>
 
-      <div className="space-y-2">
-        <label className="block text-sm font-medium text-gray-700">Sub Category *</label>
-        <select
-          name="subCategory"
-          value={formData.subCategory}
-          onChange={handleInputChange}
-          className="w-full p-3 sm:p-4 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm sm:text-base"
-          required
-          disabled={!formData.category}
-        >
-          <option value="">Select Sub Category</option>
-          {formData.category &&
-            subCategories[formData.category]?.map(subCat => (
-              <option key={subCat} value={subCat}>
-                {subCat}
-              </option>
-            ))}
-        </select>
-      </div>
+//       <div className="space-y-2">
+//         <label className="block text-sm font-medium text-gray-700">Amount *</label>
+//         <div className="relative">
+//           <input
+//             type="number"
+//             step="0.01"
+//             name="amount"
+//             value={onlineFormData.amount}
+//             onChange={handleOnlineInputChange}
+//             placeholder="0.00"
+//             className="w-full p-3 sm:p-4 pl-8 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm sm:text-base"
+//             required
+//           />
+//           <div className="absolute inset-y-0 left-0 flex items-center pl-3">
+//             <DollarSign className="w-4 h-4 text-gray-500" />
+//           </div>
+//         </div>
+//       </div>
+//     </div>
 
-      <div className="space-y-2">
-        <label className="block text-sm font-medium text-gray-700">Amount *</label>
-        <div className="relative">
-          <input
-            type="number"
-            step="0.01"
-            name="amount"
-            value={formData.amount}
-            onChange={handleInputChange}
-            placeholder="0.00"
-            className="w-full p-3 sm:p-4 pl-8 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm sm:text-base"
-            required
-          />
-          <div className="absolute inset-y-0 left-0 flex items-center pl-3">
-            <DollarSign className="w-4 h-4 text-gray-500" />
-          </div>
-        </div>
-      </div>
-    </div>
+//     {/* Remaining fields */}
+//     <div className="space-y-2">
+//       <label className="block text-sm font-medium text-gray-700">Keywords</label>
+//       <input
+//         type="text"
+//         name="keywords"
+//         value={onlineFormData.keywords}
+//         onChange={handleOnlineInputChange}
+//         placeholder="Enter keywords separated by commas"
+//         className="w-full p-3 sm:p-4 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm sm:text-base"
+//       />
+//     </div>
 
-    
-    <div className="space-y-2">
-      <label className="block text-sm font-medium text-gray-700">Keywords</label>
-      <input
-        type="text"
-        name="keywords"
-        value={formData.keywords}
-        onChange={handleInputChange}
-        placeholder="Enter keywords separated by commas"
-        className="w-full p-3 sm:p-4 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm sm:text-base"
-      />
-    </div>
+//     <div className="space-y-2">
+//       <label className="block text-sm font-medium text-gray-700">Image</label>
+//       <div className="border-2 border-dashed border-gray-300 rounded-xl p-4 sm:p-6 hover:border-blue-400 transition-colors">
+//         <input
+//           type="file"
+//           accept="image/*"
+//           name="image"
+//           onChange={handleOnlineInputChange}
+//           className="hidden"
+//           id="image-upload"
+//         />
+//         <label
+//           htmlFor="image-upload"
+//           className="cursor-pointer flex flex-col items-center"
+//         >
+//           <div className="w-10 h-10 sm:w-12 sm:h-12 bg-blue-100 rounded-full flex items-center justify-center mb-2">
+//             <Image className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600" />
+//           </div>
+//           <p className="text-sm font-medium text-gray-700">
+//             {onlineFormData.image ? onlineFormData.image.name : 'Upload Image'}
+//           </p>
+//           <p className="text-xs text-gray-500">PNG, JPG up to 10MB</p>
+//         </label>
+//       </div>
+//     </div>
 
-    <div className="space-y-2">
-      <label className="block text-sm font-medium text-gray-700">Image</label>
-      <div className="border-2 border-dashed border-gray-300 rounded-xl p-4 sm:p-6 hover:border-blue-400 transition-colors">
-        <input
-          type="file"
-          accept="image/*"
-          name="image"
-          onChange={handleInputChange}
-          className="hidden"
-          id="image-upload"
-        />
-        <label
-          htmlFor="image-upload"
-          className="cursor-pointer flex flex-col items-center"
-        >
-          <div className="w-10 h-10 sm:w-12 sm:h-12 bg-blue-100 rounded-full flex items-center justify-center mb-2">
-            <Image className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600" />
-          </div>
-          <p className="text-sm font-medium text-gray-700">
-            {formData.image ? formData.image.name : 'Upload Image'}
-          </p>
-          <p className="text-xs text-gray-500">PNG, JPG up to 10MB</p>
-        </label>
-      </div>
-    </div>
+//     <div className="space-y-2">
+//       <label className="block text-sm font-medium text-gray-700">Description *</label>
+//       <textarea
+//         name="description"
+//         value={onlineFormData.description}
+//         onChange={handleOnlineInputChange}
+//         placeholder="Enter detailed description of your post"
+//         rows={4}
+//         className="w-full p-3 sm:p-4 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none text-sm sm:text-base"
+//         required
+//       />
+//     </div>
+//   </div>
+// </div>
+//         )
+//         :( 
+//           <div className="space-y-6">
+//    <div className="text-center mb-6 sm:mb-8">
+//      <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">
+//        Step 2: Post Details
+//     </h3>
+//      <p className="text-sm sm:text-base text-gray-600">
+//       Add your post content and specifications
+//     </p>   </div>
+//    <div className="space-y-4 sm:space-y-6">
+//   {/* Title, Category, Sub Category, Amount in same grid */}
+//   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">    <div className="space-y-2">
+//        <label className="block text-sm font-medium text-gray-700">Title *</label>
+//        <input
+//           type="text"
+//           name="title"
+//           value={offlineFormData.title}
+//           onChange={handleOfflineInputChange}
+//           placeholder="Enter post title"
+//           className="w-full p-3 sm:p-4 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm sm:text-base"
+//           required
+//         />
+//       </div>
 
-    <div className="space-y-2">
-      <label className="block text-sm font-medium text-gray-700">Description *</label>
-      <textarea
-        name="description"
-        value={formData.description}
-        onChange={handleInputChange}
-        placeholder="Enter detailed description of your post"
-        rows={4}
-        className="w-full p-3 sm:p-4 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none text-sm sm:text-base"
-        required
-      />
-    </div>
-  </div>
-</div>
-        ):( <div className="space-y-6">
-   <div className="text-center mb-6 sm:mb-8">
-     <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">
-       Step 2: Post Details
-    </h3>
-     <p className="text-sm sm:text-base text-gray-600">
-      Add your post content and specifications
-    </p>   </div>
-   <div className="space-y-4 sm:space-y-6">
-  
-  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">    <div className="space-y-2">
-       <label className="block text-sm font-medium text-gray-700">Title *</label>
-       <input
-          type="text"
-          name="title"
-          value={formData.title}
-          onChange={handleInputChange}
-          placeholder="Enter post title"
-          className="w-full p-3 sm:p-4 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm sm:text-base"
-          required
-        />
-      </div>
+//       <div className="space-y-2">
+//         <label className="block text-sm font-medium text-gray-700">Category *</label>
+//         <select
+//           name="category"
+//           value={offlineFormData.category}
+//           onChange={handleOfflineInputChange}
+//           className="w-full p-3 sm:p-4 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm sm:text-base"
+//           required
+//         >
+//           <option value="">Select Category</option>
+//           {categories.map(category => (
+//             <option key={category} value={category}>
+//               {category}
+//             </option>
+//           ))}
+//         </select>
+//       </div>
 
-      <div className="space-y-2">
-        <label className="block text-sm font-medium text-gray-700">Category *</label>
-        <select
-          name="category"
-          value={formData.category}
-          onChange={handleInputChange}
-          className="w-full p-3 sm:p-4 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm sm:text-base"
-          required
-        >
-          <option value="">Select Category</option>
-          {categories.map(category => (
-            <option key={category} value={category}>
-              {category}
-            </option>
-          ))}
-        </select>
-      </div>
+//       <div className="space-y-2">
+//         <label className="block text-sm font-medium text-gray-700">Sub Category *</label>
+//         <select
+//           name="subCategory"
+//           value={offlineFormData.subCategory}
+//           onChange={handleOfflineInputChange}
+//           className="w-full p-3 sm:p-4 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm sm:text-base"
+//           required
+//           disabled={!offlineFormData.category}
+//         >
+//           <option value="">Select Sub Category</option>
+//           {offlineFormData.category &&
+//             subCategories[offlineFormData.category]?.map(subCat => (
+//               <option key={subCat} value={subCat}>
+//                 {subCat}
+//               </option>
+//             ))}
+//         </select>
+//       </div>
 
-      <div className="space-y-2">
-        <label className="block text-sm font-medium text-gray-700">Sub Category *</label>
-        <select
-          name="subCategory"
-          value={formData.subCategory}
-          onChange={handleInputChange}
-          className="w-full p-3 sm:p-4 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm sm:text-base"
-          required
-          disabled={!formData.category}
-        >
-          <option value="">Select Sub Category</option>
-          {formData.category &&
-            subCategories[formData.category]?.map(subCat => (
-              <option key={subCat} value={subCat}>
-                {subCat}
-              </option>
-            ))}
-        </select>
-      </div>
+//       <div className="space-y-2">
+//         <label className="block text-sm font-medium text-gray-700">Amount *</label>
+//         <div className="relative">
+//           <input
+//             type="number"
+//             step="0.01"
+//             name="amount"
+//             value={offlineFormData.amount}
+//             onChange={handleOfflineInputChange}
+//             placeholder="0.00"
+//             className="w-full p-3 sm:p-4 pl-8 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm sm:text-base"
+//             required
+//           />
+//           <div className="absolute inset-y-0 left-0 flex items-center pl-3">
+//             <DollarSign className="w-4 h-4 text-gray-500" />
+//           </div>
+//         </div>
+//       </div>
+//     </div>
 
-      <div className="space-y-2">
-        <label className="block text-sm font-medium text-gray-700">Amount *</label>
-        <div className="relative">
-          <input
-            type="number"
-            step="0.01"
-            name="amount"
-            value={formData.amount}
-            onChange={handleInputChange}
-            placeholder="0.00"
-            className="w-full p-3 sm:p-4 pl-8 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm sm:text-base"
-            required
-          />
-          <div className="absolute inset-y-0 left-0 flex items-center pl-3">
-            <DollarSign className="w-4 h-4 text-gray-500" />
-          </div>
-        </div>
-      </div>
-    </div>
+//     {/* Remaining fields */}
+//     <div className="space-y-2">
+//       <label className="block text-sm font-medium text-gray-700">Keywords</label>
+//       <input
+//         type="text"
+//         name="keywords"
+//         value={offlineFormData.keywords}
+//         onChange={handleOfflineInputChange}
+//         placeholder="Enter keywords separated by commas"
+//         className="w-full p-3 sm:p-4 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm sm:text-base"
+//       />
+//     </div>
 
-    
-    <div className="space-y-2">
-      <label className="block text-sm font-medium text-gray-700">Keywords</label>
-      <input
-        type="text"
-        name="keywords"
-        value={formData.keywords}
-        onChange={handleInputChange}
-        placeholder="Enter keywords separated by commas"
-        className="w-full p-3 sm:p-4 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm sm:text-base"
-      />
-    </div>
+//     <div className="space-y-2">
+//       <label className="block text-sm font-medium text-gray-700">Image</label>
+//       <div className="border-2 border-dashed border-gray-300 rounded-xl p-4 sm:p-6 hover:border-blue-400 transition-colors">
+//         <input
+//           type="file"
+//           accept="image/*"
+//           name="image"
+//           onChange={handleOfflineInputChange}
+//           className="hidden"
+//           id="image-upload"
+//         />
+//         <label
+//           htmlFor="image-upload"
+//           className="cursor-pointer flex flex-col items-center"
+//         >
+//           <div className="w-10 h-10 sm:w-12 sm:h-12 bg-blue-100 rounded-full flex items-center justify-center mb-2">
+//             <Image className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600" />
+//           </div>
+//           <p className="text-sm font-medium text-gray-700">
+//             {offlineFormData.image ? offlineFormData.image.name : 'Upload Image'}
+//           </p>
+//           <p className="text-xs text-gray-500">PNG, JPG up to 10MB</p>
+//         </label>
+//       </div>
+//     </div>
 
-    <div className="space-y-2">
-      <label className="block text-sm font-medium text-gray-700">Image</label>
-      <div className="border-2 border-dashed border-gray-300 rounded-xl p-4 sm:p-6 hover:border-blue-400 transition-colors">
-        <input
-          type="file"
-          accept="image/*"
-          name="image"
-          onChange={handleInputChange}
-          className="hidden"
-          id="image-upload"
-        />
-        <label
-          htmlFor="image-upload"
-          className="cursor-pointer flex flex-col items-center"
-        >
-          <div className="w-10 h-10 sm:w-12 sm:h-12 bg-blue-100 rounded-full flex items-center justify-center mb-2">
-            <Image className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600" />
-          </div>
-          <p className="text-sm font-medium text-gray-700">
-            {formData.image ? formData.image.name : 'Upload Image'}
-          </p>
-          <p className="text-xs text-gray-500">PNG, JPG up to 10MB</p>
-        </label>
-      </div>
-    </div>
+//     <div className="space-y-2">
+//       <label className="block text-sm font-medium text-gray-700">Description *</label>
+//       <textarea
+//         name="description"
+//         value={offlineFormData.description}
+//         onChange={handleOfflineInputChange}
+//         placeholder="Enter detailed description of your post"
+//         rows={4}
+//         className="w-full p-3 sm:p-4 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none text-sm sm:text-base"
+//         required
+//       />
+//     </div>
+//   </div>
+// </div>)}
+// </>
+//   );
+<Step2Details></Step2Details>
 
-    <div className="space-y-2">
-      <label className="block text-sm font-medium text-gray-700">Description *</label>
-      <textarea
-        name="description"
-        value={formData.description}
-        onChange={handleInputChange}
-        placeholder="Enter detailed description of your post"
-        rows={4}
-        className="w-full p-3 sm:p-4 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none text-sm sm:text-base"
-        required
-      />
-    </div>
-  </div>
-</div>)}
-</>
-  );
-
-
+  // Step 3 - Review Component
   const Step3Review = () => (
     <div className="space-y-6">
       <div className="text-center mb-6 sm:mb-8">
@@ -643,7 +699,7 @@ const PostManagement = () => {
       </div>
 
       <div className="bg-gray-50 rounded-xl p-4 sm:p-6 space-y-6">
-        
+        {/* Targeting Info */}
         <div>
           <h4 className="text-base sm:text-lg font-semibold text-gray-900 mb-3 flex items-center">
             <Target className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
@@ -665,7 +721,7 @@ const PostManagement = () => {
           </div>
         </div>
 
-        
+        {/* Post Details */}
         <div>
           <h4 className="text-base sm:text-lg font-semibold text-gray-900 mb-3 flex items-center">
             <FileText className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
@@ -705,7 +761,7 @@ const PostManagement = () => {
           </div>
         </div>
 
-        
+        {/* Pricing Information */}
         <div className="border-t pt-6">
           <h4 className="text-base sm:text-lg font-semibold text-gray-900 mb-3 flex items-center">
             <DollarSign className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
@@ -735,7 +791,7 @@ const PostManagement = () => {
       <Headline className='mb-10'  headlines={["Welcome to our amazing platform!"]} ></Headline>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
-        
+        {/* Header */}
         <div className="text-center mb-6 sm:mb-8">
           <div className="inline-flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full mb-4 sm:mb-6">
             <FileText className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
@@ -746,7 +802,7 @@ const PostManagement = () => {
           </p>
         </div>
 
-        
+        {/* Tab Navigation - Mobile Optimized */}
         <div className="flex justify-center mb-6 sm:mb-8">
           <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg p-1 border border-gray-200 w-full max-w-md">
             <div className="grid grid-cols-2 gap-1">
@@ -789,14 +845,14 @@ const PostManagement = () => {
               </h2>
             </div>
 
-            
+            {/* Mobile View - Cards */}
             <div className="block lg:hidden p-4 space-y-4">
               {posts.map((post) => (
                 <PostCard key={post.id} post={post} />
               ))}
             </div>
 
-            
+            {/* Desktop View - Table */}
             <div className="hidden lg:block overflow-x-auto">
               <table className="min-w-full">
                 <thead className="bg-gray-50">
@@ -863,7 +919,7 @@ const PostManagement = () => {
         ) : (
           /* Create Post Wizard */
           <div className="bg-white rounded-2xl sm:rounded-3xl shadow-xl border border-gray-100 overflow-hidden">
-            
+            {/* Progress Bar */}
             <div className="bg-gradient-to-r from-blue-500 to-purple-600 px-4 sm:px-8 py-4 sm:py-6">
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-lg sm:text-2xl font-bold text-white">Create New Post</h2>
@@ -880,12 +936,12 @@ const PostManagement = () => {
             </div>
 
             <div className="p-4 sm:p-8">
-              
+              {/* Step Content */}
               {currentStep === 1 && <Step1Targeting />}
               {currentStep === 2 && <Step2Details />}
               {currentStep === 3 && <Step3Review />}
 
-              
+              {/* Navigation Buttons */}
               <div className="flex justify-between items-center pt-6 sm:pt-8 mt-6 sm:mt-8 border-t">
                 <button
                   onClick={prevStep}
@@ -934,7 +990,7 @@ const PostManagement = () => {
         )}
       </div>
 
-      
+      {/* Post Details Modal - Mobile Optimized */}
       {selectedPost && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-2xl sm:rounded-3xl shadow-2xl w-full max-w-2xl max-h-screen overflow-y-auto">

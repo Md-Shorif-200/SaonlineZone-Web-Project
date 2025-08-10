@@ -1,0 +1,122 @@
+[
+  {
+    "id": 1,
+    "title": "Frontend Developer",
+    "company": "Google",
+    "location": "California, USA",
+    "status": "Pending",
+    "appliedDate": "2025-08-01"
+  },
+  {
+    "id": 2,
+    "title": "Backend Engineer",
+    "company": "Meta",
+    "location": "Texas, USA",
+    "status": "Interview Scheduled",
+    "appliedDate": "2025-07-29"
+  },
+  {
+    "id": 3,
+    "title": "UI/UX Designer",
+    "company": "Adobe",
+    "location": "Remote",
+    "status": "Rejected",
+    "appliedDate": "2025-07-25"
+  },
+  {
+    "id": 4,
+    "title": "Full Stack Developer",
+    "company": "Netflix",
+    "location": "California, USA",
+    "status": "Shortlisted",
+    "appliedDate": "2025-07-22"
+  },
+  {
+    "id": 5,
+    "title": "DevOps Engineer",
+    "company": "Amazon",
+    "location": "Washington, USA",
+    "status": "Pending",
+    "appliedDate": "2025-07-20"
+  },
+  {
+    "id": 6,
+    "title": "Mobile App Developer",
+    "company": "Uber",
+    "location": "Remote",
+    "status": "Applied",
+    "appliedDate": "2025-07-18"
+  },
+  {
+    "id": 7,
+    "title": "QA Engineer",
+    "company": "Airbnb",
+    "location": "New York, USA",
+    "status": "Pending",
+    "appliedDate": "2025-07-15"
+  },
+  {
+    "id": 8,
+    "title": "Data Analyst",
+    "company": "Spotify",
+    "location": "London, UK",
+    "status": "Interview Scheduled",
+    "appliedDate": "2025-07-10"
+  },
+  {
+    "id": 9,
+    "title": "ML Engineer",
+    "company": "Tesla",
+    "location": "Texas, USA",
+    "status": "Rejected",
+    "appliedDate": "2025-07-08"
+  },
+  {
+    "id": 10,
+    "title": "Cloud Engineer",
+    "company": "IBM",
+    "location": "Canada",
+    "status": "Pending",
+    "appliedDate": "2025-07-05"
+  },
+  {
+    "id": 11,
+    "title": "Security Analyst",
+    "company": "Cisco",
+    "location": "Remote",
+    "status": "Shortlisted",
+    "appliedDate": "2025-07-01"
+  },
+  {
+    "id": 12,
+    "title": "System Administrator",
+    "company": "Oracle",
+    "location": "California, USA",
+    "status": "Pending",
+    "appliedDate": "2025-06-29"
+  },
+  {
+    "id": 13,
+    "title": "AI Researcher",
+    "company": "OpenAI",
+    "location": "Remote",
+    "status": "Applied",
+    "appliedDate": "2025-06-26"
+  },
+  {
+    "id": 14,
+    "title": "Project Manager",
+    "company": "Apple",
+    "location": "California, USA",
+    "status": "Interview Scheduled",
+    "appliedDate": "2025-06-22"
+  },
+  {
+    "id": 15,
+    "title": "Technical Writer",
+    "company": "RedHat",
+    "location": "Remote",
+    "status": "Pending",
+    "appliedDate": "2025-06-20"
+  }
+]

@@ -1,0 +1,77 @@
+[
+  {
+    "jobTitle": "Frontend Bug Fixing",
+    "progress": { "current": 35, "total": 47 },
+    "payment": "$120"
+  },
+  {
+    "jobTitle": "API Integration Task",
+    "progress": { "current": 8, "total": 145 },
+    "payment": "$500"
+  },
+  {
+    "jobTitle": "React Component Refactor",
+    "progress": { "current": 21, "total": 50 },
+    "payment": "$200"
+  },
+  {
+    "jobTitle": "Landing Page Design",
+    "progress": { "current": 1, "total": 10 },
+    "payment": "$80"
+  },
+  {
+    "jobTitle": "Admin Dashboard Setup",
+    "progress": { "current": 27, "total": 30 },
+    "payment": "$400"
+  },
+  {
+    "jobTitle": "Database Optimization",
+    "progress": { "current": 14, "total": 25 },
+    "payment": "$250"
+  },
+  {
+    "jobTitle": "JWT Auth Implementation",
+    "progress": { "current": 5, "total": 8 },
+    "payment": "$150"
+  },
+  {
+    "jobTitle": "Stripe Payment Gateway",
+    "progress": { "current": 2, "total": 5 },
+    "payment": "$300"
+  },
+  {
+    "jobTitle": "SEO Improvement",
+    "progress": { "current": 45, "total": 100 },
+    "payment": "$350"
+  },
+  {
+    "jobTitle": "Responsive Fixes",
+    "progress": { "current": 18, "total": 20 },
+    "payment": "$100"
+  },
+  {
+    "jobTitle": "Blog Post Creation",
+    "progress": { "current": 9, "total": 15 },
+    "payment": "$180"
+  },
+  {
+    "jobTitle": "Firebase Setup",
+    "progress": { "current": 3, "total": 5 },
+    "payment": "$120"
+  },
+  {
+    "jobTitle": "UX Audit Report",
+    "progress": { "current": 12, "total": 12 },
+    "payment": "$220"
+  },
+  {
+    "jobTitle": "CMS Customization",
+    "progress": { "current": 7, "total": 10 },
+    "payment": "$170"
+  },
+  {
+    "jobTitle": "Content Uploading",
+    "progress": { "current": 29, "total": 40 },
+    "payment": "$210"
+  }
+]
