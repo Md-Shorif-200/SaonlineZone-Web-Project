@@ -3,7 +3,7 @@ import React from 'react';
 
 const useAxiosPublic = () => {
     const axiosPublic = axios.create({
-        baseURL : 'http://localhost:5000'
+        baseURL : 'https://saonlinezone-server.vercel.app'
     })
     return  axiosPublic;
 };

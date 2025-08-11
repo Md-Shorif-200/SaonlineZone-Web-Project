@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const useAxiosPrivate = () => {
    
-    // const baseURL = 'http://localhost:5000';
+    // const baseURL = 'https://saonlinezone-server.vercel.app';
 
     // const axiosPrivate = axios.create({
     //     baseURL: baseURL,
@@ -14,7 +14,7 @@ const useAxiosPrivate = () => {
     // });
 
       const axiosPrivate = axios.create({
-        baseURL : 'http://localhost:5000',
+        baseURL : 'https://saonlinezone-server.vercel.app',
         withCredentials: true,
     })
 
