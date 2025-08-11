@@ -1,66 +1,23 @@
-import { useState, useEffect } from 'react';
-import useAxiosPrivate from './Api/useAxiosPrivate';
+import { useQuery } from '@tanstack/react-query';
+// import useAxiosPrivate from './Api/useAxiosPrivate';
+
+import useAxiosPublic from './Api/useAxiosPublic';
+import useAuth from './useAuth';
 
 const useRole = () => {
-    const [role, setRole] = useState(null);
-    const [user, setUser] = useState(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-    
-    const axiosPrivate = useAxiosPrivate();
+  const { user } = useAuth();
+  const axiosPublic = useAxiosPublic();
 
-    useEffect(() => {
-        const fetchUserRole = async () => {
-            try {
-                setLoading(true);
-                setError(null);
-                
-                console.log('Fetching user role...');
-                
-                const response = await axiosPrivate.get('/api/auth/me');
-                
-                console.log('User role response:', response.data);
-                
-                if (response.data.success) {
-                    setRole(response.data.user.role);
-                    setUser(response.data.user);
-                } else {
-                    setError('Failed to fetch user role');
-                    setRole(null);
-                    setUser(null);
-                }
-            } catch (err) {
-                console.error('Error fetching user role:', err);
-                setError(err.response?.data?.message || 'Failed to fetch role');
-                setRole(null);
-                setUser(null);
-            } finally {
-                setLoading(false);
-            }
-        };
+  const { data: role = null, isLoading, refetch } = useQuery({
+    queryKey: ['userRole', user?.email],
+    // enabled: !!user?.email,
+    queryFn: async () => {
+      const res = await axiosPublic.get(`/api/user/${user.email}`);
+      return res.data?.role;
+    },
+  });
 
-        fetchUserRole();
-    }, []);
-
-    // Manual refresh function
-    const refreshRole = async () => {
-        setLoading(true);
-        try {
-            const response = await axiosPrivate.get('/api/auth/me');
-            console.log(response)
-            if (response.data.success) {
-                setRole(response.data.user.role);
-                setUser(response.data.user);
-                setError(null);
-            }
-        } catch (err) {
-            setError(err.response?.data?.message || 'Failed to refresh role');
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    return { role, user, loading, error, refreshRole };
+  return [role, isLoading, refetch];
 };
 
 export default useRole;

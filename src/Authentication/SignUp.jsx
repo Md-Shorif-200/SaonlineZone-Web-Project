@@ -1,18 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import { useForm } from 'react-hook-form';
 import {
-    FiMail, FiLock, FiUser, FiEye, FiEyeOff, FiX, FiChevronRight,
+    FiMail, FiLock, FiUser, FiEye, FiEyeOff, FiX,
     FiShield, FiUsers, FiTrendingUp, FiPhone, FiChevronDown
 } from 'react-icons/fi';
 import { FaGoogle, FaFacebookF } from 'react-icons/fa';
-import { 
-    createUserWithEmailAndPassword, signInWithEmailAndPassword,
-    signInWithPopup, GoogleAuthProvider, FacebookAuthProvider,
-    updateProfile, sendPasswordResetEmail, onAuthStateChanged
-} from 'firebase/auth';
-import { auth } from '../../firebase';
+import useAuth from '../Hooks/useAuth';
 import useAxiosPrivate from '../Hooks/Api/useAxiosPrivate';
+import { Link, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
-// Constants
 const COUNTRY_CODES = [
     { code: '+1', country: 'US', flag: '🇺🇸' },
     { code: '+44', country: 'UK', flag: '🇬🇧' },
@@ -42,527 +39,197 @@ const COUNTRIES = [
     'Pakistan', 'Bangladesh', 'Sri Lanka', 'Afghanistan', 'Nepal', 'Myanmar'
 ];
 
-// Utility Functions
-const getFirebaseErrorMessage = (errorCode) => {
-    const errorMessages = {
-        'auth/user-not-found': 'No account found with this email address.',
-        'auth/wrong-password': 'Incorrect password. Please try again.',
-        'auth/email-already-in-use': 'An account with this email already exists.',
-        'auth/weak-password': 'Password should be at least 6 characters long.',
-        'auth/invalid-email': 'Please enter a valid email address.',
-        'auth/too-many-requests': 'Too many failed attempts. Please try again later.',
-        'auth/popup-closed-by-user': 'Sign-in popup was closed. Please try again.',
-        'auth/cancelled-popup-request': 'Only one popup request is allowed at a time.',
-        'auth/popup-blocked': 'Popup was blocked by the browser. Please allow popups and try again.',
-    };
-    return errorMessages[errorCode] || 'An error occurred. Please try again.';
-};
-
-const getPasswordStrength = (password) => {
-    let strength = 0;
-    if (password.length >= 8) strength++;
-    if (/[A-Z]/.test(password)) strength++;
-    if (/[a-z]/.test(password)) strength++;
-    if (/[0-9]/.test(password)) strength++;
-    if (/[^A-Za-z0-9]/.test(password)) strength++;
-    return strength;
-};
-
-// API Functions
-const saveUserToBackend = async (userData, axiosPrivate) => {
-    try {
-        const response = await axiosPrivate.post('/api/all-users', userData);
-        console.log('User saved to backend:', response.data);
-        return response.data;
-    } catch (error) {
-        console.error('Error saving user to backend:', error);
-        throw error;
-    }
-};
-
-// Backend login function - NEW
-const handleBackendLogin = async (email, password, axiosPrivate) => {
-    try {
-        const response = await axiosPrivate.post('/api/auth/login', {
-            email,
-            password
-        });
-        
-        if (response.data.success) {
-            console.log('Backend login successful:', response.data.user);
-            return response.data.user;
-        }
-    } catch (error) {
-        console.error('Backend login error:', error.response?.data?.message);
-        return null;
-    }
-};
-
-// Custom Hooks
-const useFormValidation = (formData, isSignUp) => {
-    const validateForm = () => {
-        const errors = {};
-
-        if (!formData.policyAccepted) {
-            errors.policyAccepted = 'You must accept our policies';
-        }
-
-        if (isSignUp) {
-            if (!formData.name.trim()) errors.name = 'Name is required';
-            if (!formData.username.trim()) errors.username = 'Username is required';
-            if (!formData.whatsapp.trim()) errors.whatsapp = 'WhatsApp number is required';
-            if (!formData.country.trim()) errors.country = 'Country is required';
-        }
-
-        if (!formData.email.trim()) {
-            errors.email = 'Email is required';
-        } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-            errors.email = 'Email is invalid';
-        }
-
-        if (!formData.password) {
-            errors.password = 'Password is required';
-        } else if (formData.password.length < 6) {
-            errors.password = 'Password must be at least 6 characters';
-        }
-
-        if (isSignUp && formData.password !== formData.confirmPassword) {
-            errors.confirmPassword = 'Passwords do not match';
-        }
-
-        return errors;
-    };
-
-    return { validateForm };
-};
-
-// Components (আপনার existing components গুলো একই থাকবে)
-const InputField = ({ icon: Icon, type, name, placeholder, value, onChange, error, showPasswordToggle, onTogglePassword, showPassword }) => (
-    <div className="relative">
-        <div className="relative">
-            <Icon className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 text-lg" />
-            <input
-                type={showPasswordToggle ? (showPassword ? 'text' : 'password') : type}
-                name={name}
-                placeholder={placeholder}
-                value={value}
-                onChange={onChange}
-                className={`w-full pl-12 pr-12 py-4 bg-blue-50 border-2 rounded-xl text-gray-800 placeholder-gray-500 focus:outline-none focus:bg-white transition-all duration-300 ${
-                    error ? 'border-red-400 focus:border-red-500' : 'border-gray-200 hover:border-blue-300 focus:border-blue-500'
-                }`}
-            />
-            {showPasswordToggle && (
-                <button
-                    type="button"
-                    onClick={onTogglePassword}
-                    className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
-                >
-                    {showPassword ? <FiEyeOff /> : <FiEye />}
-                </button>
-            )}
-        </div>
-        {error && (
-            <p className="mt-2 text-sm text-red-500 flex items-center gap-1">
-                <FiX className="text-xs" />
-                {error}
-            </p>
-        )}
-    </div>
-);
-
-const WhatsAppField = ({ value, onChange, error, countryCode, onCountryCodeChange }) => {
-    const [isOpen, setIsOpen] = useState(false);
-    const selectedCountry = COUNTRY_CODES.find(c => c.code === countryCode);
-
-    return (
-        <div className="relative">
-            <div className="relative">
-                <FiPhone className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 text-lg z-10" />
-                
-                <div className={`flex bg-blue-50 border-2 rounded-xl transition-all duration-300 ${
-                    error ? 'border-red-400' : 'border-gray-200 hover:border-blue-300 focus-within:border-blue-500 focus-within:bg-white'
-                }`}>
-                    <div className="relative">
-                        <button
-                            type="button"
-                            onClick={() => setIsOpen(!isOpen)}
-                            className="pl-12 pr-3 py-4 text-gray-800 focus:outline-none transition-all duration-300 flex items-center gap-2 min-w-[120px] border-r border-gray-300 hover:bg-blue-100 rounded-l-xl"
-                        >
-                            <span className="text-lg">{selectedCountry?.flag || '🌍'}</span>
-                            <span className="text-sm font-medium text-gray-700">{countryCode}</span>
-                            <FiChevronDown className={`text-xs text-gray-500 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
-                        </button>
-                        
-                        {isOpen && (
-                            <div className="absolute top-full left-0 w-64 max-h-60 overflow-y-auto bg-white border-2 border-gray-200 rounded-xl shadow-xl z-30 mt-2">
-                                <div className="p-2">
-                                    {COUNTRY_CODES.map((country) => (
-                                        <button
-                                            key={country.code}
-                                            type="button"
-                                            onClick={() => {
-                                                onCountryCodeChange(country.code);
-                                                setIsOpen(false);
-                                            }}
-                                            className="w-full flex items-center gap-3 px-3 py-2.5 text-left hover:bg-blue-50 transition-colors rounded-lg group"
-                                        >
-                                            <span className="text-lg">{country.flag}</span>
-                                            <div className="flex flex-col">
-                                                <span className="text-sm font-medium text-gray-800 group-hover:text-blue-600">{country.code}</span>
-                                                <span className="text-xs text-gray-500">{country.country}</span>
-                                            </div>
-                                        </button>
-                                    ))}
-                                </div>
-                            </div>
-                        )}
-                    </div>
-
-                    <input
-                        type="tel"
-                        name="whatsapp"
-                        placeholder="Enter phone number"
-                        value={value}
-                        onChange={onChange}
-                        className="flex-1 pl-4 pr-4 py-4 bg-transparent text-gray-800 placeholder-gray-500 focus:outline-none rounded-r-xl"
-                    />
-                </div>
-            </div>
-            {error && (
-                <p className="mt-2 text-sm text-red-500 flex items-center gap-1">
-                    <FiX className="text-xs" />
-                    {error}
-                </p>
-            )}
-            
-            {isOpen && (
-                <div 
-                    className="fixed inset-0 z-20" 
-                    onClick={() => setIsOpen(false)}
-                />
-            )}
-        </div>
-    );
-};
-
-const CountrySelectField = ({ value, onChange, error }) => {
-    const [isOpen, setIsOpen] = useState(false);
-
-    return (
-        <div className="relative">
-            <div className="relative">
-                <FiUsers className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 text-lg" />
-                <button
-                    type="button"
-                    onClick={() => setIsOpen(!isOpen)}
-                    className={`w-full pl-12 pr-12 py-4 bg-blue-50 border-2 rounded-xl text-left text-gray-800 focus:outline-none focus:bg-white transition-all duration-300 flex items-center justify-between ${
-                        error ? 'border-red-400 focus:border-red-500' : 'border-gray-200 hover:border-blue-300 focus:border-blue-500'
-                    }`}
-                >
-                    <span className={value ? 'text-gray-800' : 'text-gray-500'}>
-                        {value || 'Select your country'}
-                    </span>
-                    <FiChevronDown className={`text-gray-400 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
-                </button>
-                
-                {isOpen && (
-                    <div className="absolute top-full left-0 w-full max-h-60 overflow-y-auto bg-white border-2 border-gray-200 rounded-xl shadow-lg z-20 mt-1">
-                        {COUNTRIES.map((country) => (
-                            <button
-                                key={country}
-                                type="button"
-                                onClick={() => {
-                                    onChange({ target: { name: 'country', value: country } });
-                                    setIsOpen(false);
-                                }}
-                                className="w-full text-left px-4 py-3 hover:bg-blue-50 transition-colors border-b border-gray-100 last:border-b-0"
-                            >
-                                {country}
-                            </button>
-                        ))}
-                    </div>
-                )}
-            </div>
-            {error && (
-                <p className="mt-2 text-sm text-red-500 flex items-center gap-1">
-                    <FiX className="text-xs" />
-                    {error}
-                </p>
-            )}
-            
-            {isOpen && (
-                <div 
-                    className="fixed inset-0 z-10" 
-                    onClick={() => setIsOpen(false)}
-                />
-            )}
-        </div>
-    );
-};
-
-const SocialButton = ({ icon: Icon, provider, onClick, disabled }) => (
-    <button
-        type="button"
-        onClick={onClick}
-        disabled={disabled}
-        className="flex-1 flex items-center justify-center gap-3 py-3 px-4 bg-white border-2 border-gray-200 rounded-xl text-gray-700 hover:bg-blue-50 hover:border-blue-300 transition-all duration-300 group disabled:opacity-50 disabled:cursor-not-allowed"
-    >
-        <Icon className="text-lg group-hover:scale-110 transition-transform" />
-        <span className="text-sm font-medium">{provider}</span>
-    </button>
-);
-
-const FeatureCard = ({ icon: Icon, title, description }) => (
-    <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl p-6 text-white">
-        <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center mb-4">
-            <Icon className="text-xl" />
-        </div>
-        <h3 className="text-lg font-semibold mb-2">{title}</h3>
-        <p className="text-blue-100 text-sm">{description}</p>
-    </div>
-);
-
-const ForgotPasswordModal = ({ isOpen, onClose }) => {
-    const [email, setEmail] = useState('');
-    const [isLoading, setIsLoading] = useState(false);
-    const [message, setMessage] = useState('');
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        if (!email) return;
-
-        setIsLoading(true);
-        try {
-            await sendPasswordResetEmail(auth, email);
-            setMessage('Password reset email sent! Check your inbox.');
-            setTimeout(() => {
-                onClose();
-                setEmail('');
-                setMessage('');
-            }, 3000);
-        } catch (error) {
-            setMessage(getFirebaseErrorMessage(error.code));
-        }
-        setIsLoading(false);
-    };
-
-    if (!isOpen) return null;
-
-    return (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-            <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6">
-                <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-xl font-bold text-gray-900">Reset Password</h3>
-                    <button onClick={onClose} className="text-gray-400 hover:text-gray-600">
-                        <FiX className="w-5 h-5" />
-                    </button>
-                </div>
-                <p className="text-gray-600 mb-4">Enter your email address and we'll send you a link to reset your password.</p>
-                <form onSubmit={handleSubmit}>
-                    <input
-                        type="email"
-                        placeholder="Enter your email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-blue-500 mb-4"
-                        required
-                    />
-                    {message && (
-                        <p className={`text-sm mb-4 ${message.includes('sent') ? 'text-green-600' : 'text-red-600'}`}>
-                            {message}
-                        </p>
-                    )}
-                    <button
-                        type="submit"
-                        disabled={isLoading}
-                        className="w-full bg-blue-600 text-white py-3 rounded-xl font-medium hover:bg-blue-700 transition-colors disabled:opacity-50"
-                    >
-                        {isLoading ? 'Sending...' : 'Send Reset Link'}
-                    </button>
-                </form>
-            </div>
-        </div>
-    );
-};
-
 const SignUp = ({ onAuthSuccess }) => {
-    const [isSignUp, setIsSignUp] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-    const [showForgotPassword, setShowForgotPassword] = useState(false);
-    const [formData, setFormData] = useState({
-        name: '', username: '', email: '', whatsapp: '', country: '',
-        password: '', confirmPassword: '', policyAccepted: false
-    });
     const [countryCode, setCountryCode] = useState('+1');
-    const [errors, setErrors] = useState({});
+    const [isCountryCodeOpen, setIsCountryCodeOpen] = useState(false);
+    const [isCountryOpen, setIsCountryOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [authError, setAuthError] = useState('');
+
+    const { creatUser, updateUserProfile } = useAuth();
     const axiosPrivate = useAxiosPrivate();
+    const navigate = useNavigate()
 
-    const { validateForm } = useFormValidation(formData, isSignUp);
+    const {
+        register,
+        handleSubmit,
+        watch,
+        setValue,
+        formState: { errors },
+        reset
+    } = useForm({
+        defaultValues: {
+            fullName: '',
+            username: '',
+            email: '',
+            whatsapp: '',
+            country: '',
+            password: '',
+            confirmPassword: '',
+            policyAccepted: false
+        }
+    });
 
-    useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-            if (currentUser && onAuthSuccess && !isLoading) {
-                console.log('Firebase auth state changed:', currentUser);
-            }
-        });
-        return () => unsubscribe();
-    }, [onAuthSuccess, isLoading]);
+    const password = watch('password');
+    const selectedCountry = watch('country');
 
-    // UPDATED: handleEmailAuth function with JWT integration
-    const handleEmailAuth = async () => {
+    // Password strength calculation
+    const getPasswordStrength = (password) => {
+        let strength = 0;
+        if (password?.length >= 8) strength++;
+        if (/[A-Z]/.test(password)) strength++;
+        if (/[a-z]/.test(password)) strength++;
+        if (/[0-9]/.test(password)) strength++;
+        if (/[^A-Za-z0-9]/.test(password)) strength++;
+        return strength;
+    };
+
+    const passwordStrength = getPasswordStrength(password);
+    const strengthColors = ['bg-red-500', 'bg-red-400', 'bg-yellow-400', 'bg-blue-400', 'bg-green-500'];
+    const strengthLabels = ['Very Weak', 'Weak', 'Fair', 'Good', 'Strong'];
+
+    // Save user to backend
+    const saveUserToBackend = async (userData) => {
         try {
-            let userCredential;
-            let backendUser = null;
-
-            if (isSignUp) {
-                userCredential = await createUserWithEmailAndPassword(auth, formData.email, formData.password);
-                
-                await updateProfile(userCredential.user, {
-                    displayName: formData.name
-                });
-
-                // Save user data to backend
-                const userData = {
-                    uid: userCredential.user.uid,
-                    name: formData.name,
-                    username: formData.username,
-                    email: formData.email,
-                    whatsapp: countryCode + formData.whatsapp,
-                    country: formData.country,
-                    password: formData.password, // Backend এ password save করুন
-                    createdAt: new Date().toISOString(),
-                    provider: 'email',
-                    role: 'user'
-                };
-
-                try {
-                    await saveUserToBackend(userData, axiosPrivate);
-                    console.log('User data saved to backend successfully');
-                    
-                    // Sign up এর পর automatic backend login
-                    backendUser = await handleBackendLogin(formData.email, formData.password, axiosPrivate);
-                    
-                } catch (backendError) {
-                    console.error('Failed to save user data to backend:', backendError);
-                }
-            } else {
-                // Firebase login
-                userCredential = await signInWithEmailAndPassword(auth, formData.email, formData.password);
-                
-                // Backend login (JWT cookie set করার জন্য)
-                backendUser = await handleBackendLogin(formData.email, formData.password, axiosPrivate);
-            }
-
-            console.log('Authentication successful:', { 
-                firebase: userCredential.user, 
-                backend: backendUser 
-            });
-            setAuthError('');
-
-            // onAuthSuccess callback এ backend user info ও পাঠান
-            if (onAuthSuccess) {
-                onAuthSuccess(userCredential.user, backendUser);
-            }
-
+            const response = await axiosPrivate.post('/api/all-users', userData);
+              if(response.data.acknowledged && response.data.insertedId){
+                        navigate('/');
+                            setTimeout(() => {
+                                  toast.success('Registration Successfully') 
+                            }, 300);
+              }
+            console.log('User saved to backend:', response.data);
+            return response.data;
         } catch (error) {
-            console.error('Authentication error:', error);
-            setAuthError(getFirebaseErrorMessage(error.code));
+            console.error('Error saving user to backend:', error);
+            throw error;
         }
     };
 
-    // UPDATED: handleSocialAuth function with JWT integration
-    const handleSocialAuth = async (provider) => {
-        try {
-            const result = await signInWithPopup(auth, provider);
-            console.log('Social authentication successful:', result.user);
-            
-            const userData = {
-                uid: result.user.uid,
-                name: result.user.displayName || '',
-                email: result.user.email,
-                photoURL: result.user.photoURL || '',
-                password: 'social_login', // Social login এর জন্য dummy password
-                createdAt: new Date().toISOString(),
-                provider: provider.providerId,
-                role: 'user'
-            };
+    // Social Button Component (No functionality)
+    const SocialButton = ({ icon: Icon, provider, onClick, disabled }) => (
+        <button
+            type="button"
+            onClick={onClick}
+            disabled={disabled}
+            className="flex-1 flex items-center justify-center gap-3 py-3 px-4 bg-white border-2 border-gray-200 rounded-xl text-gray-700 hover:bg-blue-50 hover:border-blue-300 transition-all duration-300 group disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+            <Icon className="text-lg group-hover:scale-110 transition-transform" />
+            <span className="text-sm font-medium">{provider}</span>
+        </button>
+    );
 
-            let backendUser = null;
-
-            try {
-                await saveUserToBackend(userData, axiosPrivate);
-                console.log('Social auth user data saved to backend successfully');
-            } catch (backendError) {
-                console.log('User might already exist, proceeding with login');
-            }
-
-            // Backend login attempt
-            try {
-                backendUser = await handleBackendLogin(result.user.email, 'social_login', axiosPrivate);
-            } catch (loginError) {
-                console.log('Backend login failed for social user, but Firebase login successful');
-            }
-
-            setAuthError('');
-
-            if (onAuthSuccess) {
-                onAuthSuccess(result.user, backendUser);
-            }
-
-        } catch (error) {
-            console.error('Social authentication error:', error);
-            setAuthError(getFirebaseErrorMessage(error.code));
-        }
+    // Handle social auth (No functionality - just for UI)
+    const handleSocialAuth = (provider) => {
+        console.log(`${provider} login clicked - No functionality implemented`);
     };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        const validationErrors = validateForm();
-        if (Object.keys(validationErrors).length > 0) {
-            setErrors(validationErrors);
-            return;
-        }
-
+    // Form submission
+    const onSubmit = async (data) => {
         setIsLoading(true);
         setAuthError('');
 
         try {
-            await handleEmailAuth();
+            // Create user with Firebase
+            const userCredential = await creatUser(data.email, data.password);
+            
+            // Update user profile with display name (username)
+            await updateUserProfile(data.username);
+
+            // Prepare user data for backend
+            const userData = {
+                uid: userCredential.user.uid,
+                fullName: data.fullName,
+                username: data.username,
+                email: data.email,
+                whatsapp: countryCode + data.whatsapp,
+                country: data.country,
+                password: data.password,
+                createdAt: new Date().toISOString(),
+                provider: 'email',
+                role: 'user'
+            };
+
+            // Save to backend (MongoDB)
+            await saveUserToBackend(userData);
+
+            console.log('User registration successful');
+            
+            if (onAuthSuccess) {
+                onAuthSuccess(userCredential.user);
+            }
+
+            // Reset form
+            reset();
+            setCountryCode('+1');
+
+        } catch (error) {
+            console.error('Registration error:', error);
+            const errorMessages = {
+                'auth/email-already-in-use': 'An account with this email already exists.',
+                'auth/weak-password': 'Password should be at least 6 characters long.',
+                'auth/invalid-email': 'Please enter a valid email address.',
+            };
+            setAuthError(errorMessages[error.code] || 'An error occurred. Please try again.');
         } finally {
             setIsLoading(false);
         }
     };
 
-    const handleChange = (e) => {
-        const { name, value, type, checked } = e.target;
-        setFormData(prev => ({
-            ...prev,
-            [name]: type === 'checkbox' ? checked : value
-        }));
-        
-        if (errors[name]) {
-            setErrors(prev => ({ ...prev, [name]: '' }));
+    // Custom validation rules
+    const validationRules = {
+        fullName: {
+            required: 'Full name is required',
+            minLength: {
+                value: 2,
+                message: 'Name must be at least 2 characters long'
+            }
+        },
+        username: {
+            required: 'Username is required',
+            minLength: {
+                value: 3,
+                message: 'Username must be at least 3 characters long'
+            },
+            pattern: {
+                value: /^[a-zA-Z0-9_]+$/,
+                message: 'Username can only contain letters, numbers, and underscores'
+            }
+        },
+        email: {
+            required: 'Email is required',
+            pattern: {
+                value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                message: 'Please enter a valid email address'
+            }
+        },
+        whatsapp: {
+            required: 'WhatsApp number is required',
+            pattern: {
+                value: /^[0-9]{10,15}$/,
+                message: 'Please enter a valid phone number'
+            }
+        },
+        country: {
+            required: 'Please select your country'
+        },
+        password: {
+            required: 'Password is required',
+            minLength: {
+                value: 6,
+                message: 'Password must be at least 6 characters long'
+            }
+        },
+        confirmPassword: {
+            required: 'Please confirm your password',
+            validate: (value) => value === password || 'Passwords do not match'
+        },
+        policyAccepted: {
+            required: 'You must accept our policies'
         }
-        if (authError) setAuthError('');
     };
-
-    const switchMode = () => {
-        setIsSignUp(!isSignUp);
-        setFormData({
-            name: '', username: '', email: '', whatsapp: '', country: '',
-            password: '', confirmPassword: '', policyAccepted: false
-        });
-        setCountryCode('+1');
-        setErrors({});
-        setAuthError('');
-    };
-
-    const passwordStrength = getPasswordStrength(formData.password);
-    const strengthColors = ['bg-red-500', 'bg-red-400', 'bg-yellow-400', 'bg-blue-400', 'bg-green-500'];
-    const strengthLabels = ['Very Weak', 'Weak', 'Fair', 'Good', 'Strong'];
 
     return (
         <div className="min-h-screen flex">
@@ -580,9 +247,27 @@ const SignUp = ({ onAuthSuccess }) => {
                         </p>
                     </div>
                     <div className="space-y-6">
-                        <FeatureCard icon={FiShield} title="Secure & Private" description="Your data is protected with enterprise-grade security and encryption." />
-                        <FeatureCard icon={FiUsers} title="Team Collaboration" description="Work together seamlessly with powerful collaboration tools." />
-                        <FeatureCard icon={FiTrendingUp} title="Advanced Analytics" description="Get insights and analytics to grow your business effectively." />
+                        <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl p-6 text-white">
+                            <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center mb-4">
+                                <FiShield className="text-xl" />
+                            </div>
+                            <h3 className="text-lg font-semibold mb-2">Secure & Private</h3>
+                            <p className="text-blue-100 text-sm">Your data is protected with enterprise-grade security and encryption.</p>
+                        </div>
+                        <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl p-6 text-white">
+                            <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center mb-4">
+                                <FiUsers className="text-xl" />
+                            </div>
+                            <h3 className="text-lg font-semibold mb-2">Team Collaboration</h3>
+                            <p className="text-blue-100 text-sm">Work together seamlessly with powerful collaboration tools.</p>
+                        </div>
+                        <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl p-6 text-white">
+                            <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center mb-4">
+                                <FiTrendingUp className="text-xl" />
+                            </div>
+                            <h3 className="text-lg font-semibold mb-2">Advanced Analytics</h3>
+                            <p className="text-blue-100 text-sm">Get insights and analytics to grow your business effectively.</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -591,12 +276,8 @@ const SignUp = ({ onAuthSuccess }) => {
             <div className="w-full lg:w-1/2 flex items-center justify-center p-6 lg:p-12 bg-gray-50">
                 <div className="w-full max-w-md">
                     <div className="text-center mb-8">
-                        <h2 className="text-3xl font-bold text-gray-800 mb-2">
-                            {isSignUp ? 'Create Account' : 'Welcome Back'}
-                        </h2>
-                        <p className="text-gray-600">
-                            {isSignUp ? 'Sign up to get started with your account' : 'Sign in to access your account'}
-                        </p>
+                        <h2 className="text-3xl font-bold text-gray-800 mb-2">Create Account</h2>
+                        <p className="text-gray-600">Sign up to get started with your account</p>
                     </div>
 
                     {authError && (
@@ -608,23 +289,25 @@ const SignUp = ({ onAuthSuccess }) => {
                         </div>
                     )}
 
+                    {/* Social Login Buttons */}
                     <div className="mb-6">
                         <div className="flex gap-3 mb-4">
                             <SocialButton 
                                 icon={FaGoogle} 
                                 provider="Google" 
-                                onClick={() => handleSocialAuth(new GoogleAuthProvider())}
+                                onClick={() => handleSocialAuth('Google')}
                                 disabled={isLoading}
                             />
                             <SocialButton 
                                 icon={FaFacebookF} 
                                 provider="Facebook" 
-                                onClick={() => handleSocialAuth(new FacebookAuthProvider())}
+                                onClick={() => handleSocialAuth('Facebook')}
                                 disabled={isLoading}
                             />
                         </div>
                     </div>
 
+                    {/* Divider */}
                     <div className="relative mb-6">
                         <div className="absolute inset-0 flex items-center">
                             <div className="w-full border-t border-gray-200"></div>
@@ -634,46 +317,206 @@ const SignUp = ({ onAuthSuccess }) => {
                         </div>
                     </div>
 
-                    <form onSubmit={handleSubmit} className="space-y-5">
-                        {isSignUp && (
-                            <>
-                                <div className="grid grid-cols-2 gap-3">
-                                    <InputField icon={FiUser} type="text" name="name" placeholder="Full Name" value={formData.name} onChange={handleChange} error={errors.name} />
-                                    <InputField icon={FiUser} type="text" name="username" placeholder="Username" value={formData.username} onChange={handleChange} error={errors.username} />
+                    <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+                        {/* Full Name & Username */}
+                        <div className="grid grid-cols-2 gap-3">
+                            <div className="relative">
+                                <FiUser className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 text-lg" />
+                                <input
+                                    type="text"
+                                    placeholder="Full Name"
+                                    {...register('fullName', validationRules.fullName)}
+                                    className={`w-full pl-12 pr-4 py-4 bg-blue-50 border-2 rounded-xl text-gray-800 placeholder-gray-500 focus:outline-none focus:bg-white transition-all duration-300 ${
+                                        errors.fullName ? 'border-red-400 focus:border-red-500' : 'border-gray-200 hover:border-blue-300 focus:border-blue-500'
+                                    }`}
+                                />
+                                {errors.fullName && (
+                                    <p className="mt-2 text-sm text-red-500 flex items-center gap-1">
+                                        <FiX className="text-xs" />
+                                        {errors.fullName.message}
+                                    </p>
+                                )}
+                            </div>
+
+                            <div className="relative">
+                                <FiUser className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 text-lg" />
+                                <input
+                                    type="text"
+                                    placeholder="Username"
+                                    {...register('username', validationRules.username)}
+                                    className={`w-full pl-12 pr-4 py-4 bg-blue-50 border-2 rounded-xl text-gray-800 placeholder-gray-500 focus:outline-none focus:bg-white transition-all duration-300 ${
+                                        errors.username ? 'border-red-400 focus:border-red-500' : 'border-gray-200 hover:border-blue-300 focus:border-blue-500'
+                                    }`}
+                                />
+                                {errors.username && (
+                                    <p className="mt-2 text-sm text-red-500 flex items-center gap-1">
+                                        <FiX className="text-xs" />
+                                        {errors.username.message}
+                                    </p>
+                                )}
+                            </div>
+                        </div>
+
+                        {/* WhatsApp Number */}
+                        <div className="relative">
+                            <FiPhone className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 text-lg z-10" />
+                            
+                            <div className={`flex bg-blue-50 border-2 rounded-xl transition-all duration-300 ${
+                                errors.whatsapp ? 'border-red-400' : 'border-gray-200 hover:border-blue-300 focus-within:border-blue-500 focus-within:bg-white'
+                            }`}>
+                                <div className="relative">
+                                    <button
+                                        type="button"
+                                        onClick={() => setIsCountryCodeOpen(!isCountryCodeOpen)}
+                                        className="pl-12 pr-3 py-4 text-gray-800 focus:outline-none transition-all duration-300 flex items-center gap-2 min-w-[120px] border-r border-gray-300 hover:bg-blue-100 rounded-l-xl"
+                                    >
+                                        <span className="text-lg">{COUNTRY_CODES.find(c => c.code === countryCode)?.flag || '🌍'}</span>
+                                        <span className="text-sm font-medium text-gray-700">{countryCode}</span>
+                                        <FiChevronDown className={`text-xs text-gray-500 transition-transform ${isCountryCodeOpen ? 'rotate-180' : ''}`} />
+                                    </button>
+                                    
+                                    {isCountryCodeOpen && (
+                                        <div className="absolute top-full left-0 w-64 max-h-60 overflow-y-auto bg-white border-2 border-gray-200 rounded-xl shadow-xl z-30 mt-2">
+                                            <div className="p-2">
+                                                {COUNTRY_CODES.map((country) => (
+                                                    <button
+                                                        key={country.code}
+                                                        type="button"
+                                                        onClick={() => {
+                                                            setCountryCode(country.code);
+                                                            setIsCountryCodeOpen(false);
+                                                        }}
+                                                        className="w-full flex items-center gap-3 px-3 py-2.5 text-left hover:bg-blue-50 transition-colors rounded-lg group"
+                                                    >
+                                                        <span className="text-lg">{country.flag}</span>
+                                                        <div className="flex flex-col">
+                                                            <span className="text-sm font-medium text-gray-800 group-hover:text-blue-600">{country.code}</span>
+                                                            <span className="text-xs text-gray-500">{country.country}</span>
+                                                        </div>
+                                                    </button>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    )}
                                 </div>
 
-                                <WhatsAppField 
-                                    value={formData.whatsapp} 
-                                    onChange={handleChange} 
-                                    error={errors.whatsapp}
-                                    countryCode={countryCode}
-                                    onCountryCodeChange={setCountryCode}
+                                <input
+                                    type="tel"
+                                    placeholder="Enter phone number"
+                                    {...register('whatsapp', validationRules.whatsapp)}
+                                    className="flex-1 pl-4 pr-4 py-4 bg-transparent text-gray-800 placeholder-gray-500 focus:outline-none rounded-r-xl"
                                 />
-                                
-                                <CountrySelectField 
-                                    value={formData.country} 
-                                    onChange={handleChange} 
-                                    error={errors.country} 
+                            </div>
+                            {errors.whatsapp && (
+                                <p className="mt-2 text-sm text-red-500 flex items-center gap-1">
+                                    <FiX className="text-xs" />
+                                    {errors.whatsapp.message}
+                                </p>
+                            )}
+                            
+                            {isCountryCodeOpen && (
+                                <div 
+                                    className="fixed inset-0 z-20" 
+                                    onClick={() => setIsCountryCodeOpen(false)}
                                 />
-                            </>
-                        )}
+                            )}
+                        </div>
 
-                        <InputField icon={FiMail} type="email" name="email" placeholder="Email address" value={formData.email} onChange={handleChange} error={errors.email} />
+                        {/* Country Select */}
+                        <div className="relative">
+                            <FiUsers className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 text-lg" />
+                            <button
+                                type="button"
+                                onClick={() => setIsCountryOpen(!isCountryOpen)}
+                                className={`w-full pl-12 pr-12 py-4 bg-blue-50 border-2 rounded-xl text-left text-gray-800 focus:outline-none focus:bg-white transition-all duration-300 flex items-center justify-between ${
+                                    errors.country ? 'border-red-400 focus:border-red-500' : 'border-gray-200 hover:border-blue-300 focus:border-blue-500'
+                                }`}
+                            >
+                                <span className={selectedCountry ? 'text-gray-800' : 'text-gray-500'}>
+                                    {selectedCountry || 'Select your country'}
+                                </span>
+                                <FiChevronDown className={`text-gray-400 transition-transform ${isCountryOpen ? 'rotate-180' : ''}`} />
+                            </button>
+                            
+                            {isCountryOpen && (
+                                <div className="absolute top-full left-0 w-full max-h-60 overflow-y-auto bg-white border-2 border-gray-200 rounded-xl shadow-lg z-20 mt-1">
+                                    {COUNTRIES.map((country) => (
+                                        <button
+                                            key={country}
+                                            type="button"
+                                            onClick={() => {
+                                                setValue('country', country);
+                                                setIsCountryOpen(false);
+                                            }}
+                                            className="w-full text-left px-4 py-3 hover:bg-blue-50 transition-colors border-b border-gray-100 last:border-b-0"
+                                        >
+                                            {country}
+                                        </button>
+                                    ))}
+                                </div>
+                            )}
+                            {errors.country && (
+                                <p className="mt-2 text-sm text-red-500 flex items-center gap-1">
+                                    <FiX className="text-xs" />
+                                    {errors.country.message}
+                                </p>
+                            )}
+                            
+                            {isCountryOpen && (
+                                <div 
+                                    className="fixed inset-0 z-10" 
+                                    onClick={() => setIsCountryOpen(false)}
+                                />
+                            )}
+                        </div>
 
-                        <InputField 
-                            icon={FiLock} 
-                            type="password" 
-                            name="password" 
-                            placeholder="Password" 
-                            value={formData.password} 
-                            onChange={handleChange} 
-                            error={errors.password} 
-                            showPasswordToggle 
-                            onTogglePassword={() => setShowPassword(!showPassword)} 
-                            showPassword={showPassword} 
-                        />
+                        {/* Email */}
+                        <div className="relative">
+                            <FiMail className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 text-lg" />
+                            <input
+                                type="email"
+                                placeholder="Email address"
+                                {...register('email', validationRules.email)}
+                                className={`w-full pl-12 pr-4 py-4 bg-blue-50 border-2 rounded-xl text-gray-800 placeholder-gray-500 focus:outline-none focus:bg-white transition-all duration-300 ${
+                                    errors.email ? 'border-red-400 focus:border-red-500' : 'border-gray-200 hover:border-blue-300 focus:border-blue-500'
+                                }`}
+                            />
+                            {errors.email && (
+                                <p className="mt-2 text-sm text-red-500 flex items-center gap-1">
+                                    <FiX className="text-xs" />
+                                    {errors.email.message}
+                                </p>
+                            )}
+                        </div>
 
-                        {isSignUp && formData.password && (
+                        {/* Password */}
+                        <div className="relative">
+                            <FiLock className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 text-lg" />
+                            <input
+                                type={showPassword ? 'text' : 'password'}
+                                placeholder="Password"
+                                {...register('password', validationRules.password)}
+                                className={`w-full pl-12 pr-12 py-4 bg-blue-50 border-2 rounded-xl text-gray-800 placeholder-gray-500 focus:outline-none focus:bg-white transition-all duration-300 ${
+                                    errors.password ? 'border-red-400 focus:border-red-500' : 'border-gray-200 hover:border-blue-300 focus:border-blue-500'
+                                }`}
+                            />
+                            <button
+                                type="button"
+                                onClick={() => setShowPassword(!showPassword)}
+                                className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                            >
+                                {showPassword ? <FiEyeOff /> : <FiEye />}
+                            </button>
+                            {errors.password && (
+                                <p className="mt-2 text-sm text-red-500 flex items-center gap-1">
+                                    <FiX className="text-xs" />
+                                    {errors.password.message}
+                                </p>
+                            )}
+                        </div>
+
+                        {/* Password Strength */}
+                        {password && (
                             <div className="space-y-2">
                                 <div className="flex gap-1">
                                     {[...Array(5)].map((_, i) => (
@@ -688,40 +531,38 @@ const SignUp = ({ onAuthSuccess }) => {
                             </div>
                         )}
 
-                        {isSignUp && (
-                            <InputField 
-                                icon={FiLock} 
-                                type="password" 
-                                name="confirmPassword" 
-                                placeholder="Confirm password" 
-                                value={formData.confirmPassword} 
-                                onChange={handleChange} 
-                                error={errors.confirmPassword} 
-                                showPasswordToggle 
-                                onTogglePassword={() => setShowConfirmPassword(!showConfirmPassword)} 
-                                showPassword={showConfirmPassword} 
+                        {/* Confirm Password */}
+                        <div className="relative">
+                            <FiLock className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 text-lg" />
+                            <input
+                                type={showConfirmPassword ? 'text' : 'password'}
+                                placeholder="Confirm password"
+                                {...register('confirmPassword', validationRules.confirmPassword)}
+                                className={`w-full pl-12 pr-12 py-4 bg-blue-50 border-2 rounded-xl text-gray-800 placeholder-gray-500 focus:outline-none focus:bg-white transition-all duration-300 ${
+                                    errors.confirmPassword ? 'border-red-400 focus:border-red-500' : 'border-gray-200 hover:border-blue-300 focus:border-blue-500'
+                                }`}
                             />
-                        )}
+                            <button
+                                type="button"
+                                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                                className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                            >
+                                {showConfirmPassword ? <FiEyeOff /> : <FiEye />}
+                            </button>
+                            {errors.confirmPassword && (
+                                <p className="mt-2 text-sm text-red-500 flex items-center gap-1">
+                                    <FiX className="text-xs" />
+                                    {errors.confirmPassword.message}
+                                </p>
+                            )}
+                        </div>
 
-                        {!isSignUp && (
-                            <div className="text-right">
-                                <button 
-                                    type="button" 
-                                    onClick={() => setShowForgotPassword(true)}
-                                    className="text-blue-500 hover:text-blue-600 text-sm transition-colors"
-                                >
-                                    Forgot password?
-                                </button>
-                            </div>
-                        )}
-
+                        {/* Privacy Policy Checkbox */}
                         <div className="flex items-start gap-2">
                             <input
                                 type="checkbox"
                                 id="policy"
-                                name="policyAccepted"
-                                checked={formData.policyAccepted}
-                                onChange={handleChange}
+                                {...register('policyAccepted', validationRules.policyAccepted)}
                                 className="mt-1 w-4 h-4 text-blue-500 border-gray-300 rounded focus:ring-blue-500"
                             />
                             <label htmlFor="policy" className="text-sm text-gray-600">
@@ -739,10 +580,11 @@ const SignUp = ({ onAuthSuccess }) => {
                         {errors.policyAccepted && (
                             <p className="text-sm text-red-500 flex items-center gap-1">
                                 <FiX className="text-xs" />
-                                {errors.policyAccepted}
+                                {errors.policyAccepted.message}
                             </p>
                         )}
 
+                        {/* Submit Button */}
                         <button 
                             type="submit" 
                             disabled={isLoading} 
@@ -754,29 +596,22 @@ const SignUp = ({ onAuthSuccess }) => {
                                     Processing...
                                 </>
                             ) : (
-                                <>
-                                    {isSignUp ? 'Create Account' : 'Sign In'}
-                                    <FiChevronRight className="group-hover:translate-x-1 transition-transform" />
-                                </>
+                                'Create Account'
                             )}
                         </button>
                     </form>
 
-                    <div className="mt-6 text-center">
+                         <div className="mt-6 text-center">
                         <p className="text-gray-600">
-                            {isSignUp ? 'Already have an account?' : "Don't have an account?"}{' '}
-                            <button type="button" onClick={switchMode} className="text-blue-500 font-semibold hover:text-blue-600 transition-all">
-                                {isSignUp ? 'Sign In' : 'Sign Up'}
-                            </button>
+                           Already have an account ? Please  
+                            <Link to='/sign-in' className="text-blue-500 font-semibold hover:text-blue-600 transition-all ml-2">
+                                Sign In
+                            </Link>
                         </p>
                     </div>
+
                 </div>
             </div>
-
-            <ForgotPasswordModal 
-                isOpen={showForgotPassword}
-                onClose={() => setShowForgotPassword(false)}
-            />
         </div>
     );
 };

@@ -43,7 +43,7 @@ const Dashboard = ({ user }) => {
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
 //   const navigate = useNavigate();
-  const { role, loading, error } = useRole();
+  const [role, isLoading, refetch] = useRole()
   console.log(role);
 
   useEffect(() => {

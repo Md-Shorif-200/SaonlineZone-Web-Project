@@ -45,8 +45,8 @@ const Navbar = ({ user }) => {
     setIsLoggingOut(true);
     try {
         // Backend logout (JWT cookie clear করার জন্য) - NEW
-        await axiosPrivate.post('/api/auth/logout');
-        console.log('Backend logout successful');
+        // await axiosPrivate.post('/api/auth/logout');
+        // console.log('Backend logout successful');
         
         // Firebase logout
         await signOut(auth);

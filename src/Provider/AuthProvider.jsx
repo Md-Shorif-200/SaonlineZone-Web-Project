@@ -1,17 +1,16 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { onAuthStateChanged, signOut } from "firebase/auth";
+import {   createUserWithEmailAndPassword,
+  onAuthStateChanged,
+  signInWithEmailAndPassword,
+  signOut,
+  updateProfile
+} from "firebase/auth";
 import { auth } from "../../firebase";
 import useAxiosPrivate from "../Hooks/Api/useAxiosPrivate";
 
-const AuthContext = createContext();
+export const AuthContext = createContext();
 
-export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error("useAuth must be used within an AuthProvider");
-  }
-  return context;
-};
+
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
@@ -38,6 +37,39 @@ export const AuthProvider = ({ children }) => {
     return unsubscribe;
   }, []);
 
+
+// creat new user
+  const creatUser = (email, password) => {
+    setLoading(true);
+    return createUserWithEmailAndPassword(auth, email, password);
+  };
+
+  //   log in
+  const logIn = (email, password) => {
+    setLoading(true);
+    return signInWithEmailAndPassword(auth, email, password);
+  };
+
+
+
+
+
+  // update profile
+  const updateUserProfile = (name) => {
+    return updateProfile(auth.currentUser, {
+      displayName: name,
+    });
+  };
+
+
+
+
+
+
+
+
+
+  // log out
   const logout = async () => {
     try {
       await signOut(auth);
@@ -50,6 +82,9 @@ export const AuthProvider = ({ children }) => {
 
   const value = {
     user,
+    creatUser,
+    updateUserProfile,
+    logIn,
     loading,
     error,
     logout,

@@ -1,7 +1,7 @@
 
 import React, { useEffect } from 'react';
 import { BrowserRouter, Routes, Route, useLocation, Navigate } from 'react-router-dom';
-import { AuthProvider, useAuth } from './Provider/AuthProvider';
+import { AuthProvider } from './Provider/AuthProvider';
 
 import Navbar from './Navbar/Navbar';
 import Home from './HomePage/Home';
@@ -12,6 +12,9 @@ import SignUp from './Authentication/SignUp';
 import Spinner from './Components/Spinner';
 import NotFoundPage from './Components/NotFoundPage';
 import ContactPage from './Contact/ContactPage';
+import useAuth from './Hooks/useAuth';
+import LogIn from './Authentication/LogIn';
+import { ToastContainer } from 'react-toastify';
 
 
 const ProtectedRoute = ({ children, redirectTo = "/sign-in" }) => {
@@ -27,17 +30,17 @@ const ProtectedRoute = ({ children, redirectTo = "/sign-in" }) => {
 };
 
 
-const PublicRoute = ({ children, redirectTo = "/" }) => {
-  const { isAuthenticated, loading } = useAuth();
+// const PublicRoute = ({ children, redirectTo = "/" }) => {
+//   const { isAuthenticated, loading } = useAuth();
   
-  if (loading) return <Spinner></Spinner>;
+//   if (loading) return <Spinner></Spinner>;
   
-  if (isAuthenticated) {
-    return <Navigate to={redirectTo} replace />;
-  }
+//   if (isAuthenticated) {
+//     return <Navigate to={redirectTo} replace />;
+//   }
   
-  return children;
-};
+//   return children;
+// };
 
 function AppContent() {
   const location = useLocation();
@@ -49,6 +52,7 @@ function AppContent() {
     '/blog': { showNavbar: true, showFooter: true, title: 'Blog' },
     '/dashboard': { showNavbar: false, showFooter: false, title: 'Dashboard' },
     '/sign-in': { showNavbar: false, showFooter: false, title: 'Sign In' },
+    '/sign-up': { showNavbar: false, showFooter: false, title: 'Sign Up' },
     '/contact-us': { showNavbar: true, showFooter: true, title: 'Contact Us' }
   };
 
@@ -79,9 +83,20 @@ function AppContent() {
           <Route 
             path="/sign-in" 
             element={
-              <PublicRoute>
-                <SignUp />
-              </PublicRoute>
+              // <PublicRoute>
+              //   <SignUp />
+              // </PublicRoute>
+               <LogIn></LogIn>
+            } 
+          />
+
+          <Route 
+            path="/sign-up" 
+            element={
+              // <PublicRoute>
+              //   <SignUp />
+              // </PublicRoute>
+               <SignUp></SignUp>
             } 
           />
           
@@ -105,9 +120,10 @@ function AppContent() {
 
 function App() {
   return (
-    <BrowserRouter>
+     <BrowserRouter>
       <AuthProvider>
-          <AppContent />
+        <AppContent />
+        <ToastContainer position="top-right" autoClose={3000} />
       </AuthProvider>
     </BrowserRouter>
   );
