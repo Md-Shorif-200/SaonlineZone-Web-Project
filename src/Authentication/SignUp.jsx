@@ -94,12 +94,12 @@ const SignUp = ({ onAuthSuccess }) => {
     const saveUserToBackend = async (userData) => {
         try {
             const response = await axiosPrivate.post('/api/all-users', userData);
-              if(response.data.acknowledged && response.data.insertedId){
-                        navigate('/');
-                            setTimeout(() => {
+            //   if(response.data.acknowledged && response.data.insertedId){
+                  setTimeout(() => {
+                                navigate('/');
                                   toast.success('Registration Successfully') 
-                            }, 300);
-              }
+                            }, 200);
+            //   }
             console.log('User saved to backend:', response.data);
             return response.data;
         } catch (error) {
@@ -108,23 +108,6 @@ const SignUp = ({ onAuthSuccess }) => {
         }
     };
 
-    // Social Button Component (No functionality)
-    const SocialButton = ({ icon: Icon, provider, onClick, disabled }) => (
-        <button
-            type="button"
-            onClick={onClick}
-            disabled={disabled}
-            className="flex-1 flex items-center justify-center gap-3 py-3 px-4 bg-white border-2 border-gray-200 rounded-xl text-gray-700 hover:bg-blue-50 hover:border-blue-300 transition-all duration-300 group disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-            <Icon className="text-lg group-hover:scale-110 transition-transform" />
-            <span className="text-sm font-medium">{provider}</span>
-        </button>
-    );
-
-    // Handle social auth (No functionality - just for UI)
-    const handleSocialAuth = (provider) => {
-        console.log(`${provider} login clicked - No functionality implemented`);
-    };
 
     // Form submission
     const onSubmit = async (data) => {
@@ -289,23 +272,7 @@ const SignUp = ({ onAuthSuccess }) => {
                         </div>
                     )}
 
-                    {/* Social Login Buttons */}
-                    <div className="mb-6">
-                        <div className="flex gap-3 mb-4">
-                            <SocialButton 
-                                icon={FaGoogle} 
-                                provider="Google" 
-                                onClick={() => handleSocialAuth('Google')}
-                                disabled={isLoading}
-                            />
-                            <SocialButton 
-                                icon={FaFacebookF} 
-                                provider="Facebook" 
-                                onClick={() => handleSocialAuth('Facebook')}
-                                disabled={isLoading}
-                            />
-                        </div>
-                    </div>
+                  
 
                     {/* Divider */}
                     <div className="relative mb-6">

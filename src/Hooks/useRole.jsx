@@ -9,8 +9,8 @@ const useRole = () => {
   const axiosPublic = useAxiosPublic();
 
   const { data: role = null, isLoading, refetch } = useQuery({
-    queryKey: ['userRole', user?.email],
-    // enabled: !!user?.email,
+    queryKey: ['role', user?.email],
+    enabled: !!user?.email,
     queryFn: async () => {
       const res = await axiosPublic.get(`/api/user/${user.email}`);
       return res.data?.role;

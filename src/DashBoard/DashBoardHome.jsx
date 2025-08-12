@@ -31,6 +31,9 @@ import Headline from '../HeadLine/Headline';
 import SearchSection from './SearchSection';
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import DetailsModal from './DashboardHome/DetailsModal';
+import BuyModal from './DashboardHome/BuyModal';
+import AnnouncementModal from './DashboardHome/AnnouncementModal';
 
 const DashboardHome = () => {
     const [selectedRole, setSelectedRole] = useState("buyer");
@@ -152,6 +155,8 @@ const DashboardHome = () => {
     ];
 
     const handleBuyNow = (post) => {
+  
+        
         setSelectedPost(post);
         setShowBuyModal(true);
         setShowDetailsModal(false);
@@ -448,328 +453,36 @@ const DashboardHome = () => {
                     </div>
                 </div>
 
-                {showDetailsModal && selectedPost && (
-                    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 z-50">
-                        <div className="bg-white rounded-2xl sm:rounded-3xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-                            <div className="bg-gradient-to-r from-emerald-600 to-blue-600 px-4 sm:px-6 lg:px-8 py-4 sm:py-6 rounded-t-2xl sm:rounded-t-3xl">
-                                <div className="flex items-center justify-between">
-                                    <h3 className="text-xl sm:text-2xl font-bold text-white">Post Details</h3>
-                                    <button
-                                        onClick={() => setShowDetailsModal(false)}
-                                        className="text-white hover:text-gray-200 transition-colors p-1"
-                                    >
-                                        <X className="w-5 h-5 sm:w-6 sm:h-6" />
-                                    </button>
-                                </div>
-                            </div>
-
-                            <div className="p-4 sm:p-6 lg:p-8">
-                                <div className="mb-6">
-
-                                    <div className="relative w-full h-48 sm:h-64 mb-4">
-                                        <img
-                                            src={selectedPost.images[currentImageIndex]}
-                                            alt={`${selectedPost.title} - ${currentImageIndex + 1}`}
-                                            className="w-full h-full object-cover rounded-xl"
-                                        />
-
-                                        {selectedPost.images.length > 1 && (
-                                            <>
-                                                <button
-                                                    onClick={() => setCurrentImageIndex(prev =>
-                                                        prev === 0 ? selectedPost.images.length - 1 : prev - 1
-                                                    )}
-                                                    className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 text-white p-2 rounded-full hover:bg-black/70"
-                                                >
-                                                    ❮
-                                                </button>
-                                                <button
-                                                    onClick={() => setCurrentImageIndex(prev =>
-                                                        prev === selectedPost.images.length - 1 ? 0 : prev + 1
-                                                    )}
-                                                    className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 text-white p-2 rounded-full hover:bg-black/70"
-                                                >
-                                                    ❯
-                                                </button>
-
-                                                <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex space-x-2">
-                                                    {selectedPost.images.map((_, idx) => (
-                                                        <button
-                                                            key={idx}
-                                                            onClick={() => setCurrentImageIndex(idx)}
-                                                            className={`w-2 h-2 rounded-full ${idx === currentImageIndex ? 'bg-white' : 'bg-gray-400'}`}
-                                                        />
-                                                    ))}
-                                                </div>
-                                            </>
-                                        )}
-                                    </div>
-
-                                    <h4 className="font-bold text-gray-900 mb-2 text-lg sm:text-xl lg:text-2xl leading-tight">
-                                        {selectedPost.title}
-                                    </h4>
-
-                                    <div className="flex items-center space-x-2 text-xs sm:text-sm text-gray-500 mb-2">
-                                        <Clock className="w-3 h-3 sm:w-4 sm:h-4" />
-                                        <span>{selectedPost.postTime}</span>
-                                    </div>
-
-                                    <p className="text-sm sm:text-base text-gray-600 mb-4">{selectedPost.details}</p>
-
-                                    <div className="flex items-center justify-between mb-4">
-                                        <div className="flex items-center space-x-2">
-                                            <User className="w-4 h-4 text-gray-400" />
-                                            <span className="text-sm font-medium">{selectedPost.sellerAccount.name}</span>
-                                            {selectedPost.sellerAccount.isVerified && (
-                                                <svg
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                    className="w-6 h-6 flex-shrink-0"
-                                                    viewBox="0 0 24 24"
-                                                    fill="#0095f6"
-                                                    aria-label="Verified account"
-                                                >
-                                                    <path d="M22.25 12l-1.6-2.77.3-3.18-3.09-.94L15.66 2 12 3.4 8.34 2 6.14 5.11l-3.09.94.3 3.18L2.25 12l1.1 3.06-.3 3.18 3.09.94L8.34 22l3.66-1.4 3.66 1.4 2.2-3.11 3.09-.94-.3-3.18L22.25 12z" />
-                                                    <path
-                                                        d="M10.4 15.6l-3-3 1.2-1.2 1.8 1.8 4.8-4.8 1.2 1.2-6 6z"
-                                                        fill="#fff"
-                                                    />
-                                                </svg>
-                                            )}
-                                            <span className="text-xs text-gray-500">
-                                                ({selectedPost.sellerAccount.completedOrders} orders)
-                                            </span>
-                                        </div>
-                                        <button className="px-2 sm:px-3 py-1 bg-blue-200 text-blue-600 rounded-lg hover:bg-blue-300 transition-colors text-xs sm:text-sm font-medium">
-                                            <MessageCircle className="w-4 h-4" />
-                                        </button>
-                                    </div>
-
-                                    <div className="flex items-center justify-between mb-6">
-                                        <span className="text-xl font-bold text-emerald-600">${selectedPost.price}</span>
-                                        <div className="flex items-center space-x-4">
-                                            <div className='flex items-center gap-x-1'>
-                                                <ThumbsUp className="w-4 h-4 text-gray-600" />
-                                                <span className="text-[0.7rem] font-medium">{postStats[selectedPost.id]?.likes || 0} likes</span>
-                                            </div>
-                                            <div className='flex items-center gap-x-1'>
-                                                <Eye className="w-4 h-4 text-gray-600" />
-                                                <span className="text-[0.7rem] font-medium">{postStats[selectedPost.id]?.views || 0} views</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div className="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4">
-                                    <button
-                                        onClick={() => setShowDetailsModal(false)}
-                                        className="flex-1 px-4 sm:px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium"
-                                    >
-                                        Close
-                                    </button>
-                                    <button
-                                        onClick={() => handleBuyNow(selectedPost)}
-                                        className="flex-1 px-4 sm:px-6 py-3 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors font-medium"
-                                    >
-                                        Purchase Now
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                )}
-
-                {showBuyModal && selectedPost && (
-                    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 z-50">
-                        <div className="bg-white rounded-2xl sm:rounded-3xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-
-                            <div className="bg-gradient-to-r from-emerald-600 to-blue-600 px-4 sm:px-6 lg:px-8 py-4 sm:py-6 rounded-t-2xl sm:rounded-t-3xl">
-                                <div className="flex items-center justify-between">
-                                    <h3 className="text-xl sm:text-2xl font-bold text-white">Purchase Confirmation</h3>
-                                    <button
-                                        onClick={() => setShowBuyModal(false)}
-                                        className="text-white hover:text-gray-200 transition-colors p-1"
-                                    >
-                                        <X className="w-5 h-5 sm:w-6 sm:h-6" />
-                                    </button>
-                                </div>
-                            </div>
-
-
-                            <div className="p-4 sm:p-6 lg:p-8">
-
-
-                                <div className="mb-4">
-                                    <h4 className="text-lg sm:text-xl font-bold text-gray-900 mb-2">{selectedPost.title}</h4>
-                                    <p className="text-sm sm:text-base text-gray-600">{selectedPost.details}</p>
-                                </div>
-
-
-                                <div className="flex space-x-2 mb-6">
-                                    <button
-                                        onClick={() => setSelectedRole("buyer")}
-                                        className={`flex-1 px-4 py-2 rounded-lg border border-blue-500 font-medium transition-colors
-              ${selectedRole === "buyer"
-                                                ? "bg-gradient-to-r from-cyan-500 to-blue-500 text-white"
-                                                : "bg-blue-50 text-blue-500 hover:bg-blue-100"}`}
-                                    >
-                                        Buyer
-                                    </button>
-
-                                    <button
-                                        onClick={() => setSelectedRole("seller")}
-                                        className={`flex-1 px-4 py-2 rounded-lg border border-blue-500 font-medium transition-colors
-              ${selectedRole === "seller"
-                                                ? "bg-blue-500 text-white"
-                                                : "bg-blue-50 text-blue-500 hover:bg-blue-100"}`}
-                                    >
-                                        Seller
-                                    </button>
-
-                                    <button
-                                        onClick={() => setSelectedRole("combined")}
-                                        className={`flex-1 px-4 py-2 rounded-lg border border-blue-500 font-medium transition-colors
-              ${selectedRole === "combined"
-                                                ? "bg-blue-500 text-white"
-                                                : "bg-blue-50 text-blue-500 hover:bg-blue-100"}`}
-                                    >
-                                        Combined
-                                    </button>
-                                </div>
-                                {(() => {
-                                    const fees = calculateFees(selectedPost.price);
-
-                                    return (
-                                        <div className="bg-gray-50 rounded-xl p-4 sm:p-6 mb-6">
-                                            <h5 className="text-base sm:text-lg font-semibold text-gray-900 mb-4">Fee Breakdown</h5>
-
-                                            <div className="space-y-3">
-                                                <div className="flex justify-between text-sm sm:text-base">
-                                                    <span>Base Amount:</span>
-                                                    <span className="font-medium">${fees.baseAmount.toFixed(2)}</span>
-                                                </div>
-
-                                                <div className="flex justify-between text-sm sm:text-base">
-                                                    <span>Admin Fee (Buyer):</span>
-                                                    <span className={`font-medium ${selectedRole === "seller" ? "text-red-600" : ""}`}>
-                                                        {selectedRole === "seller"
-                                                            ? `-${fees.buyerFee.toFixed(2)}`
-                                                            : `+${fees.buyerFee.toFixed(2)}`}
-                                                    </span>
-                                                </div>
-
-                                                <div className="flex justify-between text-sm sm:text-base">
-                                                    <span>Admin Fee (Seller):</span>
-                                                    <span className={`font-medium ${selectedRole === "buyer" ? "text-red-600" : ""}`}>
-                                                        {selectedRole === "buyer"
-                                                            ? `-${fees.sellerFee.toFixed(2)}`
-                                                            : `+${fees.sellerFee.toFixed(2)}`}
-                                                    </span>
-                                                </div>
-
-                                                <div className="flex justify-between text-sm sm:text-base">
-                                                    <span>1st Generation Fee:</span>
-                                                    <span className="font-medium">${fees.generation1Fee.toFixed(2)}</span>
-                                                </div>
-
-                                                <div className="flex justify-between text-sm sm:text-base">
-                                                    <span>2nd Generation Fee:</span>
-                                                    <span className="font-medium">${fees.generation2Fee.toFixed(2)}</span>
-                                                </div>
-
-                                                <hr className="my-3" />
-
-                                                <div className="flex justify-between text-base sm:text-lg font-bold">
-                                                    <span>Total You Pay:</span>
-                                                    <span className="text-emerald-600">${fees.totalForBuyer.toFixed(2)}</span>
-                                                </div>
-
-                                                <div className="flex justify-between text-xs sm:text-sm text-gray-600">
-                                                    <span>Seller Receives:</span>
-                                                    <span>${fees.sellerReceives.toFixed(2)}</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    );
-                                })()}
-
-
-                                <div className="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4">
-                                    <button
-                                        onClick={() => setShowBuyModal(false)}
-                                        className="flex-1 px-4 sm:px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium"
-                                    >
-                                        Cancel
-                                    </button>
-                                    <button
-                                        onClick={() => {
-                                            alert("Purchase confirmed! Order will be processed shortly.");
-                                            setShowBuyModal(false);
-                                        }}
-                                        className="flex-1 px-4 sm:px-6 py-3 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors font-medium"
-                                    >
-                                        Confirm Purchase
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                )}
-
-
-
-                {showAnnouncement && (
-                    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 z-50">
-                        <div className="bg-white rounded-2xl sm:rounded-3xl shadow-2xl max-w-sm w-full">
-                            <div className="flex items-center justify-between px-4 py-3 border-b">
-                                <h3 className="text-lg font-bold text-gray-900">Connect With Us</h3>
-                                <button
-                                    onClick={() => setShowAnnouncement(false)}
-                                    className="text-gray-500 hover:text-gray-700 transition-colors p-1"
-                                >
-                                    <X className="w-5 h-5" />
-                                </button>
-                            </div>
-                            <div className="flex flex-col items-center justify-center p-6 space-y-5">
-                                <div className="flex space-x-8">
-                                    <a
-                                        href="https://facebook.com"
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="group hover:scale-110 transition-transform duration-300"
-                                    >
-                                        <div className="w-12 h-12 rounded-xl flex items-center justify-center  transition-colors">
-                                            <i class="fa-brands fa-facebook text-5xl text-blue-600"></i>
-                                        </div>
-                                    </a>
-                                    <a
-                                        href="https://t.me"
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="group hover:scale-110 transition-transform duration-300"
-                                    >
-                                        <div className="w-12 h-12 rounded-xl flex items-center justify-center transition-colors">
-                                            <i class="fa-brands fa-whatsapp text-5xl text-green-600"></i>
-                                        </div>
-                                    </a>
-                                    <a
-                                        href="https://wa.me"
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="group hover:scale-110 transition-transform duration-300"
-                                    >
-                                        <div className="w-12 h-12 rounded-xl flex items-center justify-center transition-colors">
-                                            <i class="fa-brands fa-telegram text-5xl text-blue-400"></i>
-                                        </div>
-                                    </a>
-                                </div>
-                                <div className="text-center">
-                                    <p className="text-base font-semibold text-gray-800 mb-1">Connect with us or subscribe to our channel</p>
-                                    <p className="text-sm text-gray-500">Stay updated with our latest news and offers!</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                )}
+        
+            {/* ... */}
+            {showDetailsModal && (
+                <DetailsModal
+                    isOpen={showDetailsModal}
+                    onClose={() => setShowDetailsModal(false)}
+                    selectedPost={selectedPost}
+                    postStats={postStats}
+                    handleLikePost={handleLikePost}
+                    handleBuyNow={handleBuyNow}
+                />
+            )}
+            {showBuyModal && (
+                <BuyModal
+                    isOpen={showBuyModal}
+                    onClose={() => setShowBuyModal(false)}
+                    selectedPost={selectedPost}
+                    selectedRole={selectedRole}
+                    setSelectedRole={setSelectedRole}
+                    calculateFees={calculateFees}
+                />
+            )}
+            {showAnnouncement && (
+                <AnnouncementModal
+                    isOpen={showAnnouncement}
+                    onClose={() => setShowAnnouncement(false)}
+                />
+            )}
+            {/* ... */}
+     
             </div>
         </div>
     );

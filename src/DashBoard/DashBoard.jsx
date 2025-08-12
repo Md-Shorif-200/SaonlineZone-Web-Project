@@ -34,6 +34,7 @@ import useRole from "../Hooks/useRole";
 import AdminRoute from "../Route/AdminRoute";
 import UserRoute from "../Route/UserRoute";
 import { FaHome } from "react-icons/fa";
+import Spinner from "../Components/Spinner";
 
 const Dashboard = ({ user }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -45,6 +46,7 @@ const Dashboard = ({ user }) => {
 //   const navigate = useNavigate();
   const [role, isLoading, refetch] = useRole()
   console.log(role);
+  
 
   useEffect(() => {
     const checkIfMobile = () => {
@@ -125,6 +127,10 @@ const getFilteredNavItems = () => {
   const getUserEmail = () => {
     return user?.email || "user@example.com";
   };
+
+  if(isLoading){
+    return  <Spinner></Spinner>
+  }
 
   return (
     <div className="min-h-screen bg-white">

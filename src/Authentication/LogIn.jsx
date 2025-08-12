@@ -167,10 +167,10 @@ const LogIn = ({ onAuthSuccess }) => {
                 
             const result = await logIn(data.email,data.password)
                     
-                navigate('/');
-                setTimeout(() => {
+            setTimeout(() => {
+                    navigate('/');
                     toast.success('log in successfully')
-                }, 300);
+                }, 100);
 
             if (onAuthSuccess) {
                 onAuthSuccess(result);

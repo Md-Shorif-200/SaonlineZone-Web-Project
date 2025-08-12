@@ -16,17 +16,35 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const axiosPrivate = useAxiosPrivate()
+  console.log(user);
  
 
-  console.log(user);
-
+  
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(
       auth,
       async (currentUser) => {
+        console.log(currentUser);
         setUser(currentUser);
+
+            if(currentUser?.email){
+               const user = {email : currentUser.email};
+               const res = await axiosPrivate.post('/jwt-token',user);
+               console.log(res.data);
         setLoading(false);
         setError(null);
+               
+            }else{
+              const res = await axiosPrivate.post('/log-out',{});
+              console.log('clear token',res.data);
+
+        setLoading(false);
+        setError(null);
+              
+            }
+
+   
       },
       (error) => {
         setError(error);
